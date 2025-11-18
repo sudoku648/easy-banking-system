@@ -23,7 +23,7 @@ USER www-data
 COPY --chown=www-data:www-data composer.* /app/
 COPY --chown=www-data:www-data symfony.lock /app/
 
-# COPY --chown=www-data:www-data phpunit.xml.dist /app/
+COPY --chown=www-data:www-data phpunit.dist.xml /app/
 
 COPY --chown=www-data:www-data migrations /app/migrations
 COPY --chown=www-data:www-data bin /app/bin/
