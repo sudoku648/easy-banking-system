@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  ebs:
+    build:
+      target: dev
+      context: .
+      dockerfile: Dockerfile
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - ./docker/php/ext-xdebug.ini:/etc/php84/conf.d/50_xdebug.ini
+      - ./:/app:rw
+    ports:
+      - "8080:80"
+    environment:
+      PHP_IDE_CONFIG: serverName=ebs
+
+  postgres:
+    ports:
+      - "54322:5432"

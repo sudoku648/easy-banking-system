@@ -56,7 +56,7 @@ Application follows hexagonal architecture with clear separation between bounded
 ## Testing
 - **Framework**: PHPUnit
 - **Command**:
-  - Make: `make test`
+  - Make: `make test --testsuite=<suite>`
 - **Suites**: unit, integration, functional, api
 - **Test file naming**: `*Test.php` for PHPUnit tests
 - **Test location**: Mirror the `src/` structure in `tests` directory

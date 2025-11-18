@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  ebs:
+    build:
+      target: test
+      context: .
+      dockerfile: Dockerfile
+
+  postgres:
+    image: postgres:latest
+    volumes:
+      - ./docker/postgres:/docker-entrypoint-initdb.d
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: ebsdatabase_test
+      POSTGRES_PASSWORD: postgres
+      TZ: "CET"
+      PGTZ: "CET"
