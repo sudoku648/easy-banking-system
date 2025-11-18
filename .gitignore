@@ -18,3 +18,7 @@
 ###< phpunit/phpunit ###
 
 docker-compose.override.yml
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

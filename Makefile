@@ -27,6 +27,11 @@ vendor:
 	$(call highlight,Installing composer)
 	$(DOCKER_RUN_WITH_USER) "composer install --no-scripts"
 
+analyse:
+	$(call highlight,Static code analysis)
+	$(DOCKER_EXEC_WITH_USER) "composer ecs:check"
+	$(DOCKER_EXEC_WITH_USER) "composer phpstan"
+
 test:
 ifdef suite
 	$(call highlight,Running test suite: $(suite))
