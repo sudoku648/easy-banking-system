@@ -1,2 +1,55 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$data of method App\\BankAccount\\Infrastructure\\Persistence\\Repository\\DbalBankAccountRepository\:\:mapToEntity\(\) expects array\{id\: string, iban\: string, customer_id\: string, balance\: int, currency\: string, is_active\: bool\}, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/BankAccount/Infrastructure/Persistence/Repository/DbalBankAccountRepository.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Shared/Domain/ValueObject/UuidValueObject.php
+
+		-
+			message: '#^Parameter \#1 \$data of method App\\Transaction\\Infrastructure\\Persistence\\Repository\\DbalTransactionRepository\:\:mapToEntity\(\) expects array\{id\: string, type\: string, bank_account_id\: string, amount\: int, currency\: string, original_amount\: int, original_currency\: string, exchange_rate\: float, \.\.\.\}, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Transaction/Infrastructure/Persistence/Repository/DbalTransactionRepository.php
+
+		-
+			message: '#^Parameter \#1 \$username of class App\\UserManagement\\Application\\Command\\CreateEmployeeCommand constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Cli/CreateEmployeeConsoleCommand.php
+
+		-
+			message: '#^Parameter \#2 \$password of class App\\UserManagement\\Application\\Command\\CreateEmployeeCommand constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Cli/CreateEmployeeConsoleCommand.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Cli/CreateEmployeeConsoleCommand.php
+
+		-
+			message: '#^Parameter \#3 \$firstName of class App\\UserManagement\\Application\\Command\\CreateEmployeeCommand constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Cli/CreateEmployeeConsoleCommand.php
+
+		-
+			message: '#^Parameter \#4 \$lastName of class App\\UserManagement\\Application\\Command\\CreateEmployeeCommand constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Cli/CreateEmployeeConsoleCommand.php
+
+		-
+			message: '#^Parameter \#1 \$data of method App\\UserManagement\\Infrastructure\\Persistence\\Repository\\DbalUserRepository\:\:mapToEntity\(\) expects array\{id\: string, username\: string, password\: string, first_name\: string, last_name\: string, is_active\: bool, role\: string\}, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/UserManagement/Infrastructure/Persistence/Repository/DbalUserRepository.php

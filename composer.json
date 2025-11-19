@@ -13,8 +13,11 @@
         "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.3.*",
+        "symfony/messenger": "7.3.*",
         "symfony/runtime": "7.3.*",
-        "symfony/yaml": "7.3.*"
+        "symfony/uid": "7.3.*",
+        "symfony/yaml": "7.3.*",
+        "webmozart/assert": "*"
     },
     "config": {
         "allow-plugins": {

@@ -1,0 +1,53 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Shared Infrastructure
+    App\Shared\Infrastructure\:
+        resource: '../src/Shared/Infrastructure/'
+        exclude:
+            - '../src/Shared/Infrastructure/DependencyInjection/'
+
+    # Event Bus
+    App\Shared\Domain\Event\EventBus: '@App\Shared\Infrastructure\Event\SymfonyMessengerEventBus'
+
+    App\Shared\Infrastructure\Event\SymfonyMessengerEventBus:
+        arguments:
+            $eventBus: '@event.bus'
+
+    # UserManagement Context
+    App\UserManagement\Application\:
+        resource: '../src/UserManagement/Application/'
+        tags: ['messenger.message_handler']
+
+    App\UserManagement\Infrastructure\:
+        resource: '../src/UserManagement/Infrastructure/'
+
+    App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface:
+        alias: App\UserManagement\Infrastructure\Persistence\Repository\DbalUserRepository
+
+    # BankAccount Context
+    App\BankAccount\Application\:
+        resource: '../src/BankAccount/Application/'
+        tags: ['messenger.message_handler']
+
+    App\BankAccount\Infrastructure\:
+        resource: '../src/BankAccount/Infrastructure/'
+
+    App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface:
+        alias: App\BankAccount\Infrastructure\Persistence\Repository\DbalBankAccountRepository
+
+    # Transaction Context
+    App\Transaction\Application\:
+        resource: '../src/Transaction/Application/'
+        tags: ['messenger.message_handler']
+
+    App\Transaction\Infrastructure\:
+        resource: '../src/Transaction/Infrastructure/'
+
+    App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface:
+        alias: App\Transaction\Infrastructure\Persistence\Repository\DbalTransactionRepository
+
+    App\Transaction\Domain\Provider\ExchangeRateProviderInterface:
+        alias: App\Transaction\Infrastructure\Provider\StaticExchangeRateProvider

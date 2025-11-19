@@ -1,6 +1,23 @@
 framework:
     secret: '%env(APP_SECRET)%'
     session: true
+    messenger:
+        default_bus: command.bus
+        buses:
+            command.bus:
+                middleware:
+                    - doctrine_transaction
+            event.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - doctrine_transaction
+        transports:
+            sync: 'sync://'
+        routing:
+            App\UserManagement\Application\Command\*: sync
+            App\BankAccount\Application\Command\*: sync
+            App\Transaction\Application\Command\*: sync
+            App\Shared\Domain\Event\DomainEvent: sync
 
 when@test:
     framework:
