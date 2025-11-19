@@ -47,10 +47,14 @@
                                                 <span class="badge bg-danger">
                                                     <i class="bi bi-cash"></i> Cash Withdrawal
                                                 </span>
+                                            {% elseif transaction.type == 'CASH_DEPOSIT' %}
+                                                <span class="badge bg-primary">
+                                                    <i class="bi bi-cash-coin"></i> Cash Deposit
+                                                </span>
                                             {% endif %}
                                         </td>
                                         <td class="text-end">
-                                            {% if transaction.type == 'TRANSFER_DEPOSIT' %}
+                                            {% if transaction.type == 'TRANSFER_DEPOSIT' or transaction.type == 'CASH_DEPOSIT' %}
                                                 <span class="text-success">
                                                     +{{ transaction.amount|number_format(2, '.', ',') }}
                                                 </span>

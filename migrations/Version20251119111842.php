@@ -53,7 +53,7 @@ final class Version20251119111842 extends AbstractMigration
         $this->addSql('
             CREATE TABLE transaction (
                 id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                type TEXT NOT NULL CHECK (type IN (\'TRANSFER_WITHDRAWAL\', \'TRANSFER_DEPOSIT\', \'CASH_WITHDRAWAL\')),
+                type TEXT NOT NULL CHECK (type IN (\'TRANSFER_WITHDRAWAL\', \'TRANSFER_DEPOSIT\', \'CASH_WITHDRAWAL\', \'CASH_DEPOSIT\')),
                 amount BIGINT NOT NULL CHECK (amount > 0),
                 currency TEXT NOT NULL CHECK (currency IN (\'PLN\', \'EUR\')),
                 original_amount BIGINT NOT NULL CHECK (original_amount > 0),

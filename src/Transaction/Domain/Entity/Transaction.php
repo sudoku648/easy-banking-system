@@ -78,6 +78,23 @@ final class Transaction
         );
     }
 
+    public static function createCashDeposit(
+        TransactionId $id,
+        BankAccountId $bankAccountId,
+        Money $amount,
+        \DateTimeImmutable $occurredAt,
+    ): self {
+        return new self(
+            $id,
+            TransactionType::CASH_DEPOSIT,
+            $bankAccountId,
+            $amount,
+            $amount,
+            ExchangeRate::identity($amount->getCurrency()),
+            $occurredAt,
+        );
+    }
+
     public function getId(): TransactionId
     {
         return $this->id;
