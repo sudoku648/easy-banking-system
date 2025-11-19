@@ -72,7 +72,7 @@ final readonly class DbalTransactionRepository implements TransactionRepositoryI
         $ids = array_map(fn (BankAccountId $id): string => $id->getValue(), $bankAccountIds);
 
         $rows = $this->connection->fetchAllAssociative(
-            'SELECT * FROM transaction WHERE bank_account_id = ANY(:bank_account_ids) ORDER BY occurred_at DESC',
+            'SELECT * FROM transaction WHERE bank_account_id IN (:bank_account_ids) ORDER BY occurred_at DESC',
             ['bank_account_ids' => $ids],
             ['bank_account_ids' => ArrayParameterType::STRING],
         );
