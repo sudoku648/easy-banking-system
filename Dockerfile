@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
-    && docker-php-ext-install zip \
+    libpq-dev \
+    && docker-php-ext-install zip pdo pdo_pgsql pgsql \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -50,8 +51,6 @@ WORKDIR /app
 COPY --chown=www-data:www-data --from=vendor /app /app/
 
 COPY --chown=www-data:www-data .env.test /app/
-RUN mkdir /app/tests/_output/ -p
-RUN chmod 777 /app/tests/_output/
 
 FROM --platform=$BUILDPLATFORM php AS dev
 

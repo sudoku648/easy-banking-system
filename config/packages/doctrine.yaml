@@ -1,0 +1,12 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+        driver: 'pdo_pgsql'
+        server_version: '16'
+        charset: utf8
+        profiling_collect_backtrace: '%kernel.debug%'
+
+when@test:
+    doctrine:
+        dbal:
+            dbname_suffix: ''

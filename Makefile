@@ -27,6 +27,10 @@ vendor:
 	$(call highlight,Installing composer)
 	$(DOCKER_RUN_WITH_USER) "composer install --no-scripts"
 
+setup:
+	$(call highlight,Setting up db - tests - etc.)
+	$(DOCKER_EXEC_WITH_USER) "composer tests-setup"
+
 analyse:
 	$(call highlight,Static code analysis)
 	$(DOCKER_EXEC_WITH_USER) "composer ecs:check"

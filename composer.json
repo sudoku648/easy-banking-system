@@ -7,6 +7,8 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "doctrine/dbal": "*",
+        "doctrine/doctrine-migrations-bundle": "*",
         "symfony/console": "7.3.*",
         "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
@@ -53,6 +55,11 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "tests-setup": [
+            "bin/console doctrine:database:drop --if-exists --force --env=test",
+            "bin/console doctrine:database:create --if-not-exists -n --env=test",
+            "bin/console doctrine:migrations:migrate --no-interaction --env=test"
         ],
         "ecs:check": "vendor/bin/ecs check --clear-cache --config ecs.php",
         "phpstan": "vendor/bin/phpstan analyse"
