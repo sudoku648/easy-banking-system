@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Transaction History - Easy Banking System{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h2 class="mb-0">
+                    <i class="bi bi-clock-history"></i> Transaction History
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if transactions|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Account</th>
+                                    <th>Type</th>
+                                    <th class="text-end">Amount</th>
+                                    <th class="text-end">Original Amount</th>
+                                    <th class="text-center">Exchange Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                    <tr>
+                                        <td>
+                                            <small>{{ transaction.occurredAt }}</small>
+                                        </td>
+                                        <td>
+                                            <code>{{ transaction.accountIban }}</code>
+                                        </td>
+                                        <td>
+                                            {% if transaction.type == 'TRANSFER_DEPOSIT' %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-arrow-down-circle"></i> Deposit
+                                                </span>
+                                            {% elseif transaction.type == 'TRANSFER_WITHDRAWAL' %}
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-arrow-up-circle"></i> Withdrawal
+                                                </span>
+                                            {% elseif transaction.type == 'CASH_WITHDRAWAL' %}
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-cash"></i> Cash Withdrawal
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end">
+                                            {% if transaction.type == 'TRANSFER_DEPOSIT' %}
+                                                <span class="text-success">
+                                                    +{{ transaction.amount|number_format(2, '.', ',') }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-danger">
+                                                    -{{ transaction.amount|number_format(2, '.', ',') }}
+                                                </span>
+                                            {% endif %}
+                                            <span class="badge bg-secondary">{{ transaction.currency }}</span>
+                                        </td>
+                                        <td class="text-end">
+                                            {{ transaction.originalAmount|number_format(2, '.', ',') }}
+                                            <span class="badge bg-secondary">{{ transaction.originalCurrency }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            {% if transaction.exchangeRate != 1.0 %}
+                                                <span class="badge bg-info">{{ transaction.exchangeRate|number_format(4) }}</span>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        No transactions found. Start making transfers to see your transaction history!
+                    </div>
+                {% endif %}
+
+                <div class="mt-3">
+                    <a href="{{ path('customer_dashboard') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

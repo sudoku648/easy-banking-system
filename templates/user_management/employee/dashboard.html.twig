@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employee Dashboard - Easy Banking System{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="bi bi-speedometer2"></i> Employee Dashboard
+        </h1>
+        <p class="lead">Welcome, {{ app.user.user.fullName }}!</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-person-plus display-4 text-primary mb-3"></i>
+                <h5 class="card-title">Open Account</h5>
+                <p class="card-text">Create a new bank account for a new customer</p>
+                <a href="{{ path('bank_account_open_new_customer') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> New Customer
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-person-check display-4 text-success mb-3"></i>
+                <h5 class="card-title">Existing Customer</h5>
+                <p class="card-text">Open another account for an existing customer</p>
+                <a href="{{ path('bank_account_open_existing_customer') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Existing Customer
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-x-circle display-4 text-danger mb-3"></i>
+                <h5 class="card-title">Close Account</h5>
+                <p class="card-text">Close a customer's bank account</p>
+                <a href="{{ path('bank_account_close') }}" class="btn btn-danger">
+                    <i class="bi bi-x-circle"></i> Close Account
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-info-circle text-info"></i> Quick Info
+                </h5>
+                <ul class="mb-0">
+                    <li>You can create accounts in PLN or EUR currency</li>
+                    <li>IBAN numbers are generated automatically</li>
+                    <li>When closing an account, all remaining funds are withdrawn</li>
+                    <li>View customer transaction history using the account management</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

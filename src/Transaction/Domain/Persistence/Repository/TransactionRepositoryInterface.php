@@ -19,5 +19,11 @@ interface TransactionRepositoryInterface
      */
     public function findByBankAccountId(BankAccountId $bankAccountId): array;
 
+    /**
+     * @param BankAccountId[] $bankAccountIds
+     * @return Transaction[]
+     */
+    public function findByBankAccountIds(array $bankAccountIds): array;
+
     public function nextIdentity(): TransactionId;
 }

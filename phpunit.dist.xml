@@ -27,8 +27,8 @@
         <testsuite name="functional">
             <directory>tests/Functional</directory>
         </testsuite>
-        <testsuite name="api">
-            <directory>tests/Api</directory>
+        <testsuite name="presentation">
+            <directory>tests/Presentation</directory>
         </testsuite>
     </testsuites>
 

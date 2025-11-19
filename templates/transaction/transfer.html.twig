@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Money Transfer - Easy Banking System{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">
+                    <i class="bi bi-arrow-left-right"></i> Money Transfer
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Send money to another bank account.</p>
+
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                
+                <div class="mb-3">
+                    <div class="form-group">
+                        {{ form_label(form.fromBankAccountId) }}
+                        {{ form_widget(form.fromBankAccountId, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.fromBankAccountId) }}
+                        <small class="form-text text-muted">Select the account to send money from</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-group">
+                        {{ form_label(form.toIban) }}
+                        {{ form_widget(form.toIban, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.toIban) }}
+                        <small class="form-text text-muted">Enter the IBAN of the destination account (must be in our bank)</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-group">
+                        {{ form_label(form.amount) }}
+                        <div class="input-group">
+                            {{ form_widget(form.amount, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        {{ form_errors(form.amount) }}
+                        <small class="form-text text-muted">Enter the amount to transfer. Currency exchange will be applied automatically if needed.</small>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Note:</strong> If the destination account has a different currency, the amount will be automatically converted at the current exchange rate.
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{{ path('customer_dashboard') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Transfer Money
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

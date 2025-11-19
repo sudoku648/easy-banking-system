@@ -129,7 +129,7 @@ make test                    # Run all test suites
 make test suite=unit         # Run unit tests
 make test suite=integration  # Run integration tests
 make test suite=functional   # Run functional tests
-make test suite=api          # Run API tests
+make test suite=presentation # Run presentation tests
 ```
 
 ### Direct Composer Scripts
@@ -184,10 +184,10 @@ The following features are not included in the current version:
 The project follows **Hexagonal Architecture** (Ports & Adapters) combined with **Domain-Driven Design** principles:
 
 ### Bounded Context Structure
-- **Api/**: REST controllers, DTOs, validators (entry points)
 - **Application/**: Commands, Queries, Handlers, Events, EventHandlers (use cases)
 - **Domain/**: Entities, Value Objects, Repositories (interfaces), Domain Services, Domain Events
 - **Infrastructure/**: Repository implementations, external service integrations, persistence
+- **Presentation/**: frontend controllers, DTOs, forms, validators (entry points)
 - **Symfony/**: Symfony-specific configuration (services, routes, event listeners)
 - **Cli/**: Console commands
 

@@ -83,6 +83,15 @@ final readonly class DbalBankAccountRepository implements BankAccountRepositoryI
         return array_map(fn (array $data): BankAccount => $this->mapToEntity($data), $rows);
     }
 
+    public function findAllActive(): array
+    {
+        $rows = $this->connection->fetchAllAssociative(
+            'SELECT * FROM bank_account WHERE is_active = true ORDER BY iban',
+        );
+
+        return array_map(fn (array $data): BankAccount => $this->mapToEntity($data), $rows);
+    }
+
     public function existsByIban(Iban $iban): bool
     {
         $count = $this->connection->fetchOne(

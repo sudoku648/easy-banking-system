@@ -75,6 +75,16 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
         return $this->mapToEntity($data);
     }
 
+    public function findAllCustomers(): array
+    {
+        $rows = $this->connection->fetchAllAssociative(
+            'SELECT * FROM "user" WHERE role = :role ORDER BY last_name, first_name',
+            ['role' => UserRole::CUSTOMER->value],
+        );
+
+        return array_map(fn (array $data): User => $this->mapToEntity($data), $rows);
+    }
+
     public function existsByUsername(Username $username): bool
     {
         $count = $this->connection->fetchOne(

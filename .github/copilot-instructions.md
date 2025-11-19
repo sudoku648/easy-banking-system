@@ -10,17 +10,17 @@
 - **Messaging**: Symfony Messenger
 - **ORM**: No ORM - direct SQL via Doctrine DBAL
 - **Dependency Injection**: Symfony DI Container
-- **Testing**: PHPUnit (unit, integration, functional, api)
+- **Testing**: PHPUnit (unit, integration, functional, presentation)
 - **Migrations**: SQL scripts in `migrations/` directory
 
 ## Architecture - Hexagonal + DDD
 Application follows hexagonal architecture with clear separation between bounded contexts.
 
 ### Folder structure (per bounded context):
-- **Api/**: REST controllers, DTOs, validators (entry points)
 - **Application/**: Commands, Queries, Handlers, Events, EventHandlers (use cases)
 - **Domain/**: Entities, Value Objects, Repositories (interfaces), Domain Services, Domain Events
 - **Infrastructure/**: Repository implementations, external service integrations, persistence
+- **Presentation/**: frontend controllers, DTOs, forms, validators (entry points)
 - **Symfony/**: Symfony-specific configuration (services, routes, event listeners)
 - **Cli/**: Console commands (optional)
 
@@ -57,7 +57,7 @@ Application follows hexagonal architecture with clear separation between bounded
 - **Framework**: PHPUnit
 - **Command**:
   - Make: `make test --testsuite=<suite>`
-- **Suites**: unit, integration, functional, api
+- **Suites**: unit, integration, functional, presentation
 - **Test file naming**: `*Test.php` for PHPUnit tests
 - **Test location**: Mirror the `src/` structure in `tests` directory
 - **Requirements**:
@@ -72,7 +72,6 @@ Application follows hexagonal architecture with clear separation between bounded
 - **README.md**: Keep installation/config/usage instructions up to date
 - **Code comments**: Only when necessary - prefer self-documenting code
 - **PHPDoc**: Required for complex logic, keep synchronized with code
-- **API docs**: Update `docs/` when adding/changing endpoints
 
 ## Common patterns
 - **Repository pattern**: 

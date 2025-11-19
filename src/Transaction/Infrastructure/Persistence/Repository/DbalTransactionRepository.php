@@ -12,6 +12,7 @@ use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\ExchangeRate;
 use App\Transaction\Domain\ValueObject\TransactionId;
 use App\Transaction\Domain\ValueObject\TransactionType;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 
 final readonly class DbalTransactionRepository implements TransactionRepositoryInterface
@@ -57,6 +58,23 @@ final readonly class DbalTransactionRepository implements TransactionRepositoryI
         $rows = $this->connection->fetchAllAssociative(
             'SELECT * FROM transaction WHERE bank_account_id = :bank_account_id ORDER BY occurred_at DESC',
             ['bank_account_id' => $bankAccountId->getValue()],
+        );
+
+        return array_map(fn (array $data): Transaction => $this->mapToEntity($data), $rows);
+    }
+
+    public function findByBankAccountIds(array $bankAccountIds): array
+    {
+        if (empty($bankAccountIds)) {
+            return [];
+        }
+
+        $ids = array_map(fn (BankAccountId $id): string => $id->getValue(), $bankAccountIds);
+
+        $rows = $this->connection->fetchAllAssociative(
+            'SELECT * FROM transaction WHERE bank_account_id = ANY(:bank_account_ids) ORDER BY occurred_at DESC',
+            ['bank_account_ids' => $ids],
+            ['bank_account_ids' => ArrayParameterType::STRING],
         );
 
         return array_map(fn (array $data): Transaction => $this->mapToEntity($data), $rows);

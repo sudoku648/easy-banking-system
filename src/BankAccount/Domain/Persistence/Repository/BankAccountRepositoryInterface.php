@@ -22,6 +22,11 @@ interface BankAccountRepositoryInterface
      */
     public function findByCustomerId(CustomerId $customerId): array;
 
+    /**
+     * @return BankAccount[]
+     */
+    public function findAllActive(): array;
+
     public function existsByIban(Iban $iban): bool;
 
     public function nextIdentity(): BankAccountId;

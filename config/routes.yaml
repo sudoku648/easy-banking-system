@@ -1,5 +1,4 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+# Controllers loaded from Presentation layers in bounded contexts
+_presentation_controllers:
+    resource: ../src/
     type: attribute

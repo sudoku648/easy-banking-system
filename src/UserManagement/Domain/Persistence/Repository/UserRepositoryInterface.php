@@ -16,6 +16,11 @@ interface UserRepositoryInterface
 
     public function findByUsername(Username $username): ?User;
 
+    /**
+     * @return User[]
+     */
+    public function findAllCustomers(): array;
+
     public function existsByUsername(Username $username): bool;
 
     public function nextIdentity(): UserId;
