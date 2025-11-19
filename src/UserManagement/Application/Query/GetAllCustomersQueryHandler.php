@@ -22,7 +22,7 @@ final readonly class GetAllCustomersQueryHandler
         /** @var array<Customer> $customers */
         $customers = $this->userRepository->findAllCustomers();
 
-        return array_map(
+        return array_values(array_map(
             fn (Customer $customer): array => [
                 'id' => $customer->getId()->getValue(),
                 'username' => $customer->getUsername()->getValue(),
@@ -32,6 +32,6 @@ final readonly class GetAllCustomersQueryHandler
                 'isActive' => $customer->isActive(),
             ],
             $customers,
-        );
+        ));
     }
 }

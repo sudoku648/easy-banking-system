@@ -1,25 +1,31 @@
 when@test:
     services:
         # Use in-memory implementations for functional tests (unless USE_DATABASE=1)
+        # Mark as shared: true to ensure singleton behavior across HTTP requests in WebTestCase
         App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface:
             class: App\Tests\Support\Repository\InMemoryUserRepository
             public: true
+            shared: true
 
         App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface:
             class: App\Tests\Support\Repository\InMemoryBankAccountRepository
             public: true
+            shared: true
 
         App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface:
             class: App\Tests\Support\Repository\InMemoryTransactionRepository
             public: true
+            shared: true
 
         App\Transaction\Domain\Provider\ExchangeRateProviderInterface:
             class: App\Tests\Support\Provider\MockExchangeRateProvider
             public: true
+            shared: true
 
         App\Shared\Domain\Event\EventBus:
             class: App\Tests\Support\Event\InMemoryEventBus
             public: true
+            shared: true
 
         # Make DBAL repositories public so integration tests can swap them
         App\UserManagement\Infrastructure\Persistence\Repository\DbalUserRepository:

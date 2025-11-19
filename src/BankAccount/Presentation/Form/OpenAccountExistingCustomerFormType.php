@@ -19,25 +19,18 @@ final class OpenAccountExistingCustomerFormType extends AbstractType
     {
         /** @var array<int, array{id: string, username: string, firstName: string, lastName: string, fullName: string, isActive: bool}> $customers */
         $customers = $options['customers'] ?? [];
+        
+        // Build choices array with labels as keys and IDs as values
+        $choices = [];
+        foreach ($customers as $customer) {
+            $label = $customer['fullName'] . ' (' . $customer['username'] . ')';
+            $choices[$label] = $customer['id'];
+        }
 
         $builder
             ->add('customerId', ChoiceType::class, [
                 'label' => 'Customer',
-                'choices' => $customers,
-                'choice_label' => function (mixed $customer): string {
-                    if (!\is_array($customer)) {
-                        return '';
-                    }
-                    /** @var array{fullName: string, username: string} $customer */
-                    return $customer['fullName'] . ' (' . $customer['username'] . ')';
-                },
-                'choice_value' => function (mixed $customer): string {
-                    if (!\is_array($customer)) {
-                        return '';
-                    }
-                    /** @var array{id: string} $customer */
-                    return $customer['id'];
-                },
+                'choices' => $choices,
                 'placeholder' => '-- Select customer --',
             ])
             ->add('currency', ChoiceType::class, [

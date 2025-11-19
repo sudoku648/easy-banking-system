@@ -17,6 +17,27 @@ services:
             - '../src/*/Domain/Event/'
             - '../src/*/Domain/Exception/'
 
+    # Register all command and query handlers as message handlers
+    App\BankAccount\Application\Command\:
+        resource: '../src/BankAccount/Application/Command/*Handler.php'
+        tags: [messenger.message_handler]
+
+    App\BankAccount\Application\Query\:
+        resource: '../src/BankAccount/Application/Query/*Handler.php'
+        tags: [messenger.message_handler]
+
+    App\Transaction\Application\Command\:
+        resource: '../src/Transaction/Application/Command/*Handler.php'
+        tags: [messenger.message_handler]
+
+    App\UserManagement\Application\Command\:
+        resource: '../src/UserManagement/Application/Command/*Handler.php'
+        tags: [messenger.message_handler]
+
+    App\UserManagement\Application\Query\:
+        resource: '../src/UserManagement/Application/Query/*Handler.php'
+        tags: [messenger.message_handler]
+
     # Event Bus
     App\Shared\Domain\Event\EventBus: '@App\Shared\Infrastructure\Event\SymfonyMessengerEventBus'
 

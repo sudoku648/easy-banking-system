@@ -18,10 +18,10 @@ security:
                 login_path: login
                 check_path: login
                 enable_csrf: true
-                default_target_path: home
+                success_handler: App\UserManagement\Infrastructure\Security\RoleBasedAuthenticationSuccessHandler
             logout:
                 path: logout
-                target: home
+                target: login
 
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }

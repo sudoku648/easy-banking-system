@@ -21,7 +21,7 @@ final readonly class GetAllActiveBankAccountsQueryHandler
     {
         $accounts = $this->bankAccountRepository->findAllActive();
 
-        return array_map(
+        return array_values(array_map(
             fn (BankAccount $account): array => [
                 'id' => $account->getId()->getValue(),
                 'iban' => $account->getIban()->getValue(),
@@ -30,6 +30,6 @@ final readonly class GetAllActiveBankAccountsQueryHandler
                 'currency' => $account->getBalance()->getCurrency()->value,
             ],
             $accounts,
-        );
+        ));
     }
 }

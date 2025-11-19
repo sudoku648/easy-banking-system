@@ -17,27 +17,20 @@ final class CloseBankAccountFormType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /** @var array<array{id: string, iban: string, customerId: string, balance: int, currency: string}> $accounts */
-        $accounts = $options['accounts'] ?? [];
+        /** @var array<array{id: string, iban: string, customerId: string, balance: int, currency: string}> $accountsData */
+        $accountsData = $options['accounts'] ?? [];
+        
+        // Build choices array with labels as keys and IDs as values
+        $choices = [];
+        foreach ($accountsData as $account) {
+            $label = $account['iban'] . ' (' . number_format($account['balance'] / 100, 2) . ' ' . $account['currency'] . ')';
+            $choices[$label] = $account['id'];
+        }
 
         $builder
             ->add('bankAccountId', ChoiceType::class, [
                 'label' => 'Bank Account',
-                'choices' => $accounts,
-                'choice_label' => function (mixed $account): string {
-                    if (!\is_array($account)) {
-                        return '';
-                    }
-                    /** @var array{iban: string, balance: int, currency: string} $account */
-                    return $account['iban'] . ' (' . number_format($account['balance'] / 100, 2) . ' ' . $account['currency'] . ')';
-                },
-                'choice_value' => function (mixed $account): string {
-                    if (!\is_array($account)) {
-                        return '';
-                    }
-                    /** @var array{id: string} $account */
-                    return $account['id'];
-                },
+                'choices' => $choices,
                 'placeholder' => '-- Select account to close --',
             ]);
     }

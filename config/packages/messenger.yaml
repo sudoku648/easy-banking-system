@@ -1,5 +1,12 @@
 framework:
     messenger:
+        default_bus: messenger.bus.default
+        
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - validation
+        
         transports:
             sync: 'sync://'
 
