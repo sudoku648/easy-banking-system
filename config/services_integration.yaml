@@ -1,0 +1,27 @@
+parameters:
+
+services:
+    # Use real DBAL implementations for integration tests
+    when@integration:
+        App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface:
+            alias: App\UserManagement\Infrastructure\Persistence\Repository\DbalUserRepository
+            public: true
+
+        App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface:
+            alias: App\BankAccount\Infrastructure\Persistence\Repository\DbalBankAccountRepository
+            public: true
+
+        App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface:
+            alias: App\Transaction\Infrastructure\Persistence\Repository\DbalTransactionRepository
+            public: true
+
+        App\Transaction\Domain\Provider\ExchangeRateProviderInterface:
+            alias: App\Transaction\Infrastructure\Provider\StaticExchangeRateProvider
+            public: true
+
+        App\Shared\Domain\Event\EventBusInterface:
+            class: App\Shared\Infrastructure\Event\SymfonyMessengerEventBus
+            public: true
+
+        App\Shared\Domain\Event\EventBus:
+            alias: App\Shared\Domain\Event\EventBusInterface

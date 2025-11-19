@@ -8,36 +8,47 @@ use App\BankAccount\Application\Command\CloseBankAccountCommand;
 use App\BankAccount\Application\Command\CloseBankAccountCommandHandler;
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Application\Command\OpenBankAccountCommandHandler;
+use App\BankAccount\Domain\Entity\BankAccount;
 use App\BankAccount\Domain\Event\BankAccountClosed;
 use App\BankAccount\Domain\Event\BankAccountOpened;
 use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
+use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\CustomerId;
+use App\Shared\Domain\Event\EventBus;
 use App\Shared\Domain\ValueObject\Currency;
+use App\Tests\Shared\ApplicationTestCase;
 use App\Tests\Support\Event\InMemoryEventBus;
-use App\Tests\Support\Repository\InMemoryBankAccountRepository;
-use PHPUnit\Framework\TestCase;
 
-final class BankAccountManagementTest extends TestCase
+final class BankAccountManagementTest extends ApplicationTestCase
 {
-    private InMemoryBankAccountRepository $bankAccountRepository;
-    private InMemoryEventBus $eventBus;
+    private BankAccountRepositoryInterface $bankAccountRepository;
+    private EventBus $eventBus;
 
     protected function setUp(): void
     {
-        $this->bankAccountRepository = new InMemoryBankAccountRepository();
-        $this->eventBus = new InMemoryEventBus();
+        parent::setUp();
+        $this->bankAccountRepository = self::getContainer()->get(BankAccountRepositoryInterface::class);
+        $this->eventBus = self::getContainer()->get(EventBus::class);
     }
 
-    protected function tearDown(): void
+    private function getEventBus(): ?InMemoryEventBus
     {
-        $this->bankAccountRepository->clear();
-        $this->eventBus->clear();
+        if ($this->eventBus instanceof InMemoryEventBus) {
+            return $this->eventBus;
+        }
+        return null;
+    }
+
+    private function isUsingInMemoryEventBus(): bool
+    {
+        return $this->eventBus instanceof InMemoryEventBus;
     }
 
     public function testOpenBankAccountCreatesNewAccount(): void
     {
         $handler = new OpenBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
         $customerId = CustomerId::generate();
+        $this->ensureCustomerExists($customerId->getValue());
 
         $command = new OpenBankAccountCommand(
             customerId: $customerId->getValue(),
@@ -58,8 +69,13 @@ final class BankAccountManagementTest extends TestCase
 
     public function testOpenBankAccountDispatchesBankAccountOpenedEvent(): void
     {
+        if (!$this->isUsingInMemoryEventBus()) {
+            self::markTestSkipped('Event assertions only work with InMemoryEventBus (functional mode)');
+        }
+
         $handler = new OpenBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
         $customerId = CustomerId::generate();
+        $this->ensureCustomerExists($customerId->getValue());
 
         $command = new OpenBankAccountCommand(
             customerId: $customerId->getValue(),
@@ -68,7 +84,8 @@ final class BankAccountManagementTest extends TestCase
 
         $handler($command);
 
-        $events = $this->eventBus->getDispatchedEventsOfType(BankAccountOpened::class);
+        $eventBus = $this->getEventBus();
+        $events = $eventBus->getDispatchedEventsOfType(BankAccountOpened::class);
 
         self::assertCount(1, $events);
         $event = $events[0];
@@ -80,6 +97,7 @@ final class BankAccountManagementTest extends TestCase
     {
         $handler = new OpenBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
         $customerId = CustomerId::generate();
+        $this->ensureCustomerExists($customerId->getValue());
 
         $command1 = new OpenBankAccountCommand($customerId->getValue(), 'PLN');
         $command2 = new OpenBankAccountCommand($customerId->getValue(), 'EUR');
@@ -90,8 +108,16 @@ final class BankAccountManagementTest extends TestCase
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
 
         self::assertCount(2, $accounts);
-        self::assertSame(Currency::PLN, $accounts[0]->getBalance()->getCurrency());
-        self::assertSame(Currency::EUR, $accounts[1]->getBalance()->getCurrency());
+        
+        // Extract currencies from accounts
+        $currencies = array_map(
+            fn (BankAccount $account): Currency => $account->getBalance()->getCurrency(),
+            $accounts,
+        );
+        
+        // Verify both currencies are present (order may vary)
+        self::assertContains(Currency::PLN, $currencies);
+        self::assertContains(Currency::EUR, $currencies);
     }
 
     public function testCloseBankAccountWithZeroBalance(): void
@@ -100,13 +126,17 @@ final class BankAccountManagementTest extends TestCase
         $closeHandler = new CloseBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
 
         $customerId = CustomerId::generate();
+        $this->ensureCustomerExists($customerId->getValue());
         $openCommand = new OpenBankAccountCommand($customerId->getValue(), 'PLN');
         $openHandler($openCommand);
 
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $accountId = $accounts[0]->getId();
 
-        $this->eventBus->clear();
+        if ($this->isUsingInMemoryEventBus()) {
+            $this->getEventBus()->clear();
+        }
+        
         $closeCommand = new CloseBankAccountCommand($accountId->getValue());
         $closeHandler($closeCommand);
 
@@ -116,8 +146,11 @@ final class BankAccountManagementTest extends TestCase
         self::assertFalse($account->isActive());
         self::assertTrue($account->getBalance()->isZero());
 
-        $events = $this->eventBus->getDispatchedEventsOfType(BankAccountClosed::class);
-        self::assertCount(1, $events);
+        if ($this->isUsingInMemoryEventBus()) {
+            $eventBus = $this->getEventBus();
+            $events = $eventBus->getDispatchedEventsOfType(BankAccountClosed::class);
+            self::assertCount(1, $events);
+        }
     }
 
     public function testCloseBankAccountThrowsExceptionForNonExistentAccount(): void
@@ -139,6 +172,9 @@ final class BankAccountManagementTest extends TestCase
 
         $customerId1 = CustomerId::generate();
         $customerId2 = CustomerId::generate();
+
+        $this->ensureCustomerExists($customerId1->getValue());
+        $this->ensureCustomerExists($customerId2->getValue());
 
         $openHandler(new OpenBankAccountCommand($customerId1->getValue(), 'PLN'));
         $openHandler(new OpenBankAccountCommand($customerId2->getValue(), 'EUR'));

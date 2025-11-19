@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\UserManagement\Application\Command;
 
-use App\Tests\Support\Repository\InMemoryUserRepository;
+use App\Tests\Shared\ApplicationTestCase;
 use App\UserManagement\Application\Command\CreateCustomerCommand;
 use App\UserManagement\Application\Command\CreateCustomerCommandHandler;
 use App\UserManagement\Application\Command\CreateEmployeeCommand;
@@ -12,22 +12,18 @@ use App\UserManagement\Application\Command\CreateEmployeeCommandHandler;
 use App\UserManagement\Domain\Entity\Customer;
 use App\UserManagement\Domain\Entity\Employee;
 use App\UserManagement\Domain\Exception\UsernameAlreadyExistsException;
+use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
 use App\UserManagement\Domain\ValueObject\Username;
 use App\UserManagement\Domain\ValueObject\UserRole;
-use PHPUnit\Framework\TestCase;
 
-final class CreateUserTest extends TestCase
+final class CreateUserTest extends ApplicationTestCase
 {
-    private InMemoryUserRepository $userRepository;
+    private UserRepositoryInterface $userRepository;
 
     protected function setUp(): void
     {
-        $this->userRepository = new InMemoryUserRepository();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->userRepository->clear();
+        parent::setUp();
+        $this->userRepository = self::getContainer()->get(UserRepositoryInterface::class);
     }
 
     public function testCreateCustomerCreatesNewCustomer(): void

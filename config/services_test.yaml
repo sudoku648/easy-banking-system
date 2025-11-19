@@ -1,0 +1,46 @@
+when@test:
+    services:
+        # Use in-memory implementations for functional tests (unless USE_DATABASE=1)
+        App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface:
+            class: App\Tests\Support\Repository\InMemoryUserRepository
+            public: true
+
+        App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface:
+            class: App\Tests\Support\Repository\InMemoryBankAccountRepository
+            public: true
+
+        App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface:
+            class: App\Tests\Support\Repository\InMemoryTransactionRepository
+            public: true
+
+        App\Transaction\Domain\Provider\ExchangeRateProviderInterface:
+            class: App\Tests\Support\Provider\MockExchangeRateProvider
+            public: true
+
+        App\Shared\Domain\Event\EventBus:
+            class: App\Tests\Support\Event\InMemoryEventBus
+            public: true
+
+        # Make DBAL repositories public so integration tests can swap them
+        App\UserManagement\Infrastructure\Persistence\Repository\DbalUserRepository:
+            arguments:
+                $connection: '@doctrine.dbal.default_connection'
+            public: true
+
+        App\BankAccount\Infrastructure\Persistence\Repository\DbalBankAccountRepository:
+            arguments:
+                $connection: '@doctrine.dbal.default_connection'
+            public: true
+
+        App\Transaction\Infrastructure\Persistence\Repository\DbalTransactionRepository:
+            arguments:
+                $connection: '@doctrine.dbal.default_connection'
+            public: true
+
+        App\Transaction\Infrastructure\Provider\StaticExchangeRateProvider:
+            public: true
+
+        App\Shared\Infrastructure\Event\SymfonyMessengerEventBus:
+            arguments:
+                $eventBus: '@event.bus'
+            public: true

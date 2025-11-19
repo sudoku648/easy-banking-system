@@ -7,44 +7,54 @@ namespace App\Tests\Functional\Transaction\Application\Command;
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Application\Command\OpenBankAccountCommandHandler;
 use App\BankAccount\Domain\Exception\InsufficientFundsException;
+use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\CustomerId;
+use App\Shared\Domain\Event\EventBus;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Money;
+use App\Tests\Shared\ApplicationTestCase;
 use App\Tests\Support\Event\InMemoryEventBus;
 use App\Tests\Support\Provider\MockExchangeRateProvider;
-use App\Tests\Support\Repository\InMemoryBankAccountRepository;
-use App\Tests\Support\Repository\InMemoryTransactionRepository;
 use App\Transaction\Application\Command\TransferMoneyCommand;
 use App\Transaction\Application\Command\TransferMoneyCommandHandler;
 use App\Transaction\Domain\Event\MoneyTransferred;
+use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
+use App\Transaction\Domain\Provider\ExchangeRateProviderInterface;
 use App\Transaction\Domain\ValueObject\TransactionType;
-use PHPUnit\Framework\TestCase;
 
-final class TransferMoneyTest extends TestCase
+final class TransferMoneyTest extends ApplicationTestCase
 {
-    private InMemoryBankAccountRepository $bankAccountRepository;
-    private InMemoryTransactionRepository $transactionRepository;
-    private MockExchangeRateProvider $exchangeRateProvider;
-    private InMemoryEventBus $eventBus;
+    private BankAccountRepositoryInterface $bankAccountRepository;
+    private TransactionRepositoryInterface $transactionRepository;
+    private ExchangeRateProviderInterface $exchangeRateProvider;
+    private EventBus $eventBus;
 
     protected function setUp(): void
     {
-        $this->bankAccountRepository = new InMemoryBankAccountRepository();
-        $this->transactionRepository = new InMemoryTransactionRepository();
-        $this->exchangeRateProvider = new MockExchangeRateProvider();
-        $this->eventBus = new InMemoryEventBus();
+        parent::setUp();
+        $this->bankAccountRepository = self::getContainer()->get(BankAccountRepositoryInterface::class);
+        $this->transactionRepository = self::getContainer()->get(TransactionRepositoryInterface::class);
+        $this->exchangeRateProvider = self::getContainer()->get(ExchangeRateProviderInterface::class);
+        $this->eventBus = self::getContainer()->get(EventBus::class);
 
-        // Setup default exchange rates
-        $this->exchangeRateProvider->setRate(Currency::PLN, Currency::EUR, 0.23);
-        $this->exchangeRateProvider->setRate(Currency::EUR, Currency::PLN, 4.35);
+        // Setup default exchange rates for MockExchangeRateProvider
+        if ($this->exchangeRateProvider instanceof MockExchangeRateProvider) {
+            $this->exchangeRateProvider->setRate(Currency::PLN, Currency::EUR, 0.23);
+            $this->exchangeRateProvider->setRate(Currency::EUR, Currency::PLN, 4.35);
+        }
     }
 
-    protected function tearDown(): void
+    private function getEventBus(): ?InMemoryEventBus
     {
-        $this->bankAccountRepository->clear();
-        $this->transactionRepository->clear();
-        $this->exchangeRateProvider->clear();
-        $this->eventBus->clear();
+        if ($this->eventBus instanceof InMemoryEventBus) {
+            return $this->eventBus;
+        }
+        return null;
+    }
+
+    private function isUsingInMemoryEventBus(): bool
+    {
+        return $this->eventBus instanceof InMemoryEventBus;
     }
 
     public function testTransferMoneyBetweenAccountsWithSameCurrency(): void
@@ -178,6 +188,10 @@ final class TransferMoneyTest extends TestCase
 
     public function testTransferMoneyDispatchesMoneyTransferredEvent(): void
     {
+        if (!$this->isUsingInMemoryEventBus()) {
+            self::markTestSkipped('Event assertions only work with InMemoryEventBus (functional mode)');
+        }
+
         $handler = $this->createTransferMoneyHandler();
 
         $customerId1 = CustomerId::generate();
@@ -195,7 +209,8 @@ final class TransferMoneyTest extends TestCase
         $fromAccount->deposit(new Money(100000, Currency::PLN));
         $this->bankAccountRepository->save($fromAccount);
 
-        $this->eventBus->clear();
+        $eventBus = $this->getEventBus();
+        $eventBus->clear();
 
         $command = new TransferMoneyCommand(
             fromBankAccountId: $fromAccount->getId()->getValue(),
@@ -206,7 +221,7 @@ final class TransferMoneyTest extends TestCase
 
         $handler($command);
 
-        $events = $this->eventBus->getDispatchedEventsOfType(MoneyTransferred::class);
+        $events = $eventBus->getDispatchedEventsOfType(MoneyTransferred::class);
 
         self::assertCount(1, $events);
         $event = $events[0];
@@ -311,6 +326,7 @@ final class TransferMoneyTest extends TestCase
 
     private function openBankAccount(CustomerId $customerId, string $currency): void
     {
+        $this->ensureCustomerExists($customerId->getValue());
         $handler = new OpenBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
         $command = new OpenBankAccountCommand($customerId->getValue(), $currency);
         $handler($command);

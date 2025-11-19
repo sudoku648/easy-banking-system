@@ -41,9 +41,9 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
         );
 
         if ($exists) {
-            $this->connection->update('user', $data, ['id' => $user->getId()->getValue()]);
+            $this->connection->update('"user"', $data, ['id' => $user->getId()->getValue()]);
         } else {
-            $this->connection->insert('user', $data);
+            $this->connection->insert('"user"', $data);
         }
     }
 

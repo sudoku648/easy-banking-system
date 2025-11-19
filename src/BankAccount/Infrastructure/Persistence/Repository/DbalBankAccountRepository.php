@@ -12,6 +12,7 @@ use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Iban;
 use App\Shared\Domain\ValueObject\Money;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 
 final readonly class DbalBankAccountRepository implements BankAccountRepositoryInterface
 {
@@ -33,15 +34,19 @@ final readonly class DbalBankAccountRepository implements BankAccountRepositoryI
             'is_active' => $bankAccount->isActive(),
         ];
 
+        $types = [
+            'is_active' => Types::BOOLEAN,
+        ];
+
         $exists = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM bank_account WHERE id = :id',
             ['id' => $bankAccount->getId()->getValue()],
         );
 
         if ($exists) {
-            $this->connection->update('bank_account', $data, ['id' => $bankAccount->getId()->getValue()]);
+            $this->connection->update('bank_account', $data, ['id' => $bankAccount->getId()->getValue()], $types);
         } else {
-            $this->connection->insert('bank_account', $data);
+            $this->connection->insert('bank_account', $data, $types);
         }
     }
 

@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "doctrine/dbal": "*",
         "doctrine/doctrine-migrations-bundle": "*",
+        "doctrine/orm": "*",
         "symfony/asset": "7.3.*",
         "symfony/console": "7.3.*",
         "symfony/dotenv": "7.3.*",
@@ -71,7 +72,7 @@
             "bin/console doctrine:migrations:migrate --no-interaction --env=test"
         ],
         "ecs:check": "vendor/bin/ecs check --clear-cache --config ecs.php",
-        "phpstan": "vendor/bin/phpstan analyse"
+        "phpstan": "vendor/bin/phpstan analyse --memory-limit=512M"
     },
     "conflict": {
         "symfony/symfony": "*"
