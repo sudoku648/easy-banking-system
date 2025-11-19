@@ -115,6 +115,8 @@ final readonly class Money implements ValueObject
 
     public function __toString(): string
     {
-        return \sprintf('%d %s', $this->amount, $this->currency->value);
+        $majorUnits = $this->amount / 100;
+
+        return \sprintf('%s %s', number_format($majorUnits, 2, ',', ''), $this->currency->value);
     }
 }

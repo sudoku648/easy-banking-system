@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     libpq-dev \
-    && docker-php-ext-install zip pdo pdo_pgsql pgsql \
+    && docker-php-ext-install zip pdo pdo_pgsql pgsql bcmath \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
