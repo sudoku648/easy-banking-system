@@ -163,9 +163,9 @@ final class TransactionControllerTest extends PresentationTestCase
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
         
-        // Add money to account1 first (simulate deposit)
-        // For now, we'll need to use raw repository access or skip this test
-        // @TODO: Implement deposit functionality for proper testing
+        // Add money to account1 using deposit method
+        $account1->deposit(new \App\Shared\Domain\ValueObject\Money(50000, \App\Shared\Domain\ValueObject\Currency::PLN));
+        $this->bankAccountRepository->save($account1);
         
         $this->loginAsCustomerUser($customer1);
         $crawler = $this->client->request('GET', '/customer/transaction/transfer');
@@ -178,12 +178,12 @@ final class TransactionControllerTest extends PresentationTestCase
 
         $this->client->submit($form);
         
-        // This will likely fail because account has zero balance
-        // The form will be re-rendered with error (no redirect on validation error)
-        $this->assertResponseIsSuccessful();
+        // Should redirect after successful transfer
+        $this->assertResponseRedirects('/customer/dashboard');
+        $this->client->followRedirect();
         
-        // Check for error message since we have insufficient funds
-        $this->assertPageContains('Insufficient funds');
+        // Check for success message
+        $this->assertPageContains('Transfer completed successfully');
     }
 
     public function testTransferWithInvalidIbanShowsError(): void
@@ -340,37 +340,109 @@ final class TransactionControllerTest extends PresentationTestCase
 
     public function testTransactionHistoryDisplaysTransactionDetails(): void
     {
-        // This test would require creating actual transactions
-        // For now, we'll mark it as incomplete
-        // @TODO: Implement after deposit functionality is available
-        self::markTestSkipped('Requires deposit functionality to create transactions');
+        $customer1 = $this->createCustomer('customer1', 'pass123');
+        $customer2 = $this->createCustomer('customer2', 'pass123');
+        
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer1->getId()->getValue(),
+                currency: 'PLN',
+            ),
+        );
+        
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer2->getId()->getValue(),
+                currency: 'PLN',
+            ),
+        );
+        
+        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->getId()->getValue());
+        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->getId()->getValue());
+        $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
+        $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
+        
+        // Add money to account1 using deposit method
+        $account1->deposit(new \App\Shared\Domain\ValueObject\Money(50000, \App\Shared\Domain\ValueObject\Currency::PLN));
+        $this->bankAccountRepository->save($account1);
+        
+        // Create a transfer
+        $this->loginAsCustomerUser($customer1);
+        $crawler = $this->client->request('GET', '/customer/transaction/transfer');
+        
+        $form = $crawler->selectButton('Transfer')->form([
+            'transfer_money_form[fromBankAccountId]' => $account1->getId()->getValue(),
+            'transfer_money_form[toIban]' => $account2->getIban()->getValue(),
+            'transfer_money_form[amount]' => '100.00',
+        ]);
+        
+        $this->client->submit($form);
+        
+        // Check transaction history
+        $this->client->request('GET', '/customer/transaction/history');
+        
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains($account1->getIban()->getValue());
+        $this->assertPageContains('100.00');
+        $this->assertPageContains('PLN');
+        $this->assertPageContains('Withdrawal');
+        $this->assertPageContains(date('Y-m-d'));
     }
 
     public function testTransactionHistoryShowsOnlyCustomerTransactions(): void
     {
-        // This test verifies that customers only see their own transactions
-        // @TODO: Implement after deposit functionality is available
-        self::markTestSkipped('Requires deposit functionality to create transactions');
-    }
-
-    public function testTransactionHistoryShowsTransactionType(): void
-    {
-        // Verify that transaction types (deposit, withdrawal, transfer) are displayed
-        // @TODO: Implement after deposit functionality is available
-        self::markTestSkipped('Requires deposit functionality to create transactions');
-    }
-
-    public function testTransactionHistoryShowsAmountAndCurrency(): void
-    {
-        // Verify that amounts and currencies are properly formatted
-        // @TODO: Implement after deposit functionality is available
-        self::markTestSkipped('Requires deposit functionality to create transactions');
-    }
-
-    public function testTransactionHistoryShowsTimestamp(): void
-    {
-        // Verify that transaction timestamps are displayed
-        // @TODO: Implement after deposit functionality is available
-        self::markTestSkipped('Requires deposit functionality to create transactions');
+        $customer1 = $this->createCustomer('customer1', 'pass123');
+        $customer2 = $this->createCustomer('customer2', 'pass123');
+        
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer1->getId()->getValue(),
+                currency: 'PLN',
+            ),
+        );
+        
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer2->getId()->getValue(),
+                currency: 'PLN',
+            ),
+        );
+        
+        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->getId()->getValue());
+        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->getId()->getValue());
+        $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
+        $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
+        
+        // Add money to both accounts
+        $account1->deposit(new \App\Shared\Domain\ValueObject\Money(50000, \App\Shared\Domain\ValueObject\Currency::PLN));
+        $this->bankAccountRepository->save($account1);
+        
+        $account2->deposit(new \App\Shared\Domain\ValueObject\Money(30000, \App\Shared\Domain\ValueObject\Currency::PLN));
+        $this->bankAccountRepository->save($account2);
+        
+        // Create a transfer from customer1 to customer2
+        $this->loginAsCustomerUser($customer1);
+        $crawler = $this->client->request('GET', '/customer/transaction/transfer');
+        
+        $form = $crawler->selectButton('Transfer')->form([
+            'transfer_money_form[fromBankAccountId]' => $account1->getId()->getValue(),
+            'transfer_money_form[toIban]' => $account2->getIban()->getValue(),
+            'transfer_money_form[amount]' => '100.00',
+        ]);
+        
+        $this->client->submit($form);
+        
+        // Check customer1's transaction history
+        $this->client->request('GET', '/customer/transaction/history');
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains($account1->getIban()->getValue());
+        
+        // Login as customer2 and check they see their transaction
+        $this->loginAsCustomerUser($customer2);
+        $this->client->request('GET', '/customer/transaction/history');
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains($account2->getIban()->getValue());
+        // Should not see customer1's account
+        $this->assertPageNotContains($account1->getIban()->getValue());
     }
 }
