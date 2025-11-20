@@ -110,11 +110,26 @@ The test environment uses minimal containers:
 - **PHP Application**: `easy-banking-service-ebs-test`
 - **PostgreSQL Database**: `easy-banking-service-postgres-test` (ebsdatabase_test)
 
-### Creating an Employee Account
+### Loading Development Fixtures
 
-To create an employee account in development, use the CLI command:
+To populate the development database with sample data, use:
 ```bash
-docker compose -f docker-compose.dev.yaml exec ebs php bin/console app:create-employee "First Name" "Last Name" "password"
+make fixtures
+```
+
+This will create:
+- **3 employees** (john.smith, anna.kowalska, michael.brown)
+- **10 customers** with random names
+- **Bank accounts** (1-3 per customer) in PLN or EUR with random balances
+- **Transaction history** for each account
+
+**Default password for all users:** `password123`
+
+### Creating an Employee Account Manually
+
+To create an employee account manually:
+```bash
+docker compose -f docker-compose.dev.yaml exec ebs php bin/console app:create-employee "First Name" "Last Name" "username" "password"
 ```
 
 ## Available Scripts
@@ -125,6 +140,7 @@ The project uses a Makefile for common tasks:
 ```bash
 make dev            # Start development environment (nginx + app + postgres_dev)
 make dev-stop       # Stop development environment
+make fixtures       # Load sample data into development database
 ```
 
 ### Testing

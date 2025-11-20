@@ -16,6 +16,25 @@ services:
             - '../src/*/Domain/ValueObject/'
             - '../src/*/Domain/Event/'
             - '../src/*/Domain/Exception/'
+            - '../src/Shared/Infrastructure/Fixtures/'
+            - '../src/*/Infrastructure/Fixtures/'
+
+    # Fixtures (only in dev environment)
+    App\UserManagement\Infrastructure\Fixtures\:
+        resource: '../src/UserManagement/Infrastructure/Fixtures/'
+        tags: ['app.fixture']
+
+    App\BankAccount\Infrastructure\Fixtures\:
+        resource: '../src/BankAccount/Infrastructure/Fixtures/'
+        tags: ['app.fixture']
+
+    App\Transaction\Infrastructure\Fixtures\:
+        resource: '../src/Transaction/Infrastructure/Fixtures/'
+        tags: ['app.fixture']
+
+    App\Shared\Infrastructure\Fixtures\FixtureLoader:
+        arguments:
+            $fixtures: !tagged_iterator app.fixture
 
     # Register all command and query handlers as message handlers
     App\BankAccount\Application\Command\:

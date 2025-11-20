@@ -30,6 +30,14 @@ dev-stop:
 	$(call highlight,Stopping development environment)
 	$(DOCKER_COMPOSE_DEV) down --volumes --remove-orphans
 
+fixtures:
+	$(call highlight,Loading fixtures into development database)
+	$(DOCKER_COMPOSE_DEV) exec $(DOCKER_CONTAINER) php bin/console app:fixtures:load --purge --no-interaction
+	@echo ""
+	@echo "Fixtures loaded successfully!"
+	@echo "Default password for all users: password123"
+	@echo ""
+
 start:
 	$(call highlight,Starting test environment)
 	CURRENT_USER=$(USER_ID):$(GROUP_ID) $(DOCKER_COMPOSE_TEST) up -d --build --force-recreate
