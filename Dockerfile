@@ -12,6 +12,10 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Xdebug
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -49,6 +53,11 @@ EXPOSE 80
 
 FROM --platform=$BUILDPLATFORM php AS test
 
+USER root
+
+# Copy Xdebug configuration for test environment
+COPY docker/php/ext-xdebug.ini /usr/local/etc/php/conf.d/50_xdebug.ini
+
 USER www-data
 WORKDIR /app
 
@@ -57,6 +66,11 @@ COPY --chown=www-data:www-data --from=vendor /app /app/
 COPY --chown=www-data:www-data .env.test /app/
 
 FROM --platform=$BUILDPLATFORM php AS dev
+
+USER root
+
+# Copy Xdebug configuration for dev environment
+COPY docker/php/ext-xdebug.ini /usr/local/etc/php/conf.d/50_xdebug.ini
 
 USER www-data
 WORKDIR /app

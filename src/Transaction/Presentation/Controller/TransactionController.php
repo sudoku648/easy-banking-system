@@ -60,7 +60,14 @@ final class TransactionController extends AbstractController
             $activeAccounts,
         );
 
-        $form = $this->createForm(TransferMoneyFormType::class, null, [
+        // Pre-populate DTO with fromAccountId if provided in URL
+        $dto = new TransferMoneyDto();
+        $fromAccountId = $request->query->get('fromAccountId');
+        if ($fromAccountId !== null) {
+            $dto->fromBankAccountId = (string) $fromAccountId;
+        }
+
+        $form = $this->createForm(TransferMoneyFormType::class, $dto, [
             'accounts' => $accountsData,
         ]);
         $form->handleRequest($request);

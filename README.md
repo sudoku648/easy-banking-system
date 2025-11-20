@@ -156,6 +156,8 @@ make test suite=functional   # Run functional tests
 make test suite=presentation # Run presentation tests
 ```
 
+**Debugging Tests**: Xdebug is pre-configured in both dev and test environments. See [docs/XDEBUG.md](docs/XDEBUG.md) for IDE setup instructions.
+
 ### Code Quality
 ```bash
 make analyse        # Run static code analysis (ECS + PHPStan)
