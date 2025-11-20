@@ -20,6 +20,7 @@ DOCKER_RUN_WITH_USER_DEV=$(DOCKER_COMPOSE_DEV) run --rm -u $(USER_ID):$(GROUP_ID
 dev:
 	$(call highlight,Starting development environment)
 	CURRENT_USER=$(USER_ID):$(GROUP_ID) $(DOCKER_COMPOSE_DEV) up -d --build --force-recreate
+	@$(MAKE) dev-setup
 	@echo ""
 	@echo "Development environment is ready!"
 	@echo "Application: http://localhost:8080"
@@ -29,6 +30,10 @@ dev:
 dev-stop:
 	$(call highlight,Stopping development environment)
 	$(DOCKER_COMPOSE_DEV) down --volumes --remove-orphans
+
+dev-setup:
+	$(call highlight,Setting up db - fixtures - etc.)
+	$(DOCKER_EXEC_WITH_USER_TEST) "composer dev-setup"
 
 fixtures:
 	$(call highlight,Loading fixtures into development database)

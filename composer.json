@@ -66,6 +66,12 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "dev-setup": [
+            "bin/console doctrine:database:drop --if-exists --force --env=dev",
+            "bin/console doctrine:database:create --if-not-exists -n --env=dev",
+            "bin/console doctrine:migrations:migrate --no-interaction --env=dev",
+            "bin/console app:fixtures:load"
+        ],
         "tests-setup": [
             "bin/console doctrine:database:drop --if-exists --force --env=test",
             "bin/console doctrine:database:create --if-not-exists -n --env=test",
