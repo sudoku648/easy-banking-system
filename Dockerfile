@@ -19,27 +19,31 @@ FROM --platform=$BUILDPLATFORM php AS vendor
 
 WORKDIR /app
 
-USER www-data
+COPY composer.* /app/
+COPY symfony.lock /app/
 
-COPY --chown=www-data:www-data composer.* /app/
-COPY --chown=www-data:www-data symfony.lock /app/
+COPY ecs.php /app/
+COPY phpstan.neon /app/
+COPY phpstan-baseline.neon /app/
+COPY phpunit.dist.xml /app/
 
-COPY --chown=www-data:www-data ecs.php /app/
-COPY --chown=www-data:www-data phpstan.neon /app/
-COPY --chown=www-data:www-data phpstan-baseline.neon /app/
-COPY --chown=www-data:www-data phpunit.dist.xml /app/
-
-COPY --chown=www-data:www-data migrations /app/migrations
-COPY --chown=www-data:www-data bin /app/bin/
-COPY --chown=www-data:www-data public /app/public
-COPY --chown=www-data:www-data ecs.php /app/
-COPY --chown=www-data:www-data .env /app/
-COPY --chown=www-data:www-data config /app/config
-COPY --chown=www-data:www-data tests /app/tests
-COPY --chown=www-data:www-data templates /app/templates
-COPY --chown=www-data:www-data src /app/src
+COPY migrations /app/migrations
+COPY bin /app/bin/
+COPY public /app/public
+COPY ecs.php /app/
+COPY .env /app/
+COPY config /app/config
+COPY tests /app/tests
+COPY templates /app/templates
+COPY src /app/src
 
 RUN composer install --optimize-autoloader --no-scripts
+
+RUN chown -R www-data:www-data /app && \
+    mkdir -p /app/var/cache /app/var/log && \
+    chmod -R 777 /app/var && \
+    touch /app/.phpunit.result.cache && \
+    chmod 666 /app/.phpunit.result.cache
 
 EXPOSE 80
 
@@ -54,9 +58,12 @@ COPY --chown=www-data:www-data .env.test /app/
 
 FROM --platform=$BUILDPLATFORM php AS dev
 
+USER www-data
 WORKDIR /app
 
-USER root
+COPY --chown=www-data:www-data --from=vendor /app /app/
+
+COPY --chown=www-data:www-data .env.dev /app/
 
 FROM --platform=$BUILDPLATFORM php AS production
 

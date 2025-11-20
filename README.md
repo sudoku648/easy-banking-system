@@ -77,35 +77,44 @@ The **Easy Banking System** is designed to streamline banking operations by prov
    cd easy-banking-system
    ```
 
-2. **Create environment configuration**
+2. **Start the development environment**
    ```bash
-   cp docker-compose.override.yml.dist docker-compose.override.yml
-   ```
-
-3. **Start the application**
-   ```bash
-   make start
+   make dev
    ```
    
    This command will:
-   - Build and start Docker containers
-   - Install Composer dependencies
-   - Set up the database
+   - Build and start Docker containers (nginx, app, postgres_dev)
+   - Set up the development environment
+   
+   The development environment includes:
+   - **Application**: http://localhost:8080
+   - **Database**: localhost:54322 (postgres/postgres)
+
+3. **For testing environment**
+   ```bash
+   make start
+   ```
 
 ### Running the Application
 
-The application runs in Docker containers:
-- **PHP Application**: `easy-banking-service-ebs`
-- **PostgreSQL Database**: `postgres:16-alpine`
-- **Nginx server**: `nginx:alpine`
+#### Development Environment (`make dev`)
+The development environment runs in separate Docker containers:
+- **PHP Application**: `easy-banking-service-ebs` (with xdebug, hot-reload)
+- **PostgreSQL Database**: `easy-banking-service-postgres-dev` (ebsdatabase_dev)
+- **Nginx Server**: `easy-banking-service-nginx`
 
-Access the application at: `http://localhost` (port configured in docker-compose.override.yml)
+Access the application at: **http://localhost:8080**
+
+#### Test Environment (`make start`)
+The test environment uses minimal containers:
+- **PHP Application**: `easy-banking-service-ebs-test`
+- **PostgreSQL Database**: `easy-banking-service-postgres-test` (ebsdatabase_test)
 
 ### Creating an Employee Account
 
-To create an employee account, use the CLI command:
+To create an employee account in development, use the CLI command:
 ```bash
-docker compose exec ebs php bin/console app:create-employee "First Name" "Last Name" "password"
+docker compose -f docker-compose.dev.yaml exec ebs php bin/console app:create-employee "First Name" "Last Name" "password"
 ```
 
 ## Available Scripts
@@ -114,23 +123,26 @@ The project uses a Makefile for common tasks:
 
 ### Development
 ```bash
-make start          # Start Docker containers and set up the project
-make stop           # Stop Docker containers and clean up volumes
-make vendor         # Install Composer dependencies
-```
-
-### Code Quality
-```bash
-make analyse        # Run static code analysis (ECS + PHPStan)
+make dev            # Start development environment (nginx + app + postgres_dev)
+make dev-stop       # Stop development environment
 ```
 
 ### Testing
 ```bash
+make start                   # Start test environment (app + postgres_test)
+make stop                    # Stop test environment
+make vendor                  # Install Composer dependencies
+make setup                   # Setup test database
 make test                    # Run all test suites
 make test suite=unit         # Run unit tests
 make test suite=integration  # Run integration tests
 make test suite=functional   # Run functional tests
 make test suite=presentation # Run presentation tests
+```
+
+### Code Quality
+```bash
+make analyse        # Run static code analysis (ECS + PHPStan)
 ```
 
 ### Direct Composer Scripts
