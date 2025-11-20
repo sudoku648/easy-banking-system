@@ -30,6 +30,10 @@ services:
         resource: '../src/Transaction/Application/Command/*Handler.php'
         tags: [messenger.message_handler]
 
+    App\Transaction\Application\EventHandler\:
+        resource: '../src/Transaction/Application/EventHandler/*Handler.php'
+        tags: [messenger.message_handler]
+
     App\UserManagement\Application\Command\:
         resource: '../src/UserManagement/Application/Command/*Handler.php'
         tags: [messenger.message_handler]

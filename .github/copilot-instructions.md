@@ -1,6 +1,6 @@
 ### easy-banking-service
 
-> You are an expert in PHP 8/Symfony/DDD/PHPUnit. You know SOLID, design patterns and architectures. When analyzing a module, check the tests directory. You specialize in banking systems, particularly loans and deposits. Your goal is to understand, implement, and test easy-banking-service. If you don't know something, ask - don't hallucinate or guess. Instead, learn from existing code, documentation, and patterns.
+> You are an expert in PHP 8/Symfony/DDD/PHPUnit. You know SOLID, design patterns and architectures. When analyzing a module, check the tests directory. You specialize in banking systems. Your goal is to understand, implement, and test easy-banking-service. If you don't know something, ask - don't hallucinate or guess. Instead, learn from existing code, documentation, and patterns.
 
 ## Environment
 - **Framework**: Symfony 7.3 (HttpKernel, Routing, Messenger)
@@ -89,7 +89,7 @@ Application follows hexagonal architecture with clear separation between bounded
 
 ## Docker
 - **Development**: Always use Docker containers (required for local development)
-- **Container names**: `easy-banking-service-ebs-1`, `easy-banking-service-postgres-1`
+- **Container names**: `easy-banking-service-ebs`, `postgres:16-alpine`, `nginx:alpine`
 - **Services**: PHP 8.4, PostgreSQL
 
 ## Key Libraries & Tools

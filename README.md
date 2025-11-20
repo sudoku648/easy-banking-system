@@ -95,8 +95,9 @@ The **Easy Banking System** is designed to streamline banking operations by prov
 ### Running the Application
 
 The application runs in Docker containers:
-- **PHP Application**: `easy-banking-service-ebs-1`
-- **PostgreSQL Database**: `easy-banking-service-postgres-1`
+- **PHP Application**: `easy-banking-service-ebs`
+- **PostgreSQL Database**: `postgres:16-alpine`
+- **Nginx server**: `nginx:alpine`
 
 Access the application at: `http://localhost` (port configured in docker-compose.override.yml)
 
