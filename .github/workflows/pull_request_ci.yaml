@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.head_ref || github.run_id }}
       cancel-in-progress: true

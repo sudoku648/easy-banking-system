@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Transaction\Infrastructure\Fixtures;
 
-use App\Shared\Infrastructure\Fixtures\AbstractFixture;
 use App\Shared\Domain\ValueObject\Currency;
+use App\Shared\Infrastructure\Fixtures\AbstractFixture;
 
 final class TransactionFixture extends AbstractFixture
 {
@@ -18,6 +18,7 @@ final class TransactionFixture extends AbstractFixture
         echo "Loading transactions...\n";
 
         // Get all active bank accounts
+        /** @var array<int, array{id: string, balance: int, currency: string}> */
         $accounts = $this->connection->fetchAllAssociative(
             'SELECT id, balance, currency FROM bank_account WHERE is_active = true ORDER BY id',
         );

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\BankAccount\Infrastructure\Fixtures;
 
-use App\Shared\Infrastructure\Fixtures\AbstractFixture;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Iban;
+use App\Shared\Infrastructure\Fixtures\AbstractFixture;
 
 final class BankAccountFixture extends AbstractFixture
 {
-    private const string COUNTRY_CODE = 'PL';
     private const string BANK_CODE = '10201026';
     private const int MIN_ACCOUNTS_PER_CUSTOMER = 1;
     private const int MAX_ACCOUNTS_PER_CUSTOMER = 3;
@@ -39,6 +38,7 @@ final class BankAccountFixture extends AbstractFixture
             );
 
             for ($i = 0; $i < $accountsCount; $i++) {
+                /** @var Currency $currency */
                 $currency = $this->faker->randomElement([Currency::PLN, Currency::EUR]);
                 $balance = $this->faker->numberBetween(0, 100000) * 100; // 0 to 100,000 in major units
 
