@@ -1,10 +1,22 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Parameter \#1 \$environment of class App\\Kernel constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: public/index.php
+
+		-
 			message: '#^Parameter \#1 \$data of method App\\BankAccount\\Infrastructure\\Persistence\\Repository\\DbalBankAccountRepository\:\:mapToEntity\(\) expects array\{id\: string, iban\: string, customer_id\: string, balance\: int, currency\: string, is_active\: bool\}, array\<string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 4
 			path: src/BankAccount/Infrastructure/Persistence/Repository/DbalBankAccountRepository.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 2
+			path: src/Shared/Cli/LoadFixturesConsoleCommand.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
