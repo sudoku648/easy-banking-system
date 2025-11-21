@@ -22,33 +22,33 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build and start docker-compose stack
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} up -d --build --force-recreate
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} up -d --build --force-recreate
 
       - name: ECS
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs composer run-script ecs:check
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs composer run-script ecs:check
 
       - name: PHPSTAN
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs composer run-script phpstan
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs composer run-script phpstan
 
       - name: PHPUNIT-UNIT
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=unit
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=unit
 
       - name: MIGRATIONS
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs bin/console doctrine:migrations:migrate --no-interaction --env=test
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs bin/console doctrine:migrations:migrate --no-interaction --env=test
 
       - name: PHPUNIT-FUNCTIONAL
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=functional
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=functional
 
       - name: PHPUNIT-INTEGRATION
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=integration
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=integration
 
       - name: PHPUNIT-PRESENTATION
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=presentation
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=presentation
 
       - name: Stop Containers
         if: always()
-        run: docker-compose -p ${{ env.COMPOSE_PROJECT_NAME }} down --volumes --remove-orphans
+        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} down --volumes --remove-orphans
 
       - name: Remove Volumes
         if: always()
-        run: docker-compose rm -v
+        run: docker compose rm -v
