@@ -1,3 +1,6 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 10
     paths:
@@ -5,4 +8,3 @@ parameters:
         - config/
         - public/
         - src/
-        - tests/
