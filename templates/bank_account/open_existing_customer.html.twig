@@ -19,7 +19,7 @@
                 {{ form_label(form.customerId) }}
                 {{ form_widget(form.customerId, {'attr': {'class': 'form-select'}}) }}
                 {{ form_errors(form.customerId) }}
-                <small class="form-text text-muted">Select the customer who wants to open a new account</small>
+                <small class="form-text text-muted">{{ 'bank_account.help_select_customer'|trans({}, 'bank_account') }}</small>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
                 {{ form_label(form.currency) }}
                 {{ form_widget(form.currency, {'attr': {'class': 'form-select'}}) }}
                 {{ form_errors(form.currency) }}
-                <small class="form-text text-muted">Select the currency for the new bank account</small>
+                <small class="form-text text-muted">{{ 'bank_account.help_select_currency'|trans({}, 'bank_account') }}</small>
             </div>
         </div>
     {% endblock %}

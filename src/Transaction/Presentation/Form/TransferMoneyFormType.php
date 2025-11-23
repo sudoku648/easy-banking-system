@@ -28,18 +28,21 @@ final class TransferMoneyFormType extends AbstractType
 
         $builder
             ->add('fromBankAccountId', ChoiceType::class, [
-                'label' => 'From Account',
+                'label' => 'transaction.transfer',
                 'choices' => $choices,
-                'placeholder' => '-- Select source account --',
+                'placeholder' => 'transaction.placeholder_select_source_account',
+                'translation_domain' => 'transaction',
             ])
             ->add('toIban', TextType::class, [
-                'label' => 'To IBAN',
-                'attr' => ['placeholder' => 'PL12345678901234567890123456'],
+                'label' => 'transaction.transfer',
+                'attr' => ['placeholder' => 'transaction.placeholder_to_iban'],
+                'translation_domain' => 'transaction',
             ])
             ->add('amount', NumberType::class, [
-                'label' => 'Amount',
+                'label' => 'transaction.amount',
                 'scale' => 2,
-                'attr' => ['placeholder' => '0.00', 'step' => '0.01'],
+                'attr' => ['placeholder' => 'transaction.placeholder_amount', 'step' => '0.01'],
+                'translation_domain' => 'transaction',
             ]);
     }
 

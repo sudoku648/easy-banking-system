@@ -25,7 +25,7 @@
                 {{ form_label(form.bankAccountId) }}
                 {{ form_widget(form.bankAccountId, {'attr': {'class': 'form-select'}}) }}
                 {{ form_errors(form.bankAccountId) }}
-                <small class="form-text text-muted">Select the bank account to close. The IBAN and current balance are shown.</small>
+                <small class="form-text text-muted">{{ 'bank_account.help_select_account_to_close'|trans({}, 'bank_account') }}</small>
             </div>
         </div>
     {% endblock %}

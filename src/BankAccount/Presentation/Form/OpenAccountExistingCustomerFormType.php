@@ -29,16 +29,18 @@ final class OpenAccountExistingCustomerFormType extends AbstractType
 
         $builder
             ->add('customerId', ChoiceType::class, [
-                'label' => 'Customer',
+                'label' => 'bank_account.select_customer',
                 'choices' => $choices,
-                'placeholder' => '-- Select customer --',
+                'placeholder' => 'bank_account.placeholder_select_customer',
+                'translation_domain' => 'bank_account',
             ])
             ->add('currency', ChoiceType::class, [
-                'label' => 'Currency',
+                'label' => 'bank_account.currency',
                 'choices' => [
                     'PLN - Polish Zloty' => 'PLN',
                     'EUR - Euro' => 'EUR',
                 ],
+                'translation_domain' => 'bank_account',
             ]);
     }
 

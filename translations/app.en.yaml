@@ -20,3 +20,5 @@ common.back: Back
 common.yes: Yes
 common.no: No
 common.account_closed: Account Closed
+common.first_name: First Name
+common.last_name: Last Name

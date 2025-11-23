@@ -9,3 +9,19 @@ bank_account.close: Close Account
 bank_account.select_customer: Select Customer
 bank_account.new_customer_info: New Customer
 bank_account.confirm_close: Are you sure you want to close this account?
+bank_account.help_select_account_to_close: Select the bank account to close. The IBAN and current balance are shown.
+bank_account.help_select_customer: Select the customer who wants to open a new account
+bank_account.help_select_currency: Select the currency for the new bank account
+bank_account.help_username: Customer will use this to login
+bank_account.help_password: Minimum 6 characters
+bank_account.help_select_currency_new: Select the currency for the bank account
+bank_account.placeholder_select_account_to_close: -- Select account to close --
+bank_account.placeholder_select_customer: -- Select customer --
+bank_account.placeholder_username: Enter username
+bank_account.placeholder_password: Enter password
+bank_account.placeholder_first_name: Enter first name
+bank_account.placeholder_last_name: Enter last name
+bank_account.first_name: First Name
+bank_account.last_name: Last Name
+bank_account.username: Username
+bank_account.password: Password

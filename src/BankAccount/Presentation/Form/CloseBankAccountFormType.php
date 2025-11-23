@@ -29,9 +29,10 @@ final class CloseBankAccountFormType extends AbstractType
 
         $builder
             ->add('bankAccountId', ChoiceType::class, [
-                'label' => 'Bank Account',
+                'label' => 'bank_account.iban',
                 'choices' => $choices,
-                'placeholder' => '-- Select account to close --',
+                'placeholder' => 'bank_account.placeholder_select_account_to_close',
+                'translation_domain' => 'bank_account',
             ]);
     }
 

@@ -28,14 +28,16 @@ final class DepositMoneyFormType extends AbstractType
 
         $builder
             ->add('bankAccountId', ChoiceType::class, [
-                'label' => 'Bank Account',
+                'label' => 'transaction.iban',
                 'choices' => $choices,
-                'placeholder' => '-- Select bank account --',
+                'placeholder' => 'transaction.placeholder_select_bank_account',
+                'translation_domain' => 'transaction',
             ])
             ->add('amount', NumberType::class, [
-                'label' => 'Amount',
+                'label' => 'transaction.amount',
                 'scale' => 2,
                 'attr' => ['placeholder' => '0.00', 'step' => '0.01'],
+                'translation_domain' => 'transaction',
             ]);
     }
 

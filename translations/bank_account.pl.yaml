@@ -9,3 +9,19 @@ bank_account.close: Zamknij konto
 bank_account.select_customer: Wybierz klienta
 bank_account.new_customer_info: Nowy klient
 bank_account.confirm_close: Czy na pewno chcesz zamknąć to konto?
+bank_account.help_select_account_to_close: Wybierz konto bankowe do zamknięcia. Pokazany jest IBAN i aktualne saldo.
+bank_account.help_select_customer: Wybierz klienta, który chce otworzyć nowe konto
+bank_account.help_select_currency: Wybierz walutę dla nowego konta bankowego
+bank_account.help_username: Klient użyje tego do logowania
+bank_account.help_password: Minimum 6 znaków
+bank_account.help_select_currency_new: Wybierz walutę dla konta bankowego
+bank_account.placeholder_select_account_to_close: -- Wybierz konto do zamknięcia --
+bank_account.placeholder_select_customer: -- Wybierz klienta --
+bank_account.placeholder_username: Wprowadź nazwę użytkownika
+bank_account.placeholder_password: Wprowadź hasło
+bank_account.placeholder_first_name: Wprowadź imię
+bank_account.placeholder_last_name: Wprowadź nazwisko
+bank_account.first_name: Imię
+bank_account.last_name: Nazwisko
+bank_account.username: Nazwa użytkownika
+bank_account.password: Hasło

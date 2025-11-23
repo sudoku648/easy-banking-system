@@ -18,27 +18,36 @@ final class OpenAccountNewCustomerFormType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'Username',
-                'attr' => ['placeholder' => 'Enter username'],
+                'label' => 'bank_account.username',
+                'label_translation_parameters' => [],
+                'attr' => ['placeholder' => 'bank_account.placeholder_username'],
+                'translation_domain' => 'bank_account',
             ])
             ->add('password', PasswordType::class, [
-                'label' => 'Password',
-                'attr' => ['placeholder' => 'Enter password'],
+                'label' => 'bank_account.password',
+                'label_translation_parameters' => [],
+                'attr' => ['placeholder' => 'bank_account.placeholder_password'],
+                'translation_domain' => 'bank_account',
             ])
             ->add('firstName', TextType::class, [
-                'label' => 'First Name',
-                'attr' => ['placeholder' => 'Enter first name'],
+                'label' => 'bank_account.first_name',
+                'label_translation_parameters' => [],
+                'attr' => ['placeholder' => 'bank_account.placeholder_first_name'],
+                'translation_domain' => 'bank_account',
             ])
             ->add('lastName', TextType::class, [
-                'label' => 'Last Name',
-                'attr' => ['placeholder' => 'Enter last name'],
+                'label' => 'bank_account.last_name',
+                'label_translation_parameters' => [],
+                'attr' => ['placeholder' => 'bank_account.placeholder_last_name'],
+                'translation_domain' => 'bank_account',
             ])
             ->add('currency', ChoiceType::class, [
-                'label' => 'Currency',
+                'label' => 'bank_account.currency',
                 'choices' => [
                     'PLN - Polish Zloty' => 'PLN',
                     'EUR - Euro' => 'EUR',
                 ],
+                'translation_domain' => 'bank_account',
             ]);
     }
 
