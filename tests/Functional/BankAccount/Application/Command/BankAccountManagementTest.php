@@ -108,13 +108,13 @@ final class BankAccountManagementTest extends ApplicationTestCase
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
 
         self::assertCount(2, $accounts);
-        
+
         // Extract currencies from accounts
         $currencies = array_map(
             fn (BankAccount $account): Currency => $account->balance->getCurrency(),
             $accounts,
         );
-        
+
         // Verify both currencies are present (order may vary)
         self::assertContains(Currency::PLN, $currencies);
         self::assertContains(Currency::EUR, $currencies);
@@ -136,7 +136,7 @@ final class BankAccountManagementTest extends ApplicationTestCase
         if ($this->isUsingInMemoryEventBus()) {
             $this->getEventBus()->clear();
         }
-        
+
         $closeCommand = new CloseBankAccountCommand($accountId->getValue());
         $closeHandler($closeCommand);
 

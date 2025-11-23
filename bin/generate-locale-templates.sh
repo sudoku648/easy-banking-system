@@ -31,17 +31,17 @@ declare -a DOMAINS=("app" "login" "dashboard" "bank_account" "transaction" "flas
 for DOMAIN in "${DOMAINS[@]}"; do
     SOURCE_FILE="$TRANSLATIONS_DIR/${DOMAIN}.en.yaml"
     TARGET_FILE="$TRANSLATIONS_DIR/${DOMAIN}.${LOCALE}.yaml"
-    
+
     if [ ! -f "$SOURCE_FILE" ]; then
         echo "Warning: Source file $SOURCE_FILE not found, skipping..."
         continue
     fi
-    
+
     # Copy English file as template and add header comment
     echo "# ${DOMAIN^} translations for locale: $LOCALE" > "$TARGET_FILE"
     echo "# TODO: Translate all values below" >> "$TARGET_FILE"
     tail -n +2 "$SOURCE_FILE" >> "$TARGET_FILE"
-    
+
     echo "✓ Created: $TARGET_FILE"
 done
 

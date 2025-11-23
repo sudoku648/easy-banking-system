@@ -15,7 +15,7 @@ final class Username extends StringValueObject
     public function __construct(string $value)
     {
         $value = trim($value);
-        
+
         Assert::notEmpty($value, 'Username cannot be empty');
         Assert::minLength($value, self::MIN_LENGTH, 'Username must be at least %2$s characters long');
         Assert::maxLength($value, self::MAX_LENGTH, 'Username cannot be longer than %2$s characters');

@@ -64,7 +64,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
     public function testDashboardDisplaysCustomerBankAccounts(): void
     {
         $customer = $this->createCustomer('customer1', 'pass123');
-        
+
         // Create a bank account for the customer
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
@@ -78,12 +78,12 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertPageNotContains('No bank accounts');
-        
+
         // Check that account details are displayed
         $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $account = $accounts[0];
-        
+
         $this->assertPageContains($account->iban->getValue());
         $this->assertPageContains('PLN');
         $this->assertPageContains('0.00'); // Initial balance
@@ -92,7 +92,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
     public function testDashboardDisplaysMultipleBankAccounts(): void
     {
         $customer = $this->createCustomer('customer1', 'pass123');
-        
+
         // Create multiple bank accounts
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
@@ -100,7 +100,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
                 currency: 'PLN',
             ),
         );
-        
+
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
                 customerId: $customer->id->getValue(),
@@ -114,7 +114,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
         $this->assertPageContains('PLN');
         $this->assertPageContains('EUR');
-        
+
         $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         foreach ($accounts as $account) {
@@ -125,7 +125,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
     public function testDashboardDisplaysAccountStatusActive(): void
     {
         $customer = $this->createCustomer('customer1', 'pass123');
-        
+
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
                 customerId: $customer->id->getValue(),
@@ -148,7 +148,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/customer/dashboard');
 
         $this->assertResponseIsSuccessful();
-        
+
         // Check that there's a link to transfer money
         $link = $crawler->selectLink('Transfer Money')->count();
         self::assertGreaterThan(0, $link, 'Expected to find "Transfer Money" link on dashboard');
@@ -162,7 +162,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/customer/dashboard');
 
         $this->assertResponseIsSuccessful();
-        
+
         // Check that there's a link to view transaction history
         $link = $crawler->selectLink('View History')->count();
         self::assertGreaterThan(0, $link, 'Expected to find "View History" link on dashboard');
@@ -176,7 +176,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/customer/dashboard');
 
         $this->assertResponseIsSuccessful();
-        
+
         // Check logout link exists
         $link = $crawler->selectLink('Log Out')->count();
         self::assertGreaterThan(0, $link, 'Expected to find "Log Out" link on dashboard');

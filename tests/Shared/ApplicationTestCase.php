@@ -34,9 +34,9 @@ abstract class ApplicationTestCase extends KernelTestCase
     {
         // Detect if we're running in integration mode based on environment or test suite
         $this->useRealDatabase = $this->isIntegrationTest();
-        
+
         self::bootKernel(['environment' => 'test']);
-        
+
         // If integration mode, override container services to use real implementations
         if ($this->useRealDatabase) {
             $this->setupRealRepositories();
@@ -49,7 +49,7 @@ abstract class ApplicationTestCase extends KernelTestCase
     {
         // Clean up in-memory repositories
         $container = self::getContainer();
-        
+
         if ($this->useRealDatabase) {
             $this->cleanDatabase();
         } else {
@@ -61,7 +61,7 @@ abstract class ApplicationTestCase extends KernelTestCase
                 ExchangeRateProviderInterface::class,
                 EventBus::class,
             ];
-            
+
             foreach ($repositories as $serviceId) {
                 $service = $container->get($serviceId);
                 if (method_exists($service, 'clear')) {
@@ -69,7 +69,7 @@ abstract class ApplicationTestCase extends KernelTestCase
                 }
             }
         }
-        
+
         parent::tearDown();
     }
 
@@ -79,7 +79,7 @@ abstract class ApplicationTestCase extends KernelTestCase
         if (getenv('INTEGRATION_TESTS') === '1' || ($_SERVER['INTEGRATION_TESTS'] ?? null) === '1') {
             return true;
         }
-        
+
         // Check PHPUnit's command line arguments
         if (isset($GLOBALS['argv'])) {
             foreach ($GLOBALS['argv'] as $arg) {
@@ -88,40 +88,40 @@ abstract class ApplicationTestCase extends KernelTestCase
                 }
             }
         }
-        
+
         // Check PHPUnit configuration if available (set via environment or global state)
         if (isset($_ENV['PHPUNIT_TESTSUITE']) && $_ENV['PHPUNIT_TESTSUITE'] === 'integration') {
             return true;
         }
-        
+
         return false;
     }
 
     private function setupRealRepositories(): void
     {
         $container = self::getContainer();
-        
+
         // Override services to use real implementations
         $container->set(
             UserRepositoryInterface::class,
             $container->get(DbalUserRepository::class),
         );
-        
+
         $container->set(
             BankAccountRepositoryInterface::class,
             $container->get(DbalBankAccountRepository::class),
         );
-        
+
         $container->set(
             TransactionRepositoryInterface::class,
             $container->get(DbalTransactionRepository::class),
         );
-        
+
         $container->set(
             ExchangeRateProviderInterface::class,
             $container->get(StaticExchangeRateProvider::class),
         );
-        
+
         $container->set(
             EventBus::class,
             $container->get(SymfonyMessengerEventBus::class),
@@ -133,7 +133,7 @@ abstract class ApplicationTestCase extends KernelTestCase
         if ($this->connection === null) {
             return;
         }
-        
+
         $this->connection->executeStatement('TRUNCATE TABLE "transaction" CASCADE');
         $this->connection->executeStatement('TRUNCATE TABLE bank_account CASCADE');
         $this->connection->executeStatement('TRUNCATE TABLE "user" CASCADE');
@@ -152,7 +152,7 @@ abstract class ApplicationTestCase extends KernelTestCase
 
         $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
         $userId = new \App\UserManagement\Domain\ValueObject\UserId($customerId);
-        
+
         // Check if customer already exists
         if ($userRepository->findById($userId) !== null) {
             return;

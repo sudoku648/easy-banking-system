@@ -25,7 +25,7 @@ framework:
         transports:
             sync: 'sync://'
             async: '%env(MESSENGER_TRANSPORT_DSN)%'
-        
+
         routing:
             'App\Shared\Application\Command\AsyncCommandInterface': async
 
@@ -131,7 +131,7 @@ public function testTransferMoney(): void
         amount: 10000,
         currency: 'PLN',
     ));
-    
+
     // Can immediately assert results
     $this->assertAccountBalance($fromAccountId, 90000);
 }
@@ -164,7 +164,7 @@ Symfony Messenger provides automatic retry mechanism. Configure in `messenger.ya
 framework:
     messenger:
         failure_transport: failed
-        
+
         transports:
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
@@ -172,7 +172,7 @@ framework:
                     max_retries: 3
                     delay: 1000
                     multiplier: 2
-            
+
             failed: 'doctrine://default?queue_name=failed'
 ```
 

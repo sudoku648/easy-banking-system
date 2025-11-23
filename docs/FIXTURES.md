@@ -149,9 +149,9 @@ final class YourFixture extends AbstractFixture
     public function load(): void
     {
         echo "Loading your entities...\n";
-        
+
         // Your fixture logic here
-        
+
         echo "✓ Created X entities\n";
     }
 

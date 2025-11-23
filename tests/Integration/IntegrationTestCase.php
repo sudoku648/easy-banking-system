@@ -30,36 +30,36 @@ abstract class IntegrationTestCase extends KernelTestCase
     protected function setUp(): void
     {
         self::bootKernel(['environment' => 'test']);
-        
+
         // Override services to use real implementations
         $container = self::getContainer();
-        
+
         // Get real repository implementations
         $container->set(
             UserRepositoryInterface::class,
             $container->get(DbalUserRepository::class),
         );
-        
+
         $container->set(
             BankAccountRepositoryInterface::class,
             $container->get(DbalBankAccountRepository::class),
         );
-        
+
         $container->set(
             TransactionRepositoryInterface::class,
             $container->get(DbalTransactionRepository::class),
         );
-        
+
         $container->set(
             ExchangeRateProviderInterface::class,
             $container->get(StaticExchangeRateProvider::class),
         );
-        
+
         $container->set(
             EventBus::class,
             $container->get(SymfonyMessengerEventBus::class),
         );
-        
+
         $this->connection = $container->get(Connection::class);
         $this->cleanDatabase();
     }

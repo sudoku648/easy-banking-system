@@ -58,7 +58,7 @@ final class IbanTest extends TestCase
     public function testGeneratePolishIbanCreatesValidIban(): void
     {
         $accountNumber = '10901014000007121981287400';
-        
+
         $iban = Iban::generatePolishIban($accountNumber);
 
         self::assertSame('PL', $iban->getCountryCode());
@@ -69,7 +69,7 @@ final class IbanTest extends TestCase
     public function testGeneratePolishIbanCalculatesCorrectCheckDigits(): void
     {
         $accountNumber = '10901014000007121981287400';
-        
+
         $iban = Iban::generatePolishIban($accountNumber);
 
         // Verify the generated IBAN is valid by checking the full value

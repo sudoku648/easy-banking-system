@@ -83,7 +83,7 @@ final class SecurityController extends AbstractController
 
         // Redirect back to the page user came from, or to home
         $referer = $request->headers->get('referer');
-        
+
         if ($referer && str_contains($referer, '/login')) {
             return $this->redirectToRoute('login', ['_locale' => $locale]);
         }

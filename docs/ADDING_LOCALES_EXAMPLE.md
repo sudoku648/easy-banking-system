@@ -131,7 +131,7 @@ final class Version20251120220000 extends AbstractMigration
     {
         // Drop existing constraint
         $this->addSql('ALTER TABLE "user" DROP CONSTRAINT IF EXISTS user_locale_check');
-        
+
         // Add new constraint with German
         $this->addSql('
             ALTER TABLE "user" 
@@ -144,7 +144,7 @@ final class Version20251120220000 extends AbstractMigration
     {
         // Revert to previous constraint (without German)
         $this->addSql('ALTER TABLE "user" DROP CONSTRAINT user_locale_check');
-        
+
         $this->addSql('
             ALTER TABLE "user" 
             ADD CONSTRAINT user_locale_check 

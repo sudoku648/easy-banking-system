@@ -19,7 +19,7 @@ final class OpenAccountExistingCustomerFormType extends AbstractType
     {
         /** @var array<int, array{id: string, username: string, firstName: string, lastName: string, fullName: string, isActive: bool}> $customers */
         $customers = $options['customers'] ?? [];
-        
+
         // Build choices array with labels as keys and IDs as values
         $choices = [];
         foreach ($customers as $customer) {

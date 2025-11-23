@@ -16,7 +16,7 @@ final class SecurityControllerTest extends PresentationTestCase
         $this->assertPageTitleMatches('Log In');
         $this->assertPageContains('Easy Banking System');
         $this->assertPageContains('Sign In');
-        
+
         // Check form fields exist
         $this->assertFormFieldExists($crawler, '_username');
         $this->assertFormFieldExists($crawler, '_password');
@@ -120,7 +120,7 @@ final class SecurityControllerTest extends PresentationTestCase
         $this->client->request('GET', '/logout');
 
         $this->assertRedirectsToRoute('login_redirect');
-        
+
         // Verify user is actually logged out by trying to access protected page
         $this->client->request('GET', '/customer/dashboard');
         $this->assertRedirectsToRoute('login_redirect');

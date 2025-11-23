@@ -14,7 +14,7 @@ final class Iban extends StringValueObject
     public function __construct(string $value)
     {
         $value = strtoupper(str_replace(' ', '', $value));
-        
+
         Assert::regex($value, self::IBAN_PATTERN, 'Invalid IBAN format');
         Assert::minLength($value, 15, 'IBAN is too short');
         Assert::maxLength($value, 34, 'IBAN is too long');

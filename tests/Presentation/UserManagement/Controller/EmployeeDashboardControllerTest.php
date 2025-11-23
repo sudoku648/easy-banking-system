@@ -45,7 +45,7 @@ final class EmployeeDashboardControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/employee/dashboard');
 
         $this->assertResponseIsSuccessful();
-        
+
         $link = $crawler->selectLink('New Customer')->count();
         self::assertGreaterThan(0, $link, 'Expected to find "New Customer" link on dashboard');
     }
@@ -58,7 +58,7 @@ final class EmployeeDashboardControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/employee/dashboard');
 
         $this->assertResponseIsSuccessful();
-        
+
         $link = $crawler->selectLink('Select Customer')->count();
         self::assertGreaterThan(0, $link, 'Expected to find "Select Customer" link on dashboard');
     }
@@ -71,7 +71,7 @@ final class EmployeeDashboardControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/employee/dashboard');
 
         $this->assertResponseIsSuccessful();
-        
+
         $link = $crawler->selectLink('Close Account')->count();
         self::assertGreaterThan(0, $link, 'Expected to find "Close Account" link on dashboard');
     }
@@ -84,7 +84,7 @@ final class EmployeeDashboardControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/employee/dashboard');
 
         $this->assertResponseIsSuccessful();
-        
+
         $link = $crawler->selectLink('Log Out')->count();
         self::assertGreaterThan(0, $link, 'Expected to find "Log Out" link on dashboard');
     }

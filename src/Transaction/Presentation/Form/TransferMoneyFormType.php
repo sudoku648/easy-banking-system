@@ -18,7 +18,7 @@ final class TransferMoneyFormType extends AbstractType
     {
         /** @var array<int, array{id: string, iban: string, balance: int, currency: string}> $accountsData */
         $accountsData = $options['accounts'] ?? [];
-        
+
         // Build choices array with labels as keys and IDs as values
         $choices = [];
         foreach ($accountsData as $account) {

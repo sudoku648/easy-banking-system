@@ -61,7 +61,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/employee/bank-account/open/new-customer');
 
         $this->assertResponseIsSuccessful();
-        
+
         // Check form fields exist
         $form = $crawler->selectButton('Open New Account')->form();
         self::assertNotNull($form->get('open_account_new_customer_form[username]'));
@@ -137,7 +137,7 @@ final class BankAccountControllerTest extends PresentationTestCase
     public function testOpenNewCustomerAccountWithDuplicateUsernameShowsError(): void
     {
         $this->createCustomer('existinguser', 'pass123');
-        
+
         $employee = $this->createEmployee('employee1', 'pass123');
         $this->loginAsEmployeeUser($employee);
 
@@ -151,7 +151,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         ]);
 
         $this->client->submit($form);
-        
+
         // The duplicate username should cause an error
         // Either redirected with flash message or form re-rendered
         if ($this->client->getResponse()->isRedirect()) {
@@ -175,7 +175,7 @@ final class BankAccountControllerTest extends PresentationTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertPageContains('Open Account for Existing Customer');
-        
+
         $form = $crawler->selectButton('Open New Account')->form();
         self::assertNotNull($form->get('open_account_existing_customer_form[customerId]'));
         self::assertNotNull($form->get('open_account_existing_customer_form[currency]'));
@@ -184,7 +184,7 @@ final class BankAccountControllerTest extends PresentationTestCase
     public function testOpenExistingCustomerAccountSuccessfully(): void
     {
         $customer = $this->createCustomer('customer1', 'pass123');
-        
+
         $employee = $this->createEmployee('employee1', 'pass123');
         $this->loginAsEmployeeUser($employee);
 
@@ -199,7 +199,7 @@ final class BankAccountControllerTest extends PresentationTestCase
 
         $this->assertOnRoute('employee_dashboard');
         $this->assertHasFlashMessage('success', 'Bank account opened successfully');
-        
+
         // Verify account was created
         $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
@@ -211,7 +211,7 @@ final class BankAccountControllerTest extends PresentationTestCase
     {
         $customer1 = $this->createCustomer('customer1', 'pass123', 'John', 'Doe');
         $customer2 = $this->createCustomer('customer2', 'pass123', 'Jane', 'Smith');
-        
+
         $employee = $this->createEmployee('employee1', 'pass123');
         $this->loginAsEmployeeUser($employee);
 
@@ -233,7 +233,7 @@ final class BankAccountControllerTest extends PresentationTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertPageContains('Close Account');
-        
+
         $form = $crawler->selectButton('Close Account')->form();
         self::assertNotNull($form->get('close_bank_account_form[bankAccountId]'));
     }
@@ -241,7 +241,7 @@ final class BankAccountControllerTest extends PresentationTestCase
     public function testCloseAccountSuccessfully(): void
     {
         $customer = $this->createCustomer('customer1', 'pass123');
-        
+
         // Create an account to close
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
@@ -249,11 +249,11 @@ final class BankAccountControllerTest extends PresentationTestCase
                 currency: 'PLN',
             ),
         );
-        
+
         $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $accountToClose = $accounts[0];
-        
+
         $employee = $this->createEmployee('employee1', 'pass123');
         $this->loginAsEmployeeUser($employee);
 
@@ -267,7 +267,7 @@ final class BankAccountControllerTest extends PresentationTestCase
 
         $this->assertOnRoute('employee_dashboard');
         $this->assertHasFlashMessage('success', 'Bank account closed successfully');
-        
+
         // Verify account is closed
         $closedAccount = $this->bankAccountRepository->findById($accountToClose->id);
         self::assertNotNull($closedAccount);
@@ -277,7 +277,7 @@ final class BankAccountControllerTest extends PresentationTestCase
     public function testCloseAccountFormShowsOnlyActiveAccounts(): void
     {
         $customer = $this->createCustomer('customer1', 'pass123');
-        
+
         // Create an active account
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
@@ -285,14 +285,14 @@ final class BankAccountControllerTest extends PresentationTestCase
                 currency: 'PLN',
             ),
         );
-        
+
         $employee = $this->createEmployee('employee1', 'pass123');
         $this->loginAsEmployeeUser($employee);
 
         $this->client->request('GET', '/employee/bank-account/close');
 
         $this->assertResponseIsSuccessful();
-        
+
         // Should show the active account's IBAN
         $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);

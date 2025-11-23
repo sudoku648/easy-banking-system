@@ -44,7 +44,7 @@ abstract class PresentationTestCase extends WebTestCase
     {
         // Clean up in-memory repositories after each test
         $container = $this->client->getContainer();
-        
+
         $repositories = [
             UserRepositoryInterface::class,
             BankAccountRepositoryInterface::class,
@@ -52,14 +52,14 @@ abstract class PresentationTestCase extends WebTestCase
             ExchangeRateProviderInterface::class,
             EventBus::class,
         ];
-        
+
         foreach ($repositories as $serviceId) {
             $service = $container->get($serviceId);
             if (method_exists($service, 'clear')) {
                 $service->clear();
             }
         }
-        
+
         parent::tearDown();
     }
 
@@ -75,7 +75,7 @@ abstract class PresentationTestCase extends WebTestCase
         $container = $this->client->getContainer();
         $hasher = $container->get(UserPasswordHasherInterface::class);
         $repository = $container->get(UserRepositoryInterface::class);
-        
+
         $customer = Customer::create(
             id: UserId::generate(),
             username: new Username($username),
@@ -89,7 +89,7 @@ abstract class PresentationTestCase extends WebTestCase
             new \App\UserManagement\Infrastructure\Security\SecurityUser($customer),
             $password,
         );
-        
+
         $customer = Customer::create(
             id: $customer->id,
             username: $customer->username,
@@ -116,7 +116,7 @@ abstract class PresentationTestCase extends WebTestCase
         $container = $this->client->getContainer();
         $hasher = $container->get(UserPasswordHasherInterface::class);
         $repository = $container->get(UserRepositoryInterface::class);
-        
+
         $employee = Employee::create(
             id: UserId::generate(),
             username: new Username($username),
@@ -130,7 +130,7 @@ abstract class PresentationTestCase extends WebTestCase
             new \App\UserManagement\Infrastructure\Security\SecurityUser($employee),
             $password,
         );
-        
+
         $employee = Employee::create(
             id: $employee->id,
             username: $employee->username,
@@ -151,14 +151,14 @@ abstract class PresentationTestCase extends WebTestCase
     protected function loginAs(string $username, string $password): Crawler
     {
         $crawler = $this->client->request('GET', '/en/login');
-        
+
         $form = $crawler->selectButton('Sign In')->form([
             '_username' => $username,
             '_password' => $password,
         ]);
 
         $this->client->submit($form);
-        
+
         // Follow redirects if any
         if ($this->client->getResponse()->isRedirect()) {
             $this->client->followRedirect();
@@ -208,7 +208,7 @@ abstract class PresentationTestCase extends WebTestCase
     {
         $crawler = $this->client->getCrawler();
         $flashMessages = $crawler->filter(".alert.alert-{$type}");
-        
+
         self::assertGreaterThan(
             0,
             $flashMessages->count(),
@@ -232,11 +232,11 @@ abstract class PresentationTestCase extends WebTestCase
     {
         $currentPath = $this->client->getRequest()->getPathInfo();
         $router = static::getContainer()->get('router');
-        
+
         // Try to get the route to check if it has _locale placeholder
         $routes = $router->getRouteCollection();
         $route = $routes->get($routeName);
-        
+
         // If no locale parameter provided, route has _locale placeholder, and request has _locale, use it
         if (
             !isset($parameters['_locale'])
@@ -246,9 +246,9 @@ abstract class PresentationTestCase extends WebTestCase
         ) {
             $parameters['_locale'] = $this->client->getRequest()->attributes->get('_locale');
         }
-        
+
         $expectedPath = $router->generate($routeName, $parameters);
-        
+
         self::assertSame(
             $expectedPath,
             $currentPath,
@@ -268,14 +268,14 @@ abstract class PresentationTestCase extends WebTestCase
 
         $router = static::getContainer()->get('router');
         $redirectUrl = $this->client->getResponse()->headers->get('Location');
-        
+
         // Extract path from redirect URL (remove scheme, host, query, fragment)
         $redirectPath = parse_url($redirectUrl, PHP_URL_PATH);
-        
+
         // Try to get the route to check if it has _locale placeholder
         $routes = $router->getRouteCollection();
         $route = $routes->get($routeName);
-        
+
         // If route has _locale placeholder but actual redirect doesn't contain locale in path
         // (e.g., redirecting to /login instead of /en/login), be flexible
         if ($route !== null && str_contains($route->getPath(), '{_locale}')) {
@@ -291,7 +291,7 @@ abstract class PresentationTestCase extends WebTestCase
                 );
                 return;
             }
-            
+
             // Has locale in path, try to extract it or use from session/request
             if (!isset($parameters['_locale'])) {
                 if ($this->client->getRequest()->getSession()->has('_locale')) {
@@ -301,9 +301,9 @@ abstract class PresentationTestCase extends WebTestCase
                 }
             }
         }
-        
+
         $expectedPath = $router->generate($routeName, $parameters);
-        
+
         self::assertStringEndsWith(
             $expectedPath,
             $redirectUrl,
@@ -335,7 +335,7 @@ abstract class PresentationTestCase extends WebTestCase
     protected function assertFormFieldExists(Crawler $crawler, string $fieldName, ?string $expectedValue = null): void
     {
         $field = $crawler->filter("[name=\"{$fieldName}\"]");
-        
+
         self::assertGreaterThan(
             0,
             $field->count(),
