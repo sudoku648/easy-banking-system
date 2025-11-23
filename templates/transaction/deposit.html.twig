@@ -3,30 +3,32 @@
 {% block title %}{{ 'transaction.deposit'|trans({}, 'transaction') }} - {{ 'app.name'|trans({}, 'app') }}{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1 class="mb-4">{{ 'transaction.deposit'|trans({}, 'transaction') }}</h1>
-
-    {{ form_start(form) }}
-        <div class="card">
-            <div class="card-body">
-                <div class="mb-3">
-                    {{ form_label(form.bankAccountId, 'bank_account.iban'|trans({}, 'bank_account')) }}
-                    {{ form_widget(form.bankAccountId, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.bankAccountId) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_label(form.amount, 'transaction.amount'|trans({}, 'transaction')) }}
-                    {{ form_widget(form.amount, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.amount) }}
-                </div>
-
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="{{ path('employee_dashboard') }}" class="btn btn-secondary">{{ 'common.cancel'|trans({}, 'app') }}</a>
-                    <button type="submit" class="btn btn-primary">{{ 'transaction.deposit'|trans({}, 'transaction') }}</button>
-                </div>
-            </div>
+{% embed '_partials/form_card.html.twig' with {
+    title: 'transaction.deposit'|trans({}, 'transaction'),
+    icon: 'cash-coin',
+    color: 'warning',
+    cancelRoute: 'employee_dashboard',
+    submitText: 'transaction.deposit'|trans({}, 'transaction'),
+    form: form
+} %}
+    {% block alert %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> {{ 'transaction.cash_deposit'|trans({}, 'transaction') }}
         </div>
-    {{ form_end(form) }}
-</div>
+    {% endblock %}
+
+    {% block form_fields %}
+        <div class="mb-3">
+            {{ form_row(form.bankAccountId, {
+                label: 'bank_account.iban'|trans({}, 'bank_account')
+            }) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_row(form.amount, {
+                label: 'transaction.amount'|trans({}, 'transaction')
+            }) }}
+        </div>
+    {% endblock %}
+{% endembed %}
 {% endblock %}

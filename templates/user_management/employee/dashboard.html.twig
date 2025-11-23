@@ -3,66 +3,58 @@
 {% block title %}{{ 'dashboard.employee_title'|trans({}, 'dashboard') }} - {{ 'app.name'|trans({}, 'app') }}{% endblock %}
 
 {% block body %}
-<div class="row">
-    <div class="col-12">
-        <h1 class="mb-4">
-            <i class="bi bi-speedometer2"></i> {{ 'dashboard.employee_title'|trans({}, 'dashboard') }}
-        </h1>
-        <p class="lead">{{ 'dashboard.welcome_message'|trans({'%name%': app.user.user.fullName}, 'dashboard') }}</p>
-    </div>
-</div>
+{% include '_partials/dashboard_header.html.twig' with {
+    title: 'dashboard.employee_title'|trans({}, 'dashboard'),
+    userName: app.user.user.fullName
+} %}
 
 <div class="row mt-4">
     <div class="col-md-4 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <i class="bi bi-person-plus display-4 text-primary mb-3"></i>
-                <h5 class="card-title">{{ 'bank_account.open_new'|trans({}, 'bank_account') }}</h5>
-                <p class="card-text">{{ 'bank_account.open_for_new_customer'|trans({}, 'bank_account') }}</p>
-                <a href="{{ path('bank_account_open_new_customer') }}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> {{ 'bank_account.new_customer_info'|trans({}, 'bank_account') }}
-                </a>
-            </div>
-        </div>
+        {% include '_partials/dashboard_card.html.twig' with {
+            icon: 'person-plus',
+            iconColor: 'primary',
+            title: 'bank_account.open_new'|trans({}, 'bank_account'),
+            description: 'bank_account.open_for_new_customer'|trans({}, 'bank_account'),
+            buttonText: 'bank_account.new_customer_info'|trans({}, 'bank_account'),
+            buttonColor: 'primary',
+            route: 'bank_account_open_new_customer'
+        } %}
     </div>
 
     <div class="col-md-4 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <i class="bi bi-person-check display-4 text-success mb-3"></i>
-                <h5 class="card-title">{{ 'bank_account.open_for_existing_customer'|trans({}, 'bank_account') }}</h5>
-                <p class="card-text">{{ 'bank_account.open_for_existing_customer'|trans({}, 'bank_account') }}</p>
-                <a href="{{ path('bank_account_open_existing_customer') }}" class="btn btn-success">
-                    <i class="bi bi-plus-circle"></i> {{ 'bank_account.select_customer'|trans({}, 'bank_account') }}
-                </a>
-            </div>
-        </div>
+        {% include '_partials/dashboard_card.html.twig' with {
+            icon: 'person-check',
+            iconColor: 'success',
+            title: 'bank_account.open_for_existing_customer'|trans({}, 'bank_account'),
+            description: 'bank_account.open_for_existing_customer'|trans({}, 'bank_account'),
+            buttonText: 'bank_account.select_customer'|trans({}, 'bank_account'),
+            buttonColor: 'success',
+            route: 'bank_account_open_existing_customer'
+        } %}
     </div>
 
     <div class="col-md-4 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <i class="bi bi-x-circle display-4 text-danger mb-3"></i>
-                <h5 class="card-title">{{ 'bank_account.close'|trans({}, 'bank_account') }}</h5>
-                <p class="card-text">{{ 'bank_account.close'|trans({}, 'bank_account') }}</p>
-                <a href="{{ path('bank_account_close') }}" class="btn btn-danger">
-                    <i class="bi bi-x-circle"></i> {{ 'bank_account.close'|trans({}, 'bank_account') }}
-                </a>
-            </div>
-        </div>
+        {% include '_partials/dashboard_card.html.twig' with {
+            icon: 'x-circle',
+            iconColor: 'danger',
+            title: 'bank_account.close'|trans({}, 'bank_account'),
+            description: 'bank_account.close'|trans({}, 'bank_account'),
+            buttonText: 'bank_account.close'|trans({}, 'bank_account'),
+            buttonColor: 'danger',
+            route: 'bank_account_close'
+        } %}
     </div>
 
     <div class="col-md-4 mb-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <i class="bi bi-cash-coin display-4 text-warning mb-3"></i>
-                <h5 class="card-title">{{ 'transaction.deposit'|trans({}, 'transaction') }}</h5>
-                <p class="card-text">{{ 'transaction.cash_deposit'|trans({}, 'transaction') }}</p>
-                <a href="{{ path('employee_transaction_deposit') }}" class="btn btn-warning">
-                    <i class="bi bi-cash-stack"></i> {{ 'transaction.deposit'|trans({}, 'transaction') }}
-                </a>
-            </div>
-        </div>
+        {% include '_partials/dashboard_card.html.twig' with {
+            icon: 'cash-coin',
+            iconColor: 'warning',
+            title: 'transaction.deposit'|trans({}, 'transaction'),
+            description: 'transaction.cash_deposit'|trans({}, 'transaction'),
+            buttonText: 'transaction.deposit'|trans({}, 'transaction'),
+            buttonColor: 'warning',
+            route: 'employee_transaction_deposit'
+        } %}
     </div>
 </div>
 
