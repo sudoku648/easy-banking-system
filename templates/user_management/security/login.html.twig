@@ -1,18 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Login - Easy Banking System{% endblock %}
+{% block title %}{{ 'login.title'|trans({}, 'login') }} - {{ 'app.name'|trans({}, 'app') }}{% endblock %}
 
 {% block body %}
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
         <div class="card shadow-sm mt-5">
             <div class="card-body p-5">
+                {# Language Switcher #}
+                <div class="text-end mb-3">
+                    <div class="btn-group btn-group-sm" role="group">
+                        {% for locale in available_locales() %}
+                            <a href="{{ path('change_locale', {locale: locale.value}) }}" 
+                               class="btn btn-outline-secondary {% if app.request.locale == locale.value %}active{% endif %}">
+                                {{ locale_flag(locale.value) }} {{ locale_name(locale.value) }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
                 <h1 class="text-center mb-4">
                     <i class="bi bi-bank2 text-primary"></i><br>
-                    Easy Banking System
+                    {{ 'app.name'|trans({}, 'app') }}
                 </h1>
                 
-                <h2 class="h4 text-center mb-4">Sign In</h2>
+                <h2 class="h4 text-center mb-4">{{ 'login.sign_in'|trans({}, 'login') }}</h2>
 
                 {% if error %}
                     <div class="alert alert-danger">
@@ -23,7 +35,7 @@
 
                 <form method="post">
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
+                        <label for="username" class="form-label">{{ 'login.username'|trans({}, 'login') }}</label>
                         <input type="text" 
                                class="form-control" 
                                id="username" 
@@ -31,24 +43,24 @@
                                value="{{ last_username }}" 
                                required 
                                autofocus
-                               placeholder="Enter your username">
+                               placeholder="{{ 'login.username_placeholder'|trans({}, 'login') }}">
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
+                        <label for="password" class="form-label">{{ 'login.password'|trans({}, 'login') }}</label>
                         <input type="password" 
                                class="form-control" 
                                id="password" 
                                name="_password" 
                                required
-                               placeholder="Enter your password">
+                               placeholder="{{ 'login.password_placeholder'|trans({}, 'login') }}">
                     </div>
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-box-arrow-in-right"></i> Sign In
+                            <i class="bi bi-box-arrow-in-right"></i> {{ 'login.sign_in'|trans({}, 'login') }}
                         </button>
                     </div>
                 </form>
@@ -56,7 +68,7 @@
                 <div class="text-center mt-4">
                     <small class="text-muted">
                         <i class="bi bi-info-circle"></i> 
-                        For employees and customers
+                        {{ 'login.info'|trans({}, 'login') }}
                     </small>
                 </div>
             </div>

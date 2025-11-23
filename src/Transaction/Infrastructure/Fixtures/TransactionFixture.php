@@ -18,7 +18,7 @@ final class TransactionFixture extends AbstractFixture
         echo "Loading transactions...\n";
 
         // Get all active bank accounts
-        /** @var array<int, array{id: string, balance: int, currency: string}> */
+        /** @var array<int, array{id: string, balance: int, currency: string}> $accounts */
         $accounts = $this->connection->fetchAllAssociative(
             'SELECT id, balance, currency FROM bank_account WHERE is_active = true ORDER BY id',
         );

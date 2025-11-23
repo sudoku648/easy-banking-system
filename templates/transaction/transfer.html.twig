@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Money Transfer - Easy Banking System{% endblock %}
+{% block title %}{{ 'transaction.make_transfer'|trans({}, 'transaction') }} - {{ 'app.name'|trans({}, 'app') }}{% endblock %}
 
 {% block body %}
 <div class="row">
@@ -8,11 +8,11 @@
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
                 <h2 class="mb-0">
-                    <i class="bi bi-arrow-left-right"></i> Money Transfer
+                    <i class="bi bi-arrow-left-right"></i> {{ 'transaction.make_transfer'|trans({}, 'transaction') }}
                 </h2>
             </div>
             <div class="card-body">
-                <p class="text-muted">Send money to another bank account.</p>
+                <p class="text-muted">{{ 'dashboard.make_transfer_desc'|trans({}, 'dashboard') }}</p>
 
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
                 
@@ -52,10 +52,10 @@
 
                 <div class="d-flex justify-content-between">
                     <a href="{{ path('customer_dashboard') }}" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Cancel
+                        <i class="bi bi-arrow-left"></i> {{ 'common.cancel'|trans({}, 'app') }}
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle"></i> Transfer Money
+                        <i class="bi bi-check-circle"></i> {{ 'dashboard.transfer_money'|trans({}, 'dashboard') }}
                     </button>
                 </div>
 

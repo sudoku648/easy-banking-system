@@ -7,6 +7,7 @@ namespace App\UserManagement\Domain\Entity;
 use App\UserManagement\Domain\ValueObject\FirstName;
 use App\UserManagement\Domain\ValueObject\HashedPassword;
 use App\UserManagement\Domain\ValueObject\LastName;
+use App\UserManagement\Domain\ValueObject\Locale;
 use App\UserManagement\Domain\ValueObject\UserId;
 use App\UserManagement\Domain\ValueObject\Username;
 use App\UserManagement\Domain\ValueObject\UserRole;
@@ -20,6 +21,7 @@ abstract class User
         private FirstName $firstName,
         private LastName $lastName,
         private bool $isActive = true,
+        private Locale $locale = Locale::POLISH,
     ) {
     }
 
@@ -68,5 +70,15 @@ abstract class User
     public function activate(): void
     {
         $this->isActive = true;
+    }
+
+    public function getLocale(): Locale
+    {
+        return $this->locale;
+    }
+
+    public function changeLocale(Locale $locale): void
+    {
+        $this->locale = $locale;
     }
 }

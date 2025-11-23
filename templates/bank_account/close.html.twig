@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Close Bank Account - Easy Banking System{% endblock %}
+{% block title %}{{ 'bank_account.close'|trans({}, 'bank_account') }} - {{ 'app.name'|trans({}, 'app') }}{% endblock %}
 
 {% block body %}
 <div class="row">
@@ -8,13 +8,13 @@
         <div class="card shadow-sm">
             <div class="card-header bg-danger text-white">
                 <h2 class="mb-0">
-                    <i class="bi bi-x-circle"></i> Close Bank Account
+                    <i class="bi bi-x-circle"></i> {{ 'bank_account.close'|trans({}, 'bank_account') }}
                 </h2>
             </div>
             <div class="card-body">
                 <div class="alert alert-warning">
                     <i class="bi bi-exclamation-triangle"></i>
-                    <strong>Warning:</strong> Closing a bank account will automatically withdraw all remaining funds. This action cannot be undone.
+                    <strong>{{ 'flash.warning'|trans({}, 'flash') }}:</strong> {{ 'bank_account.confirm_close'|trans({}, 'bank_account') }}
                 </div>
 
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
@@ -30,10 +30,10 @@
 
                 <div class="d-flex justify-content-between">
                     <a href="{{ path('employee_dashboard') }}" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Cancel
+                        <i class="bi bi-arrow-left"></i> {{ 'common.cancel'|trans({}, 'app') }}
                     </a>
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-x-circle"></i> Close Account
+                        <i class="bi bi-x-circle"></i> {{ 'bank_account.close'|trans({}, 'bank_account') }}
                     </button>
                 </div>
 

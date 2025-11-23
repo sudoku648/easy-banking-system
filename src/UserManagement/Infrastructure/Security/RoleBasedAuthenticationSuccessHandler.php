@@ -19,6 +19,13 @@ final readonly class RoleBasedAuthenticationSuccessHandler implements Authentica
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
     {
+        // Set user's preferred locale in the session
+        $user = $token->getUser();
+        if ($user instanceof SecurityUser) {
+            $locale = $user->getUser()->getLocale()->value;
+            $request->getSession()->set('_locale', $locale);
+        }
+
         $roles = $token->getRoleNames();
 
         if (\in_array('ROLE_EMPLOYEE', $roles, true)) {

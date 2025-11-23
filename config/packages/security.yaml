@@ -15,16 +15,19 @@ security:
             lazy: true
             provider: database_users
             form_login:
-                login_path: login
+                login_path: login_redirect
                 check_path: login
                 enable_csrf: true
                 success_handler: App\UserManagement\Infrastructure\Security\RoleBasedAuthenticationSuccessHandler
+                failure_handler: App\UserManagement\Infrastructure\Security\LocaleAwareAuthenticationFailureHandler
             logout:
                 path: logout
-                target: login
+                target: login_redirect
 
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: '^/[a-z]{2}/login', roles: PUBLIC_ACCESS }
+        - { path: ^/change-locale, roles: PUBLIC_ACCESS }
         - { path: ^/employee, roles: ROLE_EMPLOYEE }
         - { path: ^/customer, roles: ROLE_CUSTOMER }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

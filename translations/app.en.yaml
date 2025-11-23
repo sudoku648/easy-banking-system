@@ -1,0 +1,22 @@
+# App-wide English translations
+app.name: Easy Banking System
+app.copyright: © 2025 Easy Banking System. All rights reserved.
+
+nav.dashboard: Dashboard
+nav.new_account: New Account
+nav.transfer: Transfer
+nav.history: History
+nav.login: Log In
+nav.logout: Log Out
+
+common.welcome: Welcome
+common.active: Active
+common.closed: Closed
+common.status: Status
+common.actions: Actions
+common.submit: Submit
+common.cancel: Cancel
+common.back: Back
+common.yes: Yes
+common.no: No
+common.account_closed: Account Closed

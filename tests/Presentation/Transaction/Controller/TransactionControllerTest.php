@@ -385,7 +385,7 @@ final class TransactionControllerTest extends PresentationTestCase
         $this->assertPageContains($account1->getIban()->getValue());
         $this->assertPageContains('100.00');
         $this->assertPageContains('PLN');
-        $this->assertPageContains('Withdrawal');
+        $this->assertPageContains('Transfer (withdrawal)');
         $this->assertPageContains(date('Y-m-d'));
     }
 

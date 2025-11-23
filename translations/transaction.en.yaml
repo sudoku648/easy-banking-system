@@ -1,0 +1,14 @@
+# Transaction English translations
+transaction.transfer: Transfer
+transaction.deposit: Deposit
+transaction.amount: Amount
+transaction.date: Date
+transaction.type: Type
+transaction.make_transfer: Make a Transfer
+transaction.history_title: Transaction History
+transaction.no_transactions: No transactions
+transaction.transfer_withdrawal: Transfer (withdrawal)
+transaction.transfer_deposit: Transfer (deposit)
+transaction.cash_withdrawal: Cash withdrawal
+transaction.cash_deposit: Cash deposit
+transaction.original_amount: Original Amount

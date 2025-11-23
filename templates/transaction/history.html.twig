@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Transaction History - Easy Banking System{% endblock %}
+{% block title %}{{ 'transaction.history_title'|trans({}, 'transaction') }} - {{ 'app.name'|trans({}, 'app') }}{% endblock %}
 
 {% block body %}
 <div class="row">
@@ -8,7 +8,7 @@
         <div class="card shadow-sm">
             <div class="card-header bg-info text-white">
                 <h2 class="mb-0">
-                    <i class="bi bi-clock-history"></i> Transaction History
+                    <i class="bi bi-clock-history"></i> {{ 'transaction.history_title'|trans({}, 'transaction') }}
                 </h2>
             </div>
             <div class="card-body">
@@ -17,12 +17,12 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Date & Time</th>
-                                    <th>Account</th>
-                                    <th>Type</th>
-                                    <th class="text-end">Amount</th>
-                                    <th class="text-end">Original Amount</th>
-                                    <th class="text-center">Exchange Rate</th>
+                                    <th>{{ 'transaction.date'|trans({}, 'transaction') }}</th>
+                                    <th>{{ 'bank_account.iban'|trans({}, 'bank_account') }}</th>
+                                    <th>{{ 'transaction.type'|trans({}, 'transaction') }}</th>
+                                    <th class="text-end">{{ 'transaction.amount'|trans({}, 'transaction') }}</th>
+                                    <th class="text-end">{{ 'transaction.original_amount'|trans({}, 'transaction') }}</th>
+                                    <th class="text-center">{{ 'common.yes'|trans({}, 'app') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,19 +37,19 @@
                                         <td>
                                             {% if transaction.type == 'TRANSFER_DEPOSIT' %}
                                                 <span class="badge bg-success">
-                                                    <i class="bi bi-arrow-down-circle"></i> Deposit
+                                                    <i class="bi bi-arrow-down-circle"></i> {{ 'transaction.transfer_deposit'|trans({}, 'transaction') }}
                                                 </span>
                                             {% elseif transaction.type == 'TRANSFER_WITHDRAWAL' %}
                                                 <span class="badge bg-warning">
-                                                    <i class="bi bi-arrow-up-circle"></i> Withdrawal
+                                                    <i class="bi bi-arrow-up-circle"></i> {{ 'transaction.transfer_withdrawal'|trans({}, 'transaction') }}
                                                 </span>
                                             {% elseif transaction.type == 'CASH_WITHDRAWAL' %}
                                                 <span class="badge bg-danger">
-                                                    <i class="bi bi-cash"></i> Cash Withdrawal
+                                                    <i class="bi bi-cash"></i> {{ 'transaction.cash_withdrawal'|trans({}, 'transaction') }}
                                                 </span>
                                             {% elseif transaction.type == 'CASH_DEPOSIT' %}
                                                 <span class="badge bg-primary">
-                                                    <i class="bi bi-cash-coin"></i> Cash Deposit
+                                                    <i class="bi bi-cash-coin"></i> {{ 'transaction.cash_deposit'|trans({}, 'transaction') }}
                                                 </span>
                                             {% endif %}
                                         </td>
@@ -84,13 +84,13 @@
                 {% else %}
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle"></i>
-                        No transactions found. Start making transfers to see your transaction history!
+                        {{ 'transaction.no_transactions'|trans({}, 'transaction') }}
                     </div>
                 {% endif %}
 
                 <div class="mt-3">
                     <a href="{{ path('customer_dashboard') }}" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                        <i class="bi bi-arrow-left"></i> {{ 'common.back'|trans({}, 'app') }}
                     </a>
                 </div>
             </div>

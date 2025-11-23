@@ -1,0 +1,12 @@
+# Dashboard Polish translations
+dashboard.customer_title: Panel klienta
+dashboard.employee_title: Panel pracownika
+dashboard.welcome_message: Witaj, %name%!
+dashboard.your_accounts: Twoje konta bankowe
+dashboard.make_transfer: Wykonaj przelew
+dashboard.make_transfer_desc: Wyślij pieniądze na inne konto
+dashboard.transfer_money: Przelej pieniądze
+dashboard.transaction_history: Historia transakcji
+dashboard.transaction_history_desc: Zobacz historię transakcji
+dashboard.view_history: Zobacz historię
+dashboard.no_accounts: Nie masz jeszcze żadnych kont bankowych.

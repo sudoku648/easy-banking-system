@@ -1,0 +1,11 @@
+# Bank Account Polish translations
+bank_account.iban: IBAN
+bank_account.balance: Saldo
+bank_account.currency: Waluta
+bank_account.open_new: Otwórz nowe konto
+bank_account.open_for_new_customer: Otwórz konto dla nowego klienta
+bank_account.open_for_existing_customer: Otwórz konto dla istniejącego klienta
+bank_account.close: Zamknij konto
+bank_account.select_customer: Wybierz klienta
+bank_account.new_customer_info: Nowy klient
+bank_account.confirm_close: Czy na pewno chcesz zamknąć to konto?

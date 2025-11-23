@@ -169,6 +169,13 @@ composer ecs:check  # Check code style
 composer phpstan    # Run static analysis
 ```
 
+### Internationalization
+```bash
+./bin/generate-locale-templates.sh <locale>  # Generate translation file templates for a new locale
+```
+
+See [docs/ADDING_LOCALES.md](docs/ADDING_LOCALES.md) for detailed instructions on adding new locales.
+
 ## Project Scope
 
 ### Features
@@ -196,7 +203,14 @@ composer phpstan    # Run static analysis
    - Role-based access control
    - Secure password storage
 
-5. **Data Security & Scalability**
+5. **Internationalization (i18n)**
+   - Multi-language support (Polish, English)
+   - User language preference persistence
+   - Language selection on login page
+   - Extensible locale system for easy addition of new languages
+   - Domain-based translation organization
+
+6. **Data Security & Scalability**
    - Secure data storage
    - PostgreSQL database for reliability
    - Scalable architecture design

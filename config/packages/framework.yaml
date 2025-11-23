@@ -1,6 +1,7 @@
 framework:
     secret: '%env(APP_SECRET)%'
-    session: true
+    session:
+        enabled: true
     messenger:
         default_bus: command.bus
         buses:

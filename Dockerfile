@@ -39,6 +39,7 @@ COPY .env /app/
 COPY config /app/config
 COPY tests /app/tests
 COPY templates /app/templates
+COPY translations /app/translations
 COPY src /app/src
 
 RUN composer install --optimize-autoloader --no-scripts

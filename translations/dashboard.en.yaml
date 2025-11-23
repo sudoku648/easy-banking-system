@@ -1,0 +1,12 @@
+# Dashboard English translations
+dashboard.customer_title: Customer Dashboard
+dashboard.employee_title: Employee Dashboard
+dashboard.welcome_message: Welcome, %name%!
+dashboard.your_accounts: Your Bank Accounts
+dashboard.make_transfer: Make a Transfer
+dashboard.make_transfer_desc: Send money to another account
+dashboard.transfer_money: Transfer Money
+dashboard.transaction_history: Transaction History
+dashboard.transaction_history_desc: View transaction history
+dashboard.view_history: View History
+dashboard.no_accounts: You don't have any bank accounts yet.

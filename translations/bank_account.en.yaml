@@ -1,0 +1,11 @@
+# Bank Account English translations
+bank_account.iban: IBAN
+bank_account.balance: Balance
+bank_account.currency: Currency
+bank_account.open_new: Open New Account
+bank_account.open_for_new_customer: Open Account for New Customer
+bank_account.open_for_existing_customer: Open Account for Existing Customer
+bank_account.close: Close Account
+bank_account.select_customer: Select Customer
+bank_account.new_customer_info: New Customer
+bank_account.confirm_close: Are you sure you want to close this account?

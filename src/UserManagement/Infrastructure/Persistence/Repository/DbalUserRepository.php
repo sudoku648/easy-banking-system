@@ -11,6 +11,7 @@ use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
 use App\UserManagement\Domain\ValueObject\FirstName;
 use App\UserManagement\Domain\ValueObject\HashedPassword;
 use App\UserManagement\Domain\ValueObject\LastName;
+use App\UserManagement\Domain\ValueObject\Locale;
 use App\UserManagement\Domain\ValueObject\UserId;
 use App\UserManagement\Domain\ValueObject\Username;
 use App\UserManagement\Domain\ValueObject\UserRole;
@@ -33,6 +34,7 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
             'last_name' => $user->getLastName()->getValue(),
             'is_active' => $user->isActive(),
             'role' => $user->getRole()->value,
+            'locale' => $user->getLocale()->value,
         ];
 
         $exists = $this->connection->fetchOne(
@@ -109,6 +111,7 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
      *   last_name: string,
      *   is_active: bool,
      *   role: string,
+     *   locale: string,
      * } $data
      */
     private function mapToEntity(array $data): User
@@ -120,10 +123,11 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
         $password = new HashedPassword($data['password']);
         $firstName = new FirstName($data['first_name']);
         $lastName = new LastName($data['last_name']);
+        $locale = Locale::fromString($data['locale']);
 
         return match ($role) {
-            UserRole::EMPLOYEE => new Employee($userId, $username, $password, $firstName, $lastName, (bool) $data['is_active']),
-            UserRole::CUSTOMER => new Customer($userId, $username, $password, $firstName, $lastName, (bool) $data['is_active']),
+            UserRole::EMPLOYEE => new Employee($userId, $username, $password, $firstName, $lastName, (bool) $data['is_active'], $locale),
+            UserRole::CUSTOMER => new Customer($userId, $username, $password, $firstName, $lastName, (bool) $data['is_active'], $locale),
         };
     }
 }

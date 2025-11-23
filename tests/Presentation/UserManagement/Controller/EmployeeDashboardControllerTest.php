@@ -59,8 +59,8 @@ final class EmployeeDashboardControllerTest extends PresentationTestCase
 
         $this->assertResponseIsSuccessful();
         
-        $link = $crawler->selectLink('Existing Customer')->count();
-        self::assertGreaterThan(0, $link, 'Expected to find "Existing Customer" link on dashboard');
+        $link = $crawler->selectLink('Select Customer')->count();
+        self::assertGreaterThan(0, $link, 'Expected to find "Select Customer" link on dashboard');
     }
 
     public function testDashboardShowsNavigationToCloseAccount(): void
@@ -85,8 +85,8 @@ final class EmployeeDashboardControllerTest extends PresentationTestCase
 
         $this->assertResponseIsSuccessful();
         
-        $link = $crawler->selectLink('Logout')->count();
-        self::assertGreaterThan(0, $link, 'Expected to find "Logout" link on dashboard');
+        $link = $crawler->selectLink('Log Out')->count();
+        self::assertGreaterThan(0, $link, 'Expected to find "Log Out" link on dashboard');
     }
 
     public function testEmployeeNameIsDisplayedOnDashboard(): void

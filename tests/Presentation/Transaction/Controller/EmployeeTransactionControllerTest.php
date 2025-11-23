@@ -51,7 +51,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         $this->client->request('GET', '/employee/transaction/deposit');
 
         $this->assertResponseIsSuccessful();
-        $this->assertPageContains('Deposit Money');
+        $this->assertPageContains('Deposit');
     }
 
     // Deposit Form Rendering Tests

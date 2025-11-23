@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Customer Dashboard - Easy Banking System{% endblock %}
+{% block title %}{{ 'dashboard.customer_title'|trans({}, 'dashboard') }} - {{ 'app.name'|trans({}, 'app') }}{% endblock %}
 
 {% block body %}
 <div class="row">
     <div class="col-12">
         <h1 class="mb-4">
-            <i class="bi bi-speedometer2"></i> Customer Dashboard
+            <i class="bi bi-speedometer2"></i> {{ 'dashboard.customer_title'|trans({}, 'dashboard') }}
         </h1>
-        <p class="lead">Welcome, {{ app.user.user.fullName }}!</p>
+        <p class="lead">{{ 'dashboard.welcome_message'|trans({'%name%': app.user.user.fullName}, 'dashboard') }}</p>
     </div>
 </div>
 
@@ -17,7 +17,7 @@
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
                 <h3 class="mb-0">
-                    <i class="bi bi-wallet2"></i> Your Bank Accounts
+                    <i class="bi bi-wallet2"></i> {{ 'dashboard.your_accounts'|trans({}, 'dashboard') }}
                 </h3>
             </div>
             <div class="card-body">
@@ -26,11 +26,11 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>IBAN</th>
-                                    <th class="text-end">Balance</th>
-                                    <th>Currency</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Actions</th>
+                                    <th>{{ 'bank_account.iban'|trans({}, 'bank_account') }}</th>
+                                    <th class="text-end">{{ 'bank_account.balance'|trans({}, 'bank_account') }}</th>
+                                    <th>{{ 'bank_account.currency'|trans({}, 'bank_account') }}</th>
+                                    <th class="text-center">{{ 'common.status'|trans({}, 'app') }}</th>
+                                    <th class="text-center">{{ 'common.actions'|trans({}, 'app') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,20 +47,20 @@
                                         </td>
                                         <td class="text-center">
                                             {% if account.isActive %}
-                                                <span class="badge bg-success">Active</span>
+                                                <span class="badge bg-success">{{ 'common.active'|trans({}, 'app') }}</span>
                                             {% else %}
-                                                <span class="badge bg-danger">Closed</span>
+                                                <span class="badge bg-danger">{{ 'common.closed'|trans({}, 'app') }}</span>
                                             {% endif %}
                                         </td>
                                         <td class="text-center">
                                             {% if account.isActive %}
                                                 <a href="{{ path('transaction_transfer', {fromAccountId: account.id}) }}" 
                                                    class="btn btn-sm btn-primary">
-                                                    <i class="bi bi-arrow-left-right"></i> Transfer
+                                                    <i class="bi bi-arrow-left-right"></i> {{ 'transaction.transfer'|trans({}, 'transaction') }}
                                                 </a>
                                             {% else %}
                                                 <button class="btn btn-sm btn-secondary" disabled>
-                                                    Account Closed
+                                                    {{ 'common.account_closed'|trans({}, 'app') }}
                                                 </button>
                                             {% endif %}
                                         </td>
@@ -72,7 +72,7 @@
                 {% else %}
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle"></i>
-                        You don't have any bank accounts yet. Please contact a bank employee to open an account.
+                        {{ 'dashboard.no_accounts'|trans({}, 'dashboard') }}
                     </div>
                 {% endif %}
             </div>
@@ -85,10 +85,10 @@
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
                 <i class="bi bi-arrow-left-right display-4 text-primary mb-3"></i>
-                <h5 class="card-title">Make a Transfer</h5>
-                <p class="card-text">Send money to another account</p>
+                <h5 class="card-title">{{ 'dashboard.make_transfer'|trans({}, 'dashboard') }}</h5>
+                <p class="card-text">{{ 'dashboard.make_transfer_desc'|trans({}, 'dashboard') }}</p>
                 <a href="{{ path('transaction_transfer') }}" class="btn btn-primary">
-                    <i class="bi bi-arrow-left-right"></i> Transfer Money
+                    <i class="bi bi-arrow-left-right"></i> {{ 'dashboard.transfer_money'|trans({}, 'dashboard') }}
                 </a>
             </div>
         </div>
@@ -98,10 +98,10 @@
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
                 <i class="bi bi-clock-history display-4 text-info mb-3"></i>
-                <h5 class="card-title">Transaction History</h5>
-                <p class="card-text">View your transaction history</p>
+                <h5 class="card-title">{{ 'dashboard.transaction_history'|trans({}, 'dashboard') }}</h5>
+                <p class="card-text">{{ 'dashboard.transaction_history_desc'|trans({}, 'dashboard') }}</p>
                 <a href="{{ path('transaction_history') }}" class="btn btn-info">
-                    <i class="bi bi-clock-history"></i> View History
+                    <i class="bi bi-clock-history"></i> {{ 'dashboard.view_history'|trans({}, 'dashboard') }}
                 </a>
             </div>
         </div>

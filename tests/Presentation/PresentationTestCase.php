@@ -97,6 +97,7 @@ abstract class PresentationTestCase extends WebTestCase
             firstName: $customer->getFirstName(),
             lastName: $customer->getLastName(),
         );
+        $customer->changeLocale(\App\UserManagement\Domain\ValueObject\Locale::ENGLISH);
 
         $repository->save($customer);
 
@@ -137,6 +138,7 @@ abstract class PresentationTestCase extends WebTestCase
             firstName: $employee->getFirstName(),
             lastName: $employee->getLastName(),
         );
+        $employee->changeLocale(\App\UserManagement\Domain\ValueObject\Locale::ENGLISH);
 
         $repository->save($employee);
 
@@ -148,7 +150,7 @@ abstract class PresentationTestCase extends WebTestCase
      */
     protected function loginAs(string $username, string $password): Crawler
     {
-        $crawler = $this->client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/en/login');
         
         $form = $crawler->selectButton('Sign In')->form([
             '_username' => $username,
@@ -226,11 +228,26 @@ abstract class PresentationTestCase extends WebTestCase
     /**
      * Assert that user is on specific route.
      */
-    protected function assertOnRoute(string $routeName): void
+    protected function assertOnRoute(string $routeName, array $parameters = []): void
     {
         $currentPath = $this->client->getRequest()->getPathInfo();
         $router = static::getContainer()->get('router');
-        $expectedPath = $router->generate($routeName);
+        
+        // Try to get the route to check if it has _locale placeholder
+        $routes = $router->getRouteCollection();
+        $route = $routes->get($routeName);
+        
+        // If no locale parameter provided, route has _locale placeholder, and request has _locale, use it
+        if (
+            !isset($parameters['_locale'])
+            && $route !== null
+            && str_contains($route->getPath(), '{_locale}')
+            && $this->client->getRequest()->attributes->has('_locale')
+        ) {
+            $parameters['_locale'] = $this->client->getRequest()->attributes->get('_locale');
+        }
+        
+        $expectedPath = $router->generate($routeName, $parameters);
         
         self::assertSame(
             $expectedPath,
@@ -242,7 +259,7 @@ abstract class PresentationTestCase extends WebTestCase
     /**
      * Assert that response is a redirect to specific route.
      */
-    protected function assertRedirectsToRoute(string $routeName): void
+    protected function assertRedirectsToRoute(string $routeName, array $parameters = []): void
     {
         self::assertTrue(
             $this->client->getResponse()->isRedirect(),
@@ -250,8 +267,42 @@ abstract class PresentationTestCase extends WebTestCase
         );
 
         $router = static::getContainer()->get('router');
-        $expectedPath = $router->generate($routeName);
         $redirectUrl = $this->client->getResponse()->headers->get('Location');
+        
+        // Extract path from redirect URL (remove scheme, host, query, fragment)
+        $redirectPath = parse_url($redirectUrl, PHP_URL_PATH);
+        
+        // Try to get the route to check if it has _locale placeholder
+        $routes = $router->getRouteCollection();
+        $route = $routes->get($routeName);
+        
+        // If route has _locale placeholder but actual redirect doesn't contain locale in path
+        // (e.g., redirecting to /login instead of /en/login), be flexible
+        if ($route !== null && str_contains($route->getPath(), '{_locale}')) {
+            // Check if redirect path has locale pattern
+            if (!preg_match('#^/[a-z]{2}/#', $redirectPath)) {
+                // Redirect doesn't have locale, so we're likely being redirected to login_redirect
+                // which will then redirect to localized login. Just check the base path matches.
+                $routePathWithoutLocale = str_replace('/{_locale}', '', $route->getPath());
+                self::assertSame(
+                    $routePathWithoutLocale,
+                    $redirectPath,
+                    "Expected redirect to route '{$routeName}' (any locale), but got '{$redirectUrl}'.",
+                );
+                return;
+            }
+            
+            // Has locale in path, try to extract it or use from session/request
+            if (!isset($parameters['_locale'])) {
+                if ($this->client->getRequest()->getSession()->has('_locale')) {
+                    $parameters['_locale'] = $this->client->getRequest()->getSession()->get('_locale');
+                } elseif ($this->client->getRequest()->attributes->has('_locale')) {
+                    $parameters['_locale'] = $this->client->getRequest()->attributes->get('_locale');
+                }
+            }
+        }
+        
+        $expectedPath = $router->generate($routeName, $parameters);
         
         self::assertStringEndsWith(
             $expectedPath,

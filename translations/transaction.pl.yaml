@@ -1,0 +1,14 @@
+# Transaction Polish translations
+transaction.transfer: Przelew
+transaction.deposit: Wpłata
+transaction.amount: Kwota
+transaction.date: Data
+transaction.type: Typ
+transaction.make_transfer: Wykonaj przelew
+transaction.history_title: Historia transakcji
+transaction.no_transactions: Brak transakcji
+transaction.transfer_withdrawal: Przelew (wypłata)
+transaction.transfer_deposit: Przelew (wpłata)
+transaction.cash_withdrawal: Wypłata gotówki
+transaction.cash_deposit: Wpłata gotówki
+transaction.original_amount: Kwota oryginalna

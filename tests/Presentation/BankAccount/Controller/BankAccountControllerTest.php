@@ -48,7 +48,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->client->request('GET', '/employee/bank-account/open/new-customer');
 
         $this->assertResponseIsSuccessful();
-        $this->assertPageContains('Open Account - New Customer');
+        $this->assertPageContains('Open Account for New Customer');
     }
 
     // Open Account for New Customer Tests
@@ -63,7 +63,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
         
         // Check form fields exist
-        $form = $crawler->selectButton('Open Account')->form();
+        $form = $crawler->selectButton('Open New Account')->form();
         self::assertNotNull($form->get('open_account_new_customer_form[username]'));
         self::assertNotNull($form->get('open_account_new_customer_form[password]'));
         self::assertNotNull($form->get('open_account_new_customer_form[firstName]'));
@@ -77,7 +77,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->loginAsEmployeeUser($employee);
 
         $crawler = $this->client->request('GET', '/employee/bank-account/open/new-customer');
-        $form = $crawler->selectButton('Open Account')->form([
+        $form = $crawler->selectButton('Open New Account')->form([
             'open_account_new_customer_form[username]' => 'newcustomer',
             'open_account_new_customer_form[password]' => 'password123',
             'open_account_new_customer_form[firstName]' => 'John',
@@ -98,7 +98,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->loginAsEmployeeUser($employee);
 
         $crawler = $this->client->request('GET', '/employee/bank-account/open/new-customer');
-        $form = $crawler->selectButton('Open Account')->form([
+        $form = $crawler->selectButton('Open New Account')->form([
             'open_account_new_customer_form[username]' => 'a', // Too short
             'open_account_new_customer_form[password]' => 'password123',
             'open_account_new_customer_form[firstName]' => 'John',
@@ -119,7 +119,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->loginAsEmployeeUser($employee);
 
         $crawler = $this->client->request('GET', '/employee/bank-account/open/new-customer');
-        $form = $crawler->selectButton('Open Account')->form([
+        $form = $crawler->selectButton('Open New Account')->form([
             'open_account_new_customer_form[username]' => 'newcustomer',
             'open_account_new_customer_form[password]' => '12345', // Too short
             'open_account_new_customer_form[firstName]' => 'John',
@@ -142,7 +142,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->loginAsEmployeeUser($employee);
 
         $crawler = $this->client->request('GET', '/employee/bank-account/open/new-customer');
-        $form = $crawler->selectButton('Open Account')->form([
+        $form = $crawler->selectButton('Open New Account')->form([
             'open_account_new_customer_form[username]' => 'existinguser',
             'open_account_new_customer_form[password]' => 'password123',
             'open_account_new_customer_form[firstName]' => 'John',
@@ -174,9 +174,9 @@ final class BankAccountControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/employee/bank-account/open/existing-customer');
 
         $this->assertResponseIsSuccessful();
-        $this->assertPageContains('Open Account - Existing Customer');
+        $this->assertPageContains('Open Account for Existing Customer');
         
-        $form = $crawler->selectButton('Open Account')->form();
+        $form = $crawler->selectButton('Open New Account')->form();
         self::assertNotNull($form->get('open_account_existing_customer_form[customerId]'));
         self::assertNotNull($form->get('open_account_existing_customer_form[currency]'));
     }
@@ -189,7 +189,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->loginAsEmployeeUser($employee);
 
         $crawler = $this->client->request('GET', '/employee/bank-account/open/existing-customer');
-        $form = $crawler->selectButton('Open Account')->form([
+        $form = $crawler->selectButton('Open New Account')->form([
             'open_account_existing_customer_form[customerId]' => $customer->getId()->getValue(),
             'open_account_existing_customer_form[currency]' => 'EUR',
         ]);
@@ -232,7 +232,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/employee/bank-account/close');
 
         $this->assertResponseIsSuccessful();
-        $this->assertPageContains('Close Bank Account');
+        $this->assertPageContains('Close Account');
         
         $form = $crawler->selectButton('Close Account')->form();
         self::assertNotNull($form->get('close_bank_account_form[bankAccountId]'));

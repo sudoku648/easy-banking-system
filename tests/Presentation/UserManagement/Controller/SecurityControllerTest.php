@@ -10,10 +10,10 @@ final class SecurityControllerTest extends PresentationTestCase
 {
     public function testLoginPageRendersCorrectly(): void
     {
-        $crawler = $this->client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/en/login');
 
         $this->assertResponseIsSuccessful();
-        $this->assertPageTitleMatches('Login');
+        $this->assertPageTitleMatches('Log In');
         $this->assertPageContains('Easy Banking System');
         $this->assertPageContains('Sign In');
         
@@ -47,7 +47,7 @@ final class SecurityControllerTest extends PresentationTestCase
     {
         $this->createCustomer('customer1', 'correctpass');
 
-        $crawler = $this->client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/en/login');
         $form = $crawler->selectButton('Sign In')->form([
             '_username' => 'customer1',
             '_password' => 'wrongpass',
@@ -62,7 +62,7 @@ final class SecurityControllerTest extends PresentationTestCase
 
     public function testLoginWithNonExistentUserShowsError(): void
     {
-        $crawler = $this->client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/en/login');
         $form = $crawler->selectButton('Sign In')->form([
             '_username' => 'nonexistent',
             '_password' => 'somepass',
@@ -80,7 +80,7 @@ final class SecurityControllerTest extends PresentationTestCase
         $customer = $this->createCustomer('customer1', 'pass123');
         $this->loginAsCustomerUser($customer);
 
-        $this->client->request('GET', '/login');
+        $this->client->request('GET', '/en/login');
 
         $this->assertRedirectsToRoute('home');
     }
@@ -89,7 +89,7 @@ final class SecurityControllerTest extends PresentationTestCase
     {
         $this->client->request('GET', '/');
 
-        $this->assertRedirectsToRoute('login');
+        $this->assertRedirectsToRoute('login_redirect');
     }
 
     public function testHomePageRedirectsCustomerToCustomerDashboard(): void
@@ -119,18 +119,18 @@ final class SecurityControllerTest extends PresentationTestCase
 
         $this->client->request('GET', '/logout');
 
-        $this->assertRedirectsToRoute('login');
+        $this->assertRedirectsToRoute('login_redirect');
         
         // Verify user is actually logged out by trying to access protected page
         $this->client->request('GET', '/customer/dashboard');
-        $this->assertRedirectsToRoute('login');
+        $this->assertRedirectsToRoute('login_redirect');
     }
 
     public function testLoginFormPreservesUsernameOnError(): void
     {
         $this->createCustomer('customer1', 'correctpass');
 
-        $crawler = $this->client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/en/login');
         $form = $crawler->selectButton('Sign In')->form([
             '_username' => 'customer1',
             '_password' => 'wrongpass',
@@ -147,7 +147,7 @@ final class SecurityControllerTest extends PresentationTestCase
         $this->createCustomer('customer1', 'pass123');
 
         // Submit without CSRF token
-        $this->client->request('POST', '/login', [
+        $this->client->request('POST', '/en/login', [
             '_username' => 'customer1',
             '_password' => 'pass123',
         ]);

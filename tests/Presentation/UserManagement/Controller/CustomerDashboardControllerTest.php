@@ -58,7 +58,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->client->request('GET', '/customer/dashboard');
 
         $this->assertResponseIsSuccessful();
-        $this->assertPageContains("You don't have any bank accounts yet");
+        $this->assertPageContains("You don&#039;t have any bank accounts yet");
     }
 
     public function testDashboardDisplaysCustomerBankAccounts(): void
@@ -178,7 +178,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
         
         // Check logout link exists
-        $link = $crawler->selectLink('Logout')->count();
-        self::assertGreaterThan(0, $link, 'Expected to find "Logout" link on dashboard');
+        $link = $crawler->selectLink('Log Out')->count();
+        self::assertGreaterThan(0, $link, 'Expected to find "Log Out" link on dashboard');
     }
 }

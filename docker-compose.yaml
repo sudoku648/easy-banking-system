@@ -9,6 +9,8 @@ services:
       dockerfile: Dockerfile
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+    volumes:
+      - ./:/app:rw
     environment:
       PHP_IDE_CONFIG: serverName=ebs-test
     depends_on:
