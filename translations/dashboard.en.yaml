@@ -10,3 +10,8 @@ dashboard.transaction_history: Transaction History
 dashboard.transaction_history_desc: View transaction history
 dashboard.view_history: View History
 dashboard.no_accounts: You don't have any bank accounts yet.
+dashboard.quick_info: Quick Info
+dashboard.quick_info.currency: You can create accounts in PLN or EUR currency
+dashboard.quick_info.iban: IBAN numbers are generated automatically
+dashboard.quick_info.close: When closing an account, all remaining funds are withdrawn
+dashboard.quick_info.history: View customer transaction history using the account management

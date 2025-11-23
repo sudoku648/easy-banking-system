@@ -71,13 +71,13 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <h5 class="card-title">
-                    <i class="bi bi-info-circle text-info"></i> Quick Info
+                    <i class="bi bi-info-circle text-info"></i> {{ 'dashboard.quick_info'|trans({}, 'dashboard') }}
                 </h5>
                 <ul class="mb-0">
-                    <li>You can create accounts in PLN or EUR currency</li>
-                    <li>IBAN numbers are generated automatically</li>
-                    <li>When closing an account, all remaining funds are withdrawn</li>
-                    <li>View customer transaction history using the account management</li>
+                    <li>{{ 'dashboard.quick_info.currency'|trans({}, 'dashboard') }}</li>
+                    <li>{{ 'dashboard.quick_info.iban'|trans({}, 'dashboard') }}</li>
+                    <li>{{ 'dashboard.quick_info.close'|trans({}, 'dashboard') }}</li>
+                    <li>{{ 'dashboard.quick_info.history'|trans({}, 'dashboard') }}</li>
                 </ul>
             </div>
         </div>
