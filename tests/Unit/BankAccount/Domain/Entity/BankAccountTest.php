@@ -37,11 +37,11 @@ final class BankAccountTest extends TestCase
             $initialBalance,
         );
 
-        self::assertSame($this->accountId, $account->getId());
-        self::assertSame($this->iban, $account->getIban());
-        self::assertSame($this->customerId, $account->getCustomerId());
-        self::assertTrue($account->getBalance()->equals($initialBalance));
-        self::assertTrue($account->isActive());
+        self::assertSame($this->accountId, $account->id);
+        self::assertSame($this->iban, $account->iban);
+        self::assertSame($this->customerId, $account->customerId);
+        self::assertTrue($account->balance->equals($initialBalance));
+        self::assertTrue($account->isActive);
     }
 
     public function testDepositIncreasesBalance(): void
@@ -53,7 +53,7 @@ final class BankAccountTest extends TestCase
         $account->deposit($depositAmount);
 
         $expectedBalance = new Money(15000, Currency::PLN);
-        self::assertTrue($account->getBalance()->equals($expectedBalance));
+        self::assertTrue($account->balance->equals($expectedBalance));
     }
 
     public function testWithdrawDecreasesBalance(): void
@@ -65,7 +65,7 @@ final class BankAccountTest extends TestCase
         $account->withdraw($withdrawAmount);
 
         $expectedBalance = new Money(7000, Currency::PLN);
-        self::assertTrue($account->getBalance()->equals($expectedBalance));
+        self::assertTrue($account->balance->equals($expectedBalance));
     }
 
     public function testWithdrawThrowsExceptionForInsufficientFunds(): void
@@ -88,7 +88,7 @@ final class BankAccountTest extends TestCase
 
         $account->close();
 
-        self::assertFalse($account->isActive());
+        self::assertFalse($account->isActive);
     }
 
     public function testCloseThrowsExceptionForNonZeroBalance(): void

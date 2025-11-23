@@ -41,12 +41,12 @@ final class CreateUserTest extends ApplicationTestCase
         $user = $this->userRepository->findByUsername(new Username('john.doe'));
 
         self::assertInstanceOf(Customer::class, $user);
-        self::assertSame('john.doe', $user->getUsername()->getValue());
-        self::assertSame('John', $user->getFirstName()->getValue());
-        self::assertSame('Doe', $user->getLastName()->getValue());
+        self::assertSame('john.doe', $user->username->getValue());
+        self::assertSame('John', $user->firstName->getValue());
+        self::assertSame('Doe', $user->lastName->getValue());
         self::assertSame(UserRole::CUSTOMER, $user->getRole());
-        self::assertTrue($user->isActive());
-        self::assertTrue($user->getPassword()->verify('SecurePassword123!'));
+        self::assertTrue($user->isActive);
+        self::assertTrue($user->password->verify('SecurePassword123!'));
     }
 
     public function testCreateCustomerThrowsExceptionForDuplicateUsername(): void
@@ -82,12 +82,12 @@ final class CreateUserTest extends ApplicationTestCase
         $user = $this->userRepository->findByUsername(new Username('jane.smith'));
 
         self::assertInstanceOf(Employee::class, $user);
-        self::assertSame('jane.smith', $user->getUsername()->getValue());
-        self::assertSame('Jane', $user->getFirstName()->getValue());
-        self::assertSame('Smith', $user->getLastName()->getValue());
+        self::assertSame('jane.smith', $user->username->getValue());
+        self::assertSame('Jane', $user->firstName->getValue());
+        self::assertSame('Smith', $user->lastName->getValue());
         self::assertSame(UserRole::EMPLOYEE, $user->getRole());
-        self::assertTrue($user->isActive());
-        self::assertTrue($user->getPassword()->verify('SecurePassword123!'));
+        self::assertTrue($user->isActive);
+        self::assertTrue($user->password->verify('SecurePassword123!'));
     }
 
     public function testCreateEmployeeThrowsExceptionForDuplicateUsername(): void
@@ -135,6 +135,6 @@ final class CreateUserTest extends ApplicationTestCase
 
         self::assertInstanceOf(Customer::class, $customer);
         self::assertInstanceOf(Employee::class, $employee);
-        self::assertNotSame($customer->getId()->getValue(), $employee->getId()->getValue());
+        self::assertNotSame($customer->id->getValue(), $employee->id->getValue());
     }
 }

@@ -43,9 +43,9 @@ final readonly class OpenBankAccountCommandHandler
 
         $this->eventBus->dispatch(
             new BankAccountOpened(
-                $bankAccount->getId(),
-                $bankAccount->getIban(),
-                $bankAccount->getCustomerId(),
+                $bankAccount->id,
+                $bankAccount->iban,
+                $bankAccount->customerId,
                 $currency,
                 new \DateTimeImmutable(),
             ),

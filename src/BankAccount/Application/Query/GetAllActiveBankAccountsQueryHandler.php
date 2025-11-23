@@ -23,11 +23,11 @@ final readonly class GetAllActiveBankAccountsQueryHandler
 
         return array_values(array_map(
             fn (BankAccount $account): array => [
-                'id' => $account->getId()->getValue(),
-                'iban' => $account->getIban()->getValue(),
-                'customerId' => $account->getCustomerId()->getValue(),
-                'balance' => $account->getBalance()->getAmount(),
-                'currency' => $account->getBalance()->getCurrency()->value,
+                'id' => $account->id->getValue(),
+                'iban' => $account->iban->getValue(),
+                'customerId' => $account->customerId->getValue(),
+                'balance' => $account->balance->getAmount(),
+                'currency' => $account->balance->getCurrency()->value,
             ],
             $accounts,
         ));

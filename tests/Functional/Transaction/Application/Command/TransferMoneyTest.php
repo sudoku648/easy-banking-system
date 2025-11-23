@@ -80,8 +80,8 @@ final class TransferMoneyTest extends ApplicationTestCase
 
         // Transfer money
         $command = new TransferMoneyCommand(
-            fromBankAccountId: $fromAccount->getId()->getValue(),
-            toBankAccountId: $toAccount->getId()->getValue(),
+            fromBankAccountId: $fromAccount->id->getValue(),
+            toBankAccountId: $toAccount->id->getValue(),
             amount: 50000, // 500.00 PLN
             currency: 'PLN',
         );
@@ -89,13 +89,13 @@ final class TransferMoneyTest extends ApplicationTestCase
         $handler($command);
 
         // Verify balances
-        $fromAccountAfter = $this->bankAccountRepository->findById($fromAccount->getId());
-        $toAccountAfter = $this->bankAccountRepository->findById($toAccount->getId());
+        $fromAccountAfter = $this->bankAccountRepository->findById($fromAccount->id);
+        $toAccountAfter = $this->bankAccountRepository->findById($toAccount->id);
 
         self::assertNotNull($fromAccountAfter);
         self::assertNotNull($toAccountAfter);
-        self::assertSame(50000, $fromAccountAfter->getBalance()->getAmount());
-        self::assertSame(50000, $toAccountAfter->getBalance()->getAmount());
+        self::assertSame(50000, $fromAccountAfter->balance->getAmount());
+        self::assertSame(50000, $toAccountAfter->balance->getAmount());
     }
 
     public function testTransferMoneyBetweenAccountsWithDifferentCurrencies(): void
@@ -121,8 +121,8 @@ final class TransferMoneyTest extends ApplicationTestCase
 
         // Transfer 100.00 PLN (should be converted to EUR)
         $command = new TransferMoneyCommand(
-            fromBankAccountId: $fromAccount->getId()->getValue(),
-            toBankAccountId: $toAccount->getId()->getValue(),
+            fromBankAccountId: $fromAccount->id->getValue(),
+            toBankAccountId: $toAccount->id->getValue(),
             amount: 10000, // 100.00 PLN
             currency: 'PLN',
         );
@@ -130,13 +130,13 @@ final class TransferMoneyTest extends ApplicationTestCase
         $handler($command);
 
         // Verify balances
-        $fromAccountAfter = $this->bankAccountRepository->findById($fromAccount->getId());
-        $toAccountAfter = $this->bankAccountRepository->findById($toAccount->getId());
+        $fromAccountAfter = $this->bankAccountRepository->findById($fromAccount->id);
+        $toAccountAfter = $this->bankAccountRepository->findById($toAccount->id);
 
         self::assertNotNull($fromAccountAfter);
         self::assertNotNull($toAccountAfter);
-        self::assertSame(90000, $fromAccountAfter->getBalance()->getAmount()); // 900.00 PLN
-        self::assertSame(2300, $toAccountAfter->getBalance()->getAmount()); // 23.00 EUR (100 PLN * 0.23)
+        self::assertSame(90000, $fromAccountAfter->balance->getAmount()); // 900.00 PLN
+        self::assertSame(2300, $toAccountAfter->balance->getAmount()); // 23.00 EUR (100 PLN * 0.23)
     }
 
     public function testTransferMoneyCreatesTransactions(): void
@@ -159,8 +159,8 @@ final class TransferMoneyTest extends ApplicationTestCase
         $this->bankAccountRepository->save($fromAccount);
 
         $command = new TransferMoneyCommand(
-            fromBankAccountId: $fromAccount->getId()->getValue(),
-            toBankAccountId: $toAccount->getId()->getValue(),
+            fromBankAccountId: $fromAccount->id->getValue(),
+            toBankAccountId: $toAccount->id->getValue(),
             amount: 50000,
             currency: 'PLN',
         );
@@ -169,21 +169,21 @@ final class TransferMoneyTest extends ApplicationTestCase
 
         // Verify transactions
         $fromTransactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($fromAccount->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($fromAccount->id->getValue()),
         );
 
         $toTransactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($toAccount->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($toAccount->id->getValue()),
         );
 
         self::assertCount(1, $fromTransactions);
         self::assertCount(1, $toTransactions);
 
-        self::assertSame(TransactionType::TRANSFER_WITHDRAWAL, $fromTransactions[0]->getType());
-        self::assertSame(TransactionType::TRANSFER_DEPOSIT, $toTransactions[0]->getType());
+        self::assertSame(TransactionType::TRANSFER_WITHDRAWAL, $fromTransactions[0]->type);
+        self::assertSame(TransactionType::TRANSFER_DEPOSIT, $toTransactions[0]->type);
 
-        self::assertSame(50000, $fromTransactions[0]->getAmount()->getAmount());
-        self::assertSame(50000, $toTransactions[0]->getAmount()->getAmount());
+        self::assertSame(50000, $fromTransactions[0]->amount->getAmount());
+        self::assertSame(50000, $toTransactions[0]->amount->getAmount());
     }
 
     public function testTransferMoneyDispatchesMoneyTransferredEvent(): void
@@ -213,8 +213,8 @@ final class TransferMoneyTest extends ApplicationTestCase
         $eventBus->clear();
 
         $command = new TransferMoneyCommand(
-            fromBankAccountId: $fromAccount->getId()->getValue(),
-            toBankAccountId: $toAccount->getId()->getValue(),
+            fromBankAccountId: $fromAccount->id->getValue(),
+            toBankAccountId: $toAccount->id->getValue(),
             amount: 50000,
             currency: 'PLN',
         );
@@ -226,8 +226,8 @@ final class TransferMoneyTest extends ApplicationTestCase
         self::assertCount(1, $events);
         $event = $events[0];
         self::assertSame(50000, $event->amount->getAmount());
-        self::assertTrue($event->fromIban->equals($fromAccount->getIban()));
-        self::assertTrue($event->toIban->equals($toAccount->getIban()));
+        self::assertTrue($event->fromIban->equals($fromAccount->iban));
+        self::assertTrue($event->toIban->equals($toAccount->iban));
     }
 
     public function testTransferMoneyThrowsExceptionForInsufficientFunds(): void
@@ -250,8 +250,8 @@ final class TransferMoneyTest extends ApplicationTestCase
         $this->bankAccountRepository->save($fromAccount);
 
         $command = new TransferMoneyCommand(
-            fromBankAccountId: $fromAccount->getId()->getValue(),
-            toBankAccountId: $toAccount->getId()->getValue(),
+            fromBankAccountId: $fromAccount->id->getValue(),
+            toBankAccountId: $toAccount->id->getValue(),
             amount: 50000, // Trying to transfer 500.00 PLN
             currency: 'PLN',
         );
@@ -275,7 +275,7 @@ final class TransferMoneyTest extends ApplicationTestCase
 
         $command = new TransferMoneyCommand(
             fromBankAccountId: $nonExistentId,
-            toBankAccountId: $toAccount->getId()->getValue(),
+            toBankAccountId: $toAccount->id->getValue(),
             amount: 10000,
             currency: 'PLN',
         );
@@ -302,7 +302,7 @@ final class TransferMoneyTest extends ApplicationTestCase
         $nonExistentId = CustomerId::generate()->getValue();
 
         $command = new TransferMoneyCommand(
-            fromBankAccountId: $fromAccount->getId()->getValue(),
+            fromBankAccountId: $fromAccount->id->getValue(),
             toBankAccountId: $nonExistentId,
             amount: 10000,
             currency: 'PLN',

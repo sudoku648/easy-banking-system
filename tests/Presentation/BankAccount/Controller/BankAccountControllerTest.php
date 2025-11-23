@@ -190,7 +190,7 @@ final class BankAccountControllerTest extends PresentationTestCase
 
         $crawler = $this->client->request('GET', '/employee/bank-account/open/existing-customer');
         $form = $crawler->selectButton('Open New Account')->form([
-            'open_account_existing_customer_form[customerId]' => $customer->getId()->getValue(),
+            'open_account_existing_customer_form[customerId]' => $customer->id->getValue(),
             'open_account_existing_customer_form[currency]' => 'EUR',
         ]);
 
@@ -201,10 +201,10 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->assertHasFlashMessage('success', 'Bank account opened successfully');
         
         // Verify account was created
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         self::assertCount(1, $accounts);
-        self::assertSame('EUR', $accounts[0]->getBalance()->getCurrency()->value);
+        self::assertSame('EUR', $accounts[0]->balance->getCurrency()->value);
     }
 
     public function testOpenExistingCustomerFormShowsCustomerList(): void
@@ -245,12 +245,12 @@ final class BankAccountControllerTest extends PresentationTestCase
         // Create an account to close
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $accountToClose = $accounts[0];
         
@@ -259,7 +259,7 @@ final class BankAccountControllerTest extends PresentationTestCase
 
         $crawler = $this->client->request('GET', '/employee/bank-account/close');
         $form = $crawler->selectButton('Close Account')->form([
-            'close_bank_account_form[bankAccountId]' => $accountToClose->getId()->getValue(),
+            'close_bank_account_form[bankAccountId]' => $accountToClose->id->getValue(),
         ]);
 
         $this->client->submit($form);
@@ -269,9 +269,9 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->assertHasFlashMessage('success', 'Bank account closed successfully');
         
         // Verify account is closed
-        $closedAccount = $this->bankAccountRepository->findById($accountToClose->getId());
+        $closedAccount = $this->bankAccountRepository->findById($accountToClose->id);
         self::assertNotNull($closedAccount);
-        self::assertFalse($closedAccount->isActive());
+        self::assertFalse($closedAccount->isActive);
     }
 
     public function testCloseAccountFormShowsOnlyActiveAccounts(): void
@@ -281,7 +281,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         // Create an active account
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
@@ -294,8 +294,8 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
         
         // Should show the active account's IBAN
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
-        $this->assertPageContains($accounts[0]->getIban()->getValue());
+        $this->assertPageContains($accounts[0]->iban->getValue());
     }
 }

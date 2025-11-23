@@ -18,7 +18,7 @@ final class InMemoryTransactionRepository implements TransactionRepositoryInterf
 
     public function save(Transaction $transaction): void
     {
-        $this->transactions[$transaction->getId()->getValue()] = $transaction;
+        $this->transactions[$transaction->id->getValue()] = $transaction;
     }
 
     public function findById(TransactionId $id): ?Transaction
@@ -34,7 +34,7 @@ final class InMemoryTransactionRepository implements TransactionRepositoryInterf
         return array_values(
             array_filter(
                 $this->transactions,
-                fn (Transaction $transaction): bool => $transaction->getBankAccountId()->equals($bankAccountId),
+                fn (Transaction $transaction): bool => $transaction->bankAccountId->equals($bankAccountId),
             ),
         );
     }

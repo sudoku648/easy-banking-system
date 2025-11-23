@@ -8,10 +8,6 @@ use App\UserManagement\Domain\Entity\Customer;
 use App\UserManagement\Domain\Entity\Employee;
 use App\UserManagement\Domain\Entity\User;
 use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
-use App\UserManagement\Domain\ValueObject\FirstName;
-use App\UserManagement\Domain\ValueObject\HashedPassword;
-use App\UserManagement\Domain\ValueObject\LastName;
-use App\UserManagement\Domain\ValueObject\Locale;
 use App\UserManagement\Domain\ValueObject\UserId;
 use App\UserManagement\Domain\ValueObject\Username;
 use App\UserManagement\Domain\ValueObject\UserRole;
@@ -27,23 +23,23 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
     public function save(User $user): void
     {
         $data = [
-            'id' => $user->getId()->getValue(),
-            'username' => $user->getUsername()->getValue(),
-            'password' => $user->getPassword()->getValue(),
-            'first_name' => $user->getFirstName()->getValue(),
-            'last_name' => $user->getLastName()->getValue(),
-            'is_active' => $user->isActive(),
+            'id' => $user->id->getValue(),
+            'username' => $user->username->getValue(),
+            'password' => $user->password->getValue(),
+            'first_name' => $user->firstName->getValue(),
+            'last_name' => $user->lastName->getValue(),
+            'is_active' => $user->isActive,
             'role' => $user->getRole()->value,
-            'locale' => $user->getLocale()->value,
+            'locale' => $user->locale->value,
         ];
 
         $exists = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM "user" WHERE id = :id',
-            ['id' => $user->getId()->getValue()],
+            ['id' => $user->id->getValue()],
         );
 
         if ($exists) {
-            $this->connection->update('"user"', $data, ['id' => $user->getId()->getValue()]);
+            $this->connection->update('"user"', $data, ['id' => $user->id->getValue()]);
         } else {
             $this->connection->insert('"user"', $data);
         }
@@ -118,16 +114,9 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
     {
         $role = UserRole::fromString($data['role']);
 
-        $userId = new UserId($data['id']);
-        $username = new Username($data['username']);
-        $password = new HashedPassword($data['password']);
-        $firstName = new FirstName($data['first_name']);
-        $lastName = new LastName($data['last_name']);
-        $locale = Locale::fromString($data['locale']);
-
         return match ($role) {
-            UserRole::EMPLOYEE => new Employee($userId, $username, $password, $firstName, $lastName, (bool) $data['is_active'], $locale),
-            UserRole::CUSTOMER => new Customer($userId, $username, $password, $firstName, $lastName, (bool) $data['is_active'], $locale),
+            UserRole::EMPLOYEE => Employee::fromRaw($data),
+            UserRole::CUSTOMER => Customer::fromRaw($data),
         };
     }
 }

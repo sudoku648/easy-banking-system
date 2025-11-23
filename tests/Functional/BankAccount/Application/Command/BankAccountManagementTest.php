@@ -61,10 +61,10 @@ final class BankAccountManagementTest extends ApplicationTestCase
 
         self::assertCount(1, $accounts);
         $account = $accounts[0];
-        self::assertTrue($account->getCustomerId()->equals($customerId));
-        self::assertSame(Currency::PLN, $account->getBalance()->getCurrency());
-        self::assertTrue($account->getBalance()->isZero());
-        self::assertTrue($account->isActive());
+        self::assertTrue($account->customerId->equals($customerId));
+        self::assertSame(Currency::PLN, $account->balance->getCurrency());
+        self::assertTrue($account->balance->isZero());
+        self::assertTrue($account->isActive);
     }
 
     public function testOpenBankAccountDispatchesBankAccountOpenedEvent(): void
@@ -111,7 +111,7 @@ final class BankAccountManagementTest extends ApplicationTestCase
         
         // Extract currencies from accounts
         $currencies = array_map(
-            fn (BankAccount $account): Currency => $account->getBalance()->getCurrency(),
+            fn (BankAccount $account): Currency => $account->balance->getCurrency(),
             $accounts,
         );
         
@@ -131,7 +131,7 @@ final class BankAccountManagementTest extends ApplicationTestCase
         $openHandler($openCommand);
 
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
-        $accountId = $accounts[0]->getId();
+        $accountId = $accounts[0]->id;
 
         if ($this->isUsingInMemoryEventBus()) {
             $this->getEventBus()->clear();
@@ -143,8 +143,8 @@ final class BankAccountManagementTest extends ApplicationTestCase
         $account = $this->bankAccountRepository->findById($accountId);
 
         self::assertNotNull($account);
-        self::assertFalse($account->isActive());
-        self::assertTrue($account->getBalance()->isZero());
+        self::assertFalse($account->isActive);
+        self::assertTrue($account->balance->isZero());
 
         if ($this->isUsingInMemoryEventBus()) {
             $eventBus = $this->getEventBus();
@@ -183,10 +183,10 @@ final class BankAccountManagementTest extends ApplicationTestCase
         self::assertCount(2, $activeAccounts);
 
         $accounts1 = $this->bankAccountRepository->findByCustomerId($customerId1);
-        $closeHandler(new CloseBankAccountCommand($accounts1[0]->getId()->getValue()));
+        $closeHandler(new CloseBankAccountCommand($accounts1[0]->id->getValue()));
 
         $activeAccounts = $this->bankAccountRepository->findAllActive();
         self::assertCount(1, $activeAccounts);
-        self::assertTrue($activeAccounts[0]->getCustomerId()->equals($customerId2));
+        self::assertTrue($activeAccounts[0]->customerId->equals($customerId2));
     }
 }

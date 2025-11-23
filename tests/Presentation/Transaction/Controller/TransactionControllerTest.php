@@ -63,7 +63,7 @@ final class TransactionControllerTest extends PresentationTestCase
         // Create an account for the customer
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
@@ -87,14 +87,14 @@ final class TransactionControllerTest extends PresentationTestCase
         // Create accounts
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'EUR',
             ),
         );
@@ -105,12 +105,12 @@ final class TransactionControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
         
         // Verify accounts are shown
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         
         foreach ($accounts as $account) {
-            if ($account->isActive()) {
-                $this->assertPageContains($account->getIban()->getValue());
+            if ($account->isActive) {
+                $this->assertPageContains($account->iban->getValue());
             }
         }
     }
@@ -122,7 +122,7 @@ final class TransactionControllerTest extends PresentationTestCase
         // Create an account
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
@@ -145,21 +145,21 @@ final class TransactionControllerTest extends PresentationTestCase
         // Create accounts
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer1->getId()->getValue(),
+                customerId: $customer1->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer2->getId()->getValue(),
+                customerId: $customer2->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
         // Get accounts
-        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->getId()->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->getId()->getValue());
+        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->id->getValue());
+        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
         
@@ -171,8 +171,8 @@ final class TransactionControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/customer/transaction/transfer');
         
         $form = $crawler->selectButton('Transfer')->form([
-            'transfer_money_form[fromBankAccountId]' => $account1->getId()->getValue(),
-            'transfer_money_form[toIban]' => $account2->getIban()->getValue(),
+            'transfer_money_form[fromBankAccountId]' => $account1->id->getValue(),
+            'transfer_money_form[toIban]' => $account2->iban->getValue(),
             'transfer_money_form[amount]' => '100.00',
         ]);
 
@@ -192,19 +192,19 @@ final class TransactionControllerTest extends PresentationTestCase
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
         
         $this->loginAsCustomerUser($customer);
         $crawler = $this->client->request('GET', '/customer/transaction/transfer');
         
         $form = $crawler->selectButton('Transfer')->form([
-            'transfer_money_form[fromBankAccountId]' => $account->getId()->getValue(),
+            'transfer_money_form[fromBankAccountId]' => $account->id->getValue(),
             'transfer_money_form[toIban]' => 'INVALID', // Invalid IBAN
             'transfer_money_form[amount]' => '10.00',
         ]);
@@ -223,20 +223,20 @@ final class TransactionControllerTest extends PresentationTestCase
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer2->getId()->getValue(),
+                customerId: $customer2->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
         
@@ -244,8 +244,8 @@ final class TransactionControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/customer/transaction/transfer');
         
         $form = $crawler->selectButton('Transfer')->form([
-            'transfer_money_form[fromBankAccountId]' => $account->getId()->getValue(),
-            'transfer_money_form[toIban]' => $account2->getIban()->getValue(),
+            'transfer_money_form[fromBankAccountId]' => $account->id->getValue(),
+            'transfer_money_form[toIban]' => $account2->iban->getValue(),
             'transfer_money_form[amount]' => '0',
         ]);
 
@@ -263,20 +263,20 @@ final class TransactionControllerTest extends PresentationTestCase
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer2->getId()->getValue(),
+                customerId: $customer2->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
         
@@ -284,8 +284,8 @@ final class TransactionControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/customer/transaction/transfer');
         
         $form = $crawler->selectButton('Transfer')->form([
-            'transfer_money_form[fromBankAccountId]' => $account->getId()->getValue(),
-            'transfer_money_form[toIban]' => $account2->getIban()->getValue(),
+            'transfer_money_form[fromBankAccountId]' => $account->id->getValue(),
+            'transfer_money_form[toIban]' => $account2->iban->getValue(),
             'transfer_money_form[amount]' => '-50.00',
         ]);
 
@@ -345,20 +345,20 @@ final class TransactionControllerTest extends PresentationTestCase
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer1->getId()->getValue(),
+                customerId: $customer1->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer2->getId()->getValue(),
+                customerId: $customer2->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
-        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->getId()->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->getId()->getValue());
+        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->id->getValue());
+        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
         
@@ -371,8 +371,8 @@ final class TransactionControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/customer/transaction/transfer');
         
         $form = $crawler->selectButton('Transfer')->form([
-            'transfer_money_form[fromBankAccountId]' => $account1->getId()->getValue(),
-            'transfer_money_form[toIban]' => $account2->getIban()->getValue(),
+            'transfer_money_form[fromBankAccountId]' => $account1->id->getValue(),
+            'transfer_money_form[toIban]' => $account2->iban->getValue(),
             'transfer_money_form[amount]' => '100.00',
         ]);
         
@@ -382,7 +382,7 @@ final class TransactionControllerTest extends PresentationTestCase
         $this->client->request('GET', '/customer/transaction/history');
         
         $this->assertResponseIsSuccessful();
-        $this->assertPageContains($account1->getIban()->getValue());
+        $this->assertPageContains($account1->iban->getValue());
         $this->assertPageContains('100.00');
         $this->assertPageContains('PLN');
         $this->assertPageContains('Transfer (withdrawal)');
@@ -396,20 +396,20 @@ final class TransactionControllerTest extends PresentationTestCase
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer1->getId()->getValue(),
+                customerId: $customer1->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer2->getId()->getValue(),
+                customerId: $customer2->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
-        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->getId()->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->getId()->getValue());
+        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->id->getValue());
+        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
         
@@ -425,8 +425,8 @@ final class TransactionControllerTest extends PresentationTestCase
         $crawler = $this->client->request('GET', '/customer/transaction/transfer');
         
         $form = $crawler->selectButton('Transfer')->form([
-            'transfer_money_form[fromBankAccountId]' => $account1->getId()->getValue(),
-            'transfer_money_form[toIban]' => $account2->getIban()->getValue(),
+            'transfer_money_form[fromBankAccountId]' => $account1->id->getValue(),
+            'transfer_money_form[toIban]' => $account2->iban->getValue(),
             'transfer_money_form[amount]' => '100.00',
         ]);
         
@@ -435,14 +435,14 @@ final class TransactionControllerTest extends PresentationTestCase
         // Check customer1's transaction history
         $this->client->request('GET', '/customer/transaction/history');
         $this->assertResponseIsSuccessful();
-        $this->assertPageContains($account1->getIban()->getValue());
+        $this->assertPageContains($account1->iban->getValue());
         
         // Login as customer2 and check they see their transaction
         $this->loginAsCustomerUser($customer2);
         $this->client->request('GET', '/customer/transaction/history');
         $this->assertResponseIsSuccessful();
-        $this->assertPageContains($account2->getIban()->getValue());
+        $this->assertPageContains($account2->iban->getValue());
         // Should not see customer1's account
-        $this->assertPageNotContains($account1->getIban()->getValue());
+        $this->assertPageNotContains($account1->iban->getValue());
     }
 }

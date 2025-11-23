@@ -76,7 +76,7 @@ final class SecurityController extends AbstractController
         $user = $this->getUser();
         if ($user instanceof SecurityUser) {
             $commandBus->dispatch(new ChangeUserLocaleCommand(
-                $user->getUser()->getId(),
+                $user->getUser()->id,
                 $localeObject,
             ));
         }

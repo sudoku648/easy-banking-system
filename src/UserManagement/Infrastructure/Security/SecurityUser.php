@@ -22,7 +22,7 @@ final readonly class SecurityUser implements UserInterface, PasswordAuthenticate
 
     public function getUserIdentifier(): string
     {
-        return $this->user->getUsername()->getValue();
+        return $this->user->username->getValue();
     }
 
     public function getRoles(): array
@@ -38,7 +38,7 @@ final readonly class SecurityUser implements UserInterface, PasswordAuthenticate
 
     public function getPassword(): string
     {
-        return $this->user->getPassword()->getValue();
+        return $this->user->password->getValue();
     }
 
     public function eraseCredentials(): void

@@ -36,7 +36,7 @@ final readonly class DepositMoneyCommandHandler
         $depositAmount = new Money($command->amount, $depositCurrency);
 
         // For cash deposits, currency must match account currency
-        if (!$depositCurrency->equals($bankAccount->getBalance()->getCurrency())) {
+        if (!$depositCurrency->equals($bankAccount->balance->getCurrency())) {
             throw new \DomainException('Deposit currency must match account currency');
         }
 
@@ -61,8 +61,8 @@ final readonly class DepositMoneyCommandHandler
         // Dispatch event
         $this->eventBus->dispatch(
             new MoneyDeposited(
-                $depositTransaction->getId(),
-                $bankAccount->getIban(),
+                $depositTransaction->id,
+                $bankAccount->iban,
                 $depositAmount,
                 $occurredAt,
             ),

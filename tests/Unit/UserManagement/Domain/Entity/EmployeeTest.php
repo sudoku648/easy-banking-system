@@ -25,12 +25,12 @@ final class EmployeeTest extends TestCase
 
         $employee = Employee::create($userId, $username, $password, $firstName, $lastName);
 
-        self::assertSame($userId, $employee->getId());
-        self::assertSame($username, $employee->getUsername());
-        self::assertSame($password, $employee->getPassword());
-        self::assertSame($firstName, $employee->getFirstName());
-        self::assertSame($lastName, $employee->getLastName());
-        self::assertTrue($employee->isActive());
+        self::assertSame($userId, $employee->id);
+        self::assertSame($username, $employee->username);
+        self::assertSame($password, $employee->password);
+        self::assertSame($firstName, $employee->firstName);
+        self::assertSame($lastName, $employee->lastName);
+        self::assertTrue($employee->isActive);
     }
 
     public function testGetRoleReturnsEmployeeRole(): void
@@ -71,7 +71,7 @@ final class EmployeeTest extends TestCase
 
         $employee->deactivate();
 
-        self::assertFalse($employee->isActive());
+        self::assertFalse($employee->isActive);
     }
 
     public function testActivateSetsActiveToTrue(): void
@@ -87,6 +87,6 @@ final class EmployeeTest extends TestCase
         $employee->deactivate();
         $employee->activate();
 
-        self::assertTrue($employee->isActive());
+        self::assertTrue($employee->isActive);
     }
 }

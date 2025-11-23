@@ -56,11 +56,11 @@ final class DepositMoneyTest extends ApplicationTestCase
         $account = $accounts[0];
 
         // Initial balance should be 0
-        self::assertSame(0, $account->getBalance()->getAmount());
+        self::assertSame(0, $account->balance->getAmount());
 
         // Deposit money
         $command = new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 50000, // 500.00 PLN
             currency: 'PLN',
         );
@@ -68,10 +68,10 @@ final class DepositMoneyTest extends ApplicationTestCase
         $handler($command);
 
         // Verify balance
-        $accountAfter = $this->bankAccountRepository->findById($account->getId());
+        $accountAfter = $this->bankAccountRepository->findById($account->id);
 
         self::assertNotNull($accountAfter);
-        self::assertSame(50000, $accountAfter->getBalance()->getAmount());
+        self::assertSame(50000, $accountAfter->balance->getAmount());
     }
 
     public function testDepositMoneyCreatesTransaction(): void
@@ -85,7 +85,7 @@ final class DepositMoneyTest extends ApplicationTestCase
         $account = $accounts[0];
 
         $command = new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 30000,
             currency: 'PLN',
         );
@@ -94,16 +94,16 @@ final class DepositMoneyTest extends ApplicationTestCase
 
         // Verify transaction
         $transactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
         );
 
         self::assertCount(1, $transactions);
 
         $transaction = $transactions[0];
-        self::assertSame(TransactionType::CASH_DEPOSIT, $transaction->getType());
-        self::assertSame(30000, $transaction->getAmount()->getAmount());
-        self::assertSame(Currency::PLN, $transaction->getAmount()->getCurrency());
-        self::assertSame(30000, $transaction->getOriginalAmount()->getAmount());
+        self::assertSame(TransactionType::CASH_DEPOSIT, $transaction->type);
+        self::assertSame(30000, $transaction->amount->getAmount());
+        self::assertSame(Currency::PLN, $transaction->amount->getCurrency());
+        self::assertSame(30000, $transaction->originalAmount->getAmount());
     }
 
     public function testDepositMoneyDispatchesMoneyDepositedEvent(): void
@@ -124,7 +124,7 @@ final class DepositMoneyTest extends ApplicationTestCase
         $eventBus->clear();
 
         $command = new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 25000,
             currency: 'PLN',
         );
@@ -136,7 +136,7 @@ final class DepositMoneyTest extends ApplicationTestCase
         self::assertCount(1, $events);
         $event = $events[0];
         self::assertSame(25000, $event->amount->getAmount());
-        self::assertTrue($event->iban->equals($account->getIban()));
+        self::assertTrue($event->iban->equals($account->iban));
     }
 
     public function testDepositMoneyThrowsExceptionForNonExistentAccount(): void
@@ -169,7 +169,7 @@ final class DepositMoneyTest extends ApplicationTestCase
 
         // Try to deposit EUR into PLN account
         $command = new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 10000,
             currency: 'EUR',
         );
@@ -191,7 +191,7 @@ final class DepositMoneyTest extends ApplicationTestCase
         $account = $accounts[0];
 
         $command = new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 20000, // 200.00 EUR
             currency: 'EUR',
         );
@@ -199,11 +199,11 @@ final class DepositMoneyTest extends ApplicationTestCase
         $handler($command);
 
         // Verify balance
-        $accountAfter = $this->bankAccountRepository->findById($account->getId());
+        $accountAfter = $this->bankAccountRepository->findById($account->id);
 
         self::assertNotNull($accountAfter);
-        self::assertSame(20000, $accountAfter->getBalance()->getAmount());
-        self::assertSame(Currency::EUR, $accountAfter->getBalance()->getCurrency());
+        self::assertSame(20000, $accountAfter->balance->getAmount());
+        self::assertSame(Currency::EUR, $accountAfter->balance->getCurrency());
     }
 
     public function testMultipleDepositsAccumulate(): void
@@ -218,34 +218,34 @@ final class DepositMoneyTest extends ApplicationTestCase
 
         // First deposit
         $handler(new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 10000,
             currency: 'PLN',
         ));
 
         // Second deposit
         $handler(new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 5000,
             currency: 'PLN',
         ));
 
         // Third deposit
         $handler(new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 3000,
             currency: 'PLN',
         ));
 
         // Verify balance
-        $accountAfter = $this->bankAccountRepository->findById($account->getId());
+        $accountAfter = $this->bankAccountRepository->findById($account->id);
 
         self::assertNotNull($accountAfter);
-        self::assertSame(18000, $accountAfter->getBalance()->getAmount());
+        self::assertSame(18000, $accountAfter->balance->getAmount());
 
         // Verify transactions
         $transactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
         );
 
         self::assertCount(3, $transactions);

@@ -24,12 +24,12 @@ final readonly class GetAllCustomersQueryHandler
 
         return array_values(array_map(
             fn (Customer $customer): array => [
-                'id' => $customer->getId()->getValue(),
-                'username' => $customer->getUsername()->getValue(),
-                'firstName' => $customer->getFirstName()->getValue(),
-                'lastName' => $customer->getLastName()->getValue(),
+                'id' => $customer->id->getValue(),
+                'username' => $customer->username->getValue(),
+                'firstName' => $customer->firstName->getValue(),
+                'lastName' => $customer->lastName->getValue(),
                 'fullName' => $customer->getFullName(),
-                'isActive' => $customer->isActive(),
+                'isActive' => $customer->isActive,
             ],
             $customers,
         ));

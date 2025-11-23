@@ -55,51 +55,51 @@ final class CloseBankAccountWithBalanceTest extends ApplicationTestCase
             $this->bankAccountRepository,
         );
         $depositHandler(new DepositMoneyCommand(
-            bankAccountId: $account->getId()->getValue(),
+            bankAccountId: $account->id->getValue(),
             amount: 50000, // 500.00 PLN
             currency: 'PLN',
         ));
 
         // Verify initial state
-        $accountBefore = $this->bankAccountRepository->findById($account->getId());
+        $accountBefore = $this->bankAccountRepository->findById($account->id);
         self::assertNotNull($accountBefore);
-        self::assertSame(50000, $accountBefore->getBalance()->getAmount());
+        self::assertSame(50000, $accountBefore->balance->getAmount());
 
         // Get transactions before closing
         $transactionsBefore = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
         );
         self::assertCount(1, $transactionsBefore); // Only deposit transaction
-        self::assertSame(TransactionType::CASH_DEPOSIT, $transactionsBefore[0]->getType());
+        self::assertSame(TransactionType::CASH_DEPOSIT, $transactionsBefore[0]->type);
 
         // Act: Close the account
         $closeHandler = new CloseBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
-        $closeHandler(new CloseBankAccountCommand($account->getId()->getValue()));
+        $closeHandler(new CloseBankAccountCommand($account->id->getValue()));
 
         // Assert: Account is closed with zero balance
-        $accountAfter = $this->bankAccountRepository->findById($account->getId());
+        $accountAfter = $this->bankAccountRepository->findById($account->id);
         self::assertNotNull($accountAfter);
-        self::assertFalse($accountAfter->isActive());
-        self::assertTrue($accountAfter->getBalance()->isZero());
+        self::assertFalse($accountAfter->isActive);
+        self::assertTrue($accountAfter->balance->isZero());
 
         // Assert: Withdrawal transaction was created
         $transactionsAfter = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
         );
         self::assertCount(2, $transactionsAfter); // Deposit + withdrawal transactions
 
         // Find the withdrawal transaction
         $withdrawalTransaction = null;
         foreach ($transactionsAfter as $transaction) {
-            if ($transaction->getType() === TransactionType::CASH_WITHDRAWAL) {
+            if ($transaction->type === TransactionType::CASH_WITHDRAWAL) {
                 $withdrawalTransaction = $transaction;
                 break;
             }
         }
 
         self::assertNotNull($withdrawalTransaction, 'Withdrawal transaction should be created when closing account with balance');
-        self::assertSame(50000, $withdrawalTransaction->getAmount()->getAmount());
-        self::assertSame('PLN', $withdrawalTransaction->getAmount()->getCurrency()->value);
+        self::assertSame(50000, $withdrawalTransaction->amount->getAmount());
+        self::assertSame('PLN', $withdrawalTransaction->amount->getCurrency()->value);
     }
 
     public function testClosingAccountWithZeroBalanceDoesNotCreateTransaction(): void
@@ -115,23 +115,23 @@ final class CloseBankAccountWithBalanceTest extends ApplicationTestCase
         $account = $accounts[0];
 
         // Verify account has zero balance
-        $accountBefore = $this->bankAccountRepository->findById($account->getId());
+        $accountBefore = $this->bankAccountRepository->findById($account->id);
         self::assertNotNull($accountBefore);
-        self::assertTrue($accountBefore->getBalance()->isZero());
+        self::assertTrue($accountBefore->balance->isZero());
 
         // Get transactions before closing
         $transactionsBefore = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
         );
         self::assertCount(0, $transactionsBefore); // No transactions
 
         // Act: Close the account
         $closeHandler = new CloseBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
-        $closeHandler(new CloseBankAccountCommand($account->getId()->getValue()));
+        $closeHandler(new CloseBankAccountCommand($account->id->getValue()));
 
         // Assert: No withdrawal transaction should be created
         $transactionsAfter = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
         );
         self::assertCount(0, $transactionsAfter); // Still no transactions
     }

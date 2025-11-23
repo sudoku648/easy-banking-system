@@ -91,11 +91,11 @@ abstract class PresentationTestCase extends WebTestCase
         );
         
         $customer = Customer::create(
-            id: $customer->getId(),
-            username: $customer->getUsername(),
+            id: $customer->id,
+            username: $customer->username,
             password: new HashedPassword($hashedPassword),
-            firstName: $customer->getFirstName(),
-            lastName: $customer->getLastName(),
+            firstName: $customer->firstName,
+            lastName: $customer->lastName,
         );
         $customer->changeLocale(\App\UserManagement\Domain\ValueObject\Locale::ENGLISH);
 
@@ -132,11 +132,11 @@ abstract class PresentationTestCase extends WebTestCase
         );
         
         $employee = Employee::create(
-            id: $employee->getId(),
-            username: $employee->getUsername(),
+            id: $employee->id,
+            username: $employee->username,
             password: new HashedPassword($hashedPassword),
-            firstName: $employee->getFirstName(),
-            lastName: $employee->getLastName(),
+            firstName: $employee->firstName,
+            lastName: $employee->lastName,
         );
         $employee->changeLocale(\App\UserManagement\Domain\ValueObject\Locale::ENGLISH);
 
@@ -172,7 +172,7 @@ abstract class PresentationTestCase extends WebTestCase
      */
     protected function loginAsCustomer(Customer $customer, string $password = 'password123'): Crawler
     {
-        return $this->loginAs($customer->getUsername()->getValue(), $password);
+        return $this->loginAs($customer->username->getValue(), $password);
     }
 
     /**
@@ -180,7 +180,7 @@ abstract class PresentationTestCase extends WebTestCase
      */
     protected function loginAsEmployee(Employee $employee, string $password = 'password123'): Crawler
     {
-        return $this->loginAs($employee->getUsername()->getValue(), $password);
+        return $this->loginAs($employee->username->getValue(), $password);
     }
 
     /**

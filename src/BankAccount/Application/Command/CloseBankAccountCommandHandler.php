@@ -27,7 +27,7 @@ final readonly class CloseBankAccountCommandHandler
             throw BankAccountNotFoundException::withId($bankAccountId->getValue());
         }
 
-        $balanceToWithdraw = $bankAccount->getBalance();
+        $balanceToWithdraw = $bankAccount->balance;
 
         // If there's balance, withdraw it as cash
         if ($balanceToWithdraw->isPositive()) {
@@ -39,7 +39,7 @@ final readonly class CloseBankAccountCommandHandler
 
         $this->eventBus->dispatch(
             new BankAccountClosed(
-                $bankAccount->getId(),
+                $bankAccount->id,
                 $balanceToWithdraw,
                 new \DateTimeImmutable(),
             ),

@@ -41,13 +41,13 @@ final class TransactionTest extends TestCase
             $this->occurredAt,
         );
 
-        self::assertSame($this->transactionId, $transaction->getId());
-        self::assertSame(TransactionType::TRANSFER_WITHDRAWAL, $transaction->getType());
-        self::assertSame($this->bankAccountId, $transaction->getBankAccountId());
-        self::assertTrue($transaction->getAmount()->equals($amount));
-        self::assertTrue($transaction->getOriginalAmount()->equals($originalAmount));
-        self::assertTrue($transaction->getExchangeRate()->equals($exchangeRate));
-        self::assertSame($this->occurredAt, $transaction->getOccurredAt());
+        self::assertSame($this->transactionId, $transaction->id);
+        self::assertSame(TransactionType::TRANSFER_WITHDRAWAL, $transaction->type);
+        self::assertSame($this->bankAccountId, $transaction->bankAccountId);
+        self::assertTrue($transaction->amount->equals($amount));
+        self::assertTrue($transaction->originalAmount->equals($originalAmount));
+        self::assertTrue($transaction->exchangeRate->equals($exchangeRate));
+        self::assertSame($this->occurredAt, $transaction->occurredAt);
     }
 
     public function testCreateTransferDepositCreatesValidTransaction(): void
@@ -65,13 +65,13 @@ final class TransactionTest extends TestCase
             $this->occurredAt,
         );
 
-        self::assertSame($this->transactionId, $transaction->getId());
-        self::assertSame(TransactionType::TRANSFER_DEPOSIT, $transaction->getType());
-        self::assertSame($this->bankAccountId, $transaction->getBankAccountId());
-        self::assertTrue($transaction->getAmount()->equals($amount));
-        self::assertTrue($transaction->getOriginalAmount()->equals($originalAmount));
-        self::assertTrue($transaction->getExchangeRate()->equals($exchangeRate));
-        self::assertSame($this->occurredAt, $transaction->getOccurredAt());
+        self::assertSame($this->transactionId, $transaction->id);
+        self::assertSame(TransactionType::TRANSFER_DEPOSIT, $transaction->type);
+        self::assertSame($this->bankAccountId, $transaction->bankAccountId);
+        self::assertTrue($transaction->amount->equals($amount));
+        self::assertTrue($transaction->originalAmount->equals($originalAmount));
+        self::assertTrue($transaction->exchangeRate->equals($exchangeRate));
+        self::assertSame($this->occurredAt, $transaction->occurredAt);
     }
 
     public function testCreateCashWithdrawalCreatesValidTransaction(): void
@@ -85,12 +85,12 @@ final class TransactionTest extends TestCase
             $this->occurredAt,
         );
 
-        self::assertSame($this->transactionId, $transaction->getId());
-        self::assertSame(TransactionType::CASH_WITHDRAWAL, $transaction->getType());
-        self::assertSame($this->bankAccountId, $transaction->getBankAccountId());
-        self::assertTrue($transaction->getAmount()->equals($amount));
-        self::assertTrue($transaction->getOriginalAmount()->equals($amount));
-        self::assertSame($this->occurredAt, $transaction->getOccurredAt());
+        self::assertSame($this->transactionId, $transaction->id);
+        self::assertSame(TransactionType::CASH_WITHDRAWAL, $transaction->type);
+        self::assertSame($this->bankAccountId, $transaction->bankAccountId);
+        self::assertTrue($transaction->amount->equals($amount));
+        self::assertTrue($transaction->originalAmount->equals($amount));
+        self::assertSame($this->occurredAt, $transaction->occurredAt);
     }
 
     public function testCashWithdrawalUsesIdentityExchangeRate(): void
@@ -104,7 +104,7 @@ final class TransactionTest extends TestCase
             $this->occurredAt,
         );
 
-        $exchangeRate = $transaction->getExchangeRate();
+        $exchangeRate = $transaction->exchangeRate;
         self::assertSame(Currency::PLN, $exchangeRate->getFromCurrency());
         self::assertSame(Currency::PLN, $exchangeRate->getToCurrency());
         self::assertSame(1.0, $exchangeRate->getRate());
@@ -121,12 +121,12 @@ final class TransactionTest extends TestCase
             $this->occurredAt,
         );
 
-        self::assertSame($this->transactionId, $transaction->getId());
-        self::assertSame(TransactionType::CASH_DEPOSIT, $transaction->getType());
-        self::assertSame($this->bankAccountId, $transaction->getBankAccountId());
-        self::assertTrue($transaction->getAmount()->equals($amount));
-        self::assertTrue($transaction->getOriginalAmount()->equals($amount));
-        self::assertSame($this->occurredAt, $transaction->getOccurredAt());
+        self::assertSame($this->transactionId, $transaction->id);
+        self::assertSame(TransactionType::CASH_DEPOSIT, $transaction->type);
+        self::assertSame($this->bankAccountId, $transaction->bankAccountId);
+        self::assertTrue($transaction->amount->equals($amount));
+        self::assertTrue($transaction->originalAmount->equals($amount));
+        self::assertSame($this->occurredAt, $transaction->occurredAt);
     }
 
     public function testCashDepositUsesIdentityExchangeRate(): void
@@ -140,7 +140,7 @@ final class TransactionTest extends TestCase
             $this->occurredAt,
         );
 
-        $exchangeRate = $transaction->getExchangeRate();
+        $exchangeRate = $transaction->exchangeRate;
         self::assertSame(Currency::EUR, $exchangeRate->getFromCurrency());
         self::assertSame(Currency::EUR, $exchangeRate->getToCurrency());
         self::assertSame(1.0, $exchangeRate->getRate());

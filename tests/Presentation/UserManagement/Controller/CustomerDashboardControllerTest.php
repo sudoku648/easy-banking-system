@@ -68,7 +68,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         // Create a bank account for the customer
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
@@ -80,11 +80,11 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->assertPageNotContains('No bank accounts');
         
         // Check that account details are displayed
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $account = $accounts[0];
         
-        $this->assertPageContains($account->getIban()->getValue());
+        $this->assertPageContains($account->iban->getValue());
         $this->assertPageContains('PLN');
         $this->assertPageContains('0.00'); // Initial balance
     }
@@ -96,14 +96,14 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         // Create multiple bank accounts
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'EUR',
             ),
         );
@@ -115,10 +115,10 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->assertPageContains('PLN');
         $this->assertPageContains('EUR');
         
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         foreach ($accounts as $account) {
-            $this->assertPageContains($account->getIban()->getValue());
+            $this->assertPageContains($account->iban->getValue());
         }
     }
 
@@ -128,7 +128,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );

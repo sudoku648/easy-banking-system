@@ -8,9 +8,7 @@ use App\BankAccount\Domain\Entity\BankAccount;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\BankAccount\Domain\ValueObject\CustomerId;
-use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Iban;
-use App\Shared\Domain\ValueObject\Money;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 
@@ -26,12 +24,12 @@ final readonly class DbalBankAccountRepository implements BankAccountRepositoryI
     public function save(BankAccount $bankAccount): void
     {
         $data = [
-            'id' => $bankAccount->getId()->getValue(),
-            'iban' => $bankAccount->getIban()->getValue(),
-            'customer_id' => $bankAccount->getCustomerId()->getValue(),
-            'balance' => $bankAccount->getBalance()->getAmount(),
-            'currency' => $bankAccount->getBalance()->getCurrency()->value,
-            'is_active' => $bankAccount->isActive(),
+            'id' => $bankAccount->id->getValue(),
+            'iban' => $bankAccount->iban->getValue(),
+            'customer_id' => $bankAccount->customerId->getValue(),
+            'balance' => $bankAccount->balance->getAmount(),
+            'currency' => $bankAccount->balance->getCurrency()->value,
+            'is_active' => $bankAccount->isActive,
         ];
 
         $types = [
@@ -40,11 +38,11 @@ final readonly class DbalBankAccountRepository implements BankAccountRepositoryI
 
         $exists = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM bank_account WHERE id = :id',
-            ['id' => $bankAccount->getId()->getValue()],
+            ['id' => $bankAccount->id->getValue()],
         );
 
         if ($exists) {
-            $this->connection->update('bank_account', $data, ['id' => $bankAccount->getId()->getValue()], $types);
+            $this->connection->update('bank_account', $data, ['id' => $bankAccount->id->getValue()], $types);
         } else {
             $this->connection->insert('bank_account', $data, $types);
         }
@@ -133,12 +131,6 @@ final readonly class DbalBankAccountRepository implements BankAccountRepositoryI
      */
     private function mapToEntity(array $data): BankAccount
     {
-        return new BankAccount(
-            new BankAccountId($data['id']),
-            new Iban($data['iban']),
-            new CustomerId($data['customer_id']),
-            new Money((int) $data['balance'], Currency::fromString($data['currency'])),
-            (bool) $data['is_active'],
-        );
+        return BankAccount::fromRaw($data);
     }
 }

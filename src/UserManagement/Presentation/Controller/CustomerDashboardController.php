@@ -35,16 +35,16 @@ final class CustomerDashboardController extends AbstractController
 
         /** @var array<BankAccount> $accounts */
         $accounts = $this->handle(
-            new GetBankAccountsByCustomerIdQuery($user->getId()->getValue()),
+            new GetBankAccountsByCustomerIdQuery($user->id->getValue()),
         );
 
         $accountsData = array_map(
             fn (BankAccount $account): array => [
-                'id' => $account->getId()->getValue(),
-                'iban' => $account->getIban()->getValue(),
-                'balance' => $account->getBalance()->getAmount() / 100,
-                'currency' => $account->getBalance()->getCurrency()->value,
-                'isActive' => $account->isActive(),
+                'id' => $account->id->getValue(),
+                'iban' => $account->iban->getValue(),
+                'balance' => $account->balance->getAmount() / 100,
+                'currency' => $account->balance->getCurrency()->value,
+                'isActive' => $account->isActive,
             ],
             $accounts,
         );

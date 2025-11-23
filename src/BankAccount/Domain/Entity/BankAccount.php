@@ -7,18 +7,40 @@ namespace App\BankAccount\Domain\Entity;
 use App\BankAccount\Domain\Exception\InsufficientFundsException;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\BankAccount\Domain\ValueObject\CustomerId;
+use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Iban;
 use App\Shared\Domain\ValueObject\Money;
 
 final class BankAccount
 {
-    public function __construct(
-        private readonly BankAccountId $id,
-        private readonly Iban $iban,
-        private readonly CustomerId $customerId,
-        private Money $balance,
-        private bool $isActive = true,
+    private function __construct(
+        public readonly BankAccountId $id,
+        public readonly Iban $iban,
+        public readonly CustomerId $customerId,
+        public private(set) Money $balance,
+        public private(set) bool $isActive = true,
     ) {
+    }
+
+    /**
+     * @param array{
+     *   id: string,
+     *   iban: string,
+     *   customer_id: string,
+     *   balance: int,
+     *   currency: string,
+     *   is_active: bool,
+     * } $data
+     */
+    public static function fromRaw(array $data): self
+    {
+        return new self(
+            new BankAccountId($data['id']),
+            new Iban($data['iban']),
+            new CustomerId($data['customer_id']),
+            new Money($data['balance'], Currency::from($data['currency'])),
+            (bool) $data['is_active'],
+        );
     }
 
     public static function open(
@@ -33,31 +55,6 @@ final class BankAccount
             $customerId,
             $initialBalance,
         );
-    }
-
-    public function getId(): BankAccountId
-    {
-        return $this->id;
-    }
-
-    public function getIban(): Iban
-    {
-        return $this->iban;
-    }
-
-    public function getCustomerId(): CustomerId
-    {
-        return $this->customerId;
-    }
-
-    public function getBalance(): Money
-    {
-        return $this->balance;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->isActive;
     }
 
     public function deposit(Money $amount): void

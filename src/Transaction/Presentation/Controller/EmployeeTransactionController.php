@@ -63,7 +63,7 @@ final class EmployeeTransactionController extends AbstractController
                     new DepositMoneyCommand(
                         $dto->bankAccountId,
                         $amountInCents,
-                        $account->getBalance()->getCurrency()->value,
+                        $account->balance->getCurrency()->value,
                     ),
                 );
 

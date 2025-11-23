@@ -25,6 +25,12 @@ parameters:
 			path: src/Shared/Domain/ValueObject/UuidValueObject.php
 
 		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/UserManagement/Domain/Entity/User.php 
+
+		-
 			message: '#^Parameter \#1 \$data of method App\\Transaction\\Infrastructure\\Persistence\\Repository\\DbalTransactionRepository\:\:mapToEntity\(\) expects array\{id\: string, type\: string, bank_account_id\: string, amount\: int, currency\: string, original_amount\: int, original_currency\: string, exchange_rate\: float, \.\.\.\}, array\<string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 3

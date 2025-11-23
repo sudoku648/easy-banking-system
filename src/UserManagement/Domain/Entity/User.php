@@ -14,52 +14,47 @@ use App\UserManagement\Domain\ValueObject\UserRole;
 
 abstract class User
 {
-    public function __construct(
-        private readonly UserId $id,
-        private Username $username,
-        private HashedPassword $password,
-        private FirstName $firstName,
-        private LastName $lastName,
-        private bool $isActive = true,
-        private Locale $locale = Locale::POLISH,
+    protected function __construct(
+        public readonly UserId $id,
+        public private(set) Username $username,
+        public private(set) HashedPassword $password,
+        public private(set) FirstName $firstName,
+        public private(set) LastName $lastName,
+        public private(set) bool $isActive = true,
+        public private(set) Locale $locale = Locale::POLISH,
     ) {
+    }
+
+    /**
+     * @param array{
+     *   id: string,
+     *   username: string,
+     *   password: string,
+     *   first_name: string,
+     *   last_name: string,
+     *   is_active: bool,
+     *   role: string,
+     *   locale: string,
+     * } $data
+     */
+    public static function fromRaw(array $data): self
+    {
+        return new static(
+            new UserId($data['id']),
+            new Username($data['username']),
+            new HashedPassword($data['password']),
+            new FirstName($data['first_name']),
+            new LastName($data['last_name']),
+            (bool) $data['is_active'],
+            Locale::from($data['locale']),
+        );
     }
 
     abstract public function getRole(): UserRole;
 
-    public function getId(): UserId
-    {
-        return $this->id;
-    }
-
-    public function getUsername(): Username
-    {
-        return $this->username;
-    }
-
-    public function getPassword(): HashedPassword
-    {
-        return $this->password;
-    }
-
-    public function getFirstName(): FirstName
-    {
-        return $this->firstName;
-    }
-
-    public function getLastName(): LastName
-    {
-        return $this->lastName;
-    }
-
     public function getFullName(): string
     {
         return \sprintf('%s %s', $this->firstName->getValue(), $this->lastName->getValue());
-    }
-
-    public function isActive(): bool
-    {
-        return $this->isActive;
     }
 
     public function deactivate(): void
@@ -70,11 +65,6 @@ abstract class User
     public function activate(): void
     {
         $this->isActive = true;
-    }
-
-    public function getLocale(): Locale
-    {
-        return $this->locale;
     }
 
     public function changeLocale(Locale $locale): void

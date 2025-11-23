@@ -25,12 +25,12 @@ final class CustomerTest extends TestCase
 
         $customer = Customer::create($userId, $username, $password, $firstName, $lastName);
 
-        self::assertSame($userId, $customer->getId());
-        self::assertSame($username, $customer->getUsername());
-        self::assertSame($password, $customer->getPassword());
-        self::assertSame($firstName, $customer->getFirstName());
-        self::assertSame($lastName, $customer->getLastName());
-        self::assertTrue($customer->isActive());
+        self::assertSame($userId, $customer->id);
+        self::assertSame($username, $customer->username);
+        self::assertSame($password, $customer->password);
+        self::assertSame($firstName, $customer->firstName);
+        self::assertSame($lastName, $customer->lastName);
+        self::assertTrue($customer->isActive);
     }
 
     public function testGetRoleReturnsCustomerRole(): void
@@ -71,7 +71,7 @@ final class CustomerTest extends TestCase
 
         $customer->deactivate();
 
-        self::assertFalse($customer->isActive());
+        self::assertFalse($customer->isActive);
     }
 
     public function testActivateSetsActiveToTrue(): void
@@ -87,6 +87,6 @@ final class CustomerTest extends TestCase
         $customer->deactivate();
         $customer->activate();
 
-        self::assertTrue($customer->isActive());
+        self::assertTrue($customer->isActive);
     }
 }

@@ -45,17 +45,17 @@ final class TransactionController extends AbstractController
 
         /** @var array<BankAccount> $accounts */
         $accounts = $this->handle(
-            new GetBankAccountsByCustomerIdQuery($user->getId()->getValue()),
+            new GetBankAccountsByCustomerIdQuery($user->id->getValue()),
         );
 
-        $activeAccounts = array_values(array_filter($accounts, fn (BankAccount $account): bool => $account->isActive()));
+        $activeAccounts = array_values(array_filter($accounts, fn (BankAccount $account): bool => $account->isActive));
 
         $accountsData = array_map(
             fn (BankAccount $account): array => [
-                'id' => $account->getId()->getValue(),
-                'iban' => $account->getIban()->getValue(),
-                'balance' => $account->getBalance()->getAmount() / 100,
-                'currency' => $account->getBalance()->getCurrency()->value,
+                'id' => $account->id->getValue(),
+                'iban' => $account->iban->getValue(),
+                'balance' => $account->balance->getAmount() / 100,
+                'currency' => $account->balance->getCurrency()->value,
             ],
             $activeAccounts,
         );
@@ -100,9 +100,9 @@ final class TransactionController extends AbstractController
                 $this->handle(
                     new TransferMoneyCommand(
                         $dto->fromBankAccountId,
-                        $toAccount->getId()->getValue(),
+                        $toAccount->id->getValue(),
                         $amountInCents,
-                        $fromAccount->getBalance()->getCurrency()->value,
+                        $fromAccount->balance->getCurrency()->value,
                     ),
                 );
 
@@ -128,11 +128,11 @@ final class TransactionController extends AbstractController
 
         /** @var array<BankAccount> $accounts */
         $accounts = $this->handle(
-            new GetBankAccountsByCustomerIdQuery($user->getId()->getValue()),
+            new GetBankAccountsByCustomerIdQuery($user->id->getValue()),
         );
 
         $accountIds = array_map(
-            fn (BankAccount $account): \App\Transaction\Domain\ValueObject\BankAccountId => new \App\Transaction\Domain\ValueObject\BankAccountId($account->getId()->getValue()),
+            fn (BankAccount $account): \App\Transaction\Domain\ValueObject\BankAccountId => new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
             $accounts,
         );
 
@@ -143,20 +143,20 @@ final class TransactionController extends AbstractController
             function ($transaction) use ($accounts): array {
                 $filteredAccounts = array_filter(
                     $accounts,
-                    fn (BankAccount $acc): bool => $acc->getId()->getValue() === $transaction->getBankAccountId()->getValue(),
+                    fn (BankAccount $acc): bool => $acc->id->getValue() === $transaction->bankAccountId->getValue(),
                 );
                 $account = reset($filteredAccounts);
 
                 return [
-                    'id' => $transaction->getId()->getValue(),
-                    'type' => $transaction->getType()->value,
-                    'amount' => $transaction->getAmount()->getAmount() / 100,
-                    'currency' => $transaction->getAmount()->getCurrency()->value,
-                    'originalAmount' => $transaction->getOriginalAmount()->getAmount() / 100,
-                    'originalCurrency' => $transaction->getOriginalAmount()->getCurrency()->value,
-                    'exchangeRate' => $transaction->getExchangeRate()->getRate(),
-                    'occurredAt' => $transaction->getOccurredAt()->format('Y-m-d H:i:s'),
-                    'accountIban' => $account instanceof BankAccount ? $account->getIban()->getValue() : 'N/A',
+                    'id' => $transaction->id->getValue(),
+                    'type' => $transaction->type->value,
+                    'amount' => $transaction->amount->getAmount() / 100,
+                    'currency' => $transaction->amount->getCurrency()->value,
+                    'originalAmount' => $transaction->originalAmount->getAmount() / 100,
+                    'originalCurrency' => $transaction->originalAmount->getCurrency()->value,
+                    'exchangeRate' => $transaction->exchangeRate->getRate(),
+                    'occurredAt' => $transaction->occurredAt->format('Y-m-d H:i:s'),
+                    'accountIban' => $account instanceof BankAccount ? $account->iban->getValue() : 'N/A',
                 ];
             },
             $transactions,

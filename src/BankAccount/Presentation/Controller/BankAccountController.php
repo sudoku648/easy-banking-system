@@ -71,7 +71,7 @@ final class BankAccountController extends AbstractController
                 // Open bank account
                 $this->handle(
                     new OpenBankAccountCommand(
-                        $customer->getId()->getValue(),
+                        $customer->id->getValue(),
                         $dto->currency,
                     ),
                 );

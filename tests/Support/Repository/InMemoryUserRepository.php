@@ -19,7 +19,7 @@ final class InMemoryUserRepository implements UserRepositoryInterface
 
     public function save(User $user): void
     {
-        $this->users[$user->getId()->getValue()] = $user;
+        $this->users[$user->id->getValue()] = $user;
     }
 
     public function findById(UserId $id): ?User
@@ -30,7 +30,7 @@ final class InMemoryUserRepository implements UserRepositoryInterface
     public function findByUsername(Username $username): ?User
     {
         foreach ($this->users as $user) {
-            if ($user->getUsername()->equals($username)) {
+            if ($user->username->equals($username)) {
                 return $user;
             }
         }

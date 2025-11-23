@@ -43,7 +43,7 @@ final readonly class DatabaseUserProvider implements UserProviderInterface
         $username = new Username($identifier);
         $user = $this->userRepository->findByUsername($username);
 
-        if ($user === null || !$user->isActive()) {
+        if ($user === null || !$user->isActive) {
             throw new UserNotFoundException(\sprintf('User with username "%s" not found.', $identifier));
         }
 

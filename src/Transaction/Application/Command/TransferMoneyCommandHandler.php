@@ -46,12 +46,12 @@ final readonly class TransferMoneyCommandHandler
         // Get exchange rates if needed
         $withdrawalRate = $this->exchangeRateProvider->getRate(
             $transferCurrency,
-            $fromAccount->getBalance()->getCurrency(),
+            $fromAccount->balance->getCurrency(),
         );
 
         $depositRate = $this->exchangeRateProvider->getRate(
             $transferCurrency,
-            $toAccount->getBalance()->getCurrency(),
+            $toAccount->balance->getCurrency(),
         );
 
         // Convert to account currencies
@@ -94,9 +94,9 @@ final readonly class TransferMoneyCommandHandler
         // Dispatch event
         $this->eventBus->dispatch(
             new MoneyTransferred(
-                $withdrawalTransaction->getId(),
-                $fromAccount->getIban(),
-                $toAccount->getIban(),
+                $withdrawalTransaction->id,
+                $fromAccount->iban,
+                $toAccount->iban,
                 $transferAmount,
                 $occurredAt,
             ),

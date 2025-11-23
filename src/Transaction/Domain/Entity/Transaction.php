@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Transaction\Domain\Entity;
 
+use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Money;
 use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\ExchangeRate;
@@ -12,15 +13,45 @@ use App\Transaction\Domain\ValueObject\TransactionType;
 
 final class Transaction
 {
-    public function __construct(
-        private readonly TransactionId $id,
-        private readonly TransactionType $type,
-        private readonly BankAccountId $bankAccountId,
-        private readonly Money $amount,
-        private readonly Money $originalAmount,
-        private readonly ExchangeRate $exchangeRate,
-        private readonly \DateTimeImmutable $occurredAt,
+    private function __construct(
+        public readonly TransactionId $id,
+        public readonly TransactionType $type,
+        public readonly BankAccountId $bankAccountId,
+        public readonly Money $amount,
+        public readonly Money $originalAmount,
+        public readonly ExchangeRate $exchangeRate,
+        public readonly \DateTimeImmutable $occurredAt,
     ) {
+    }
+
+    /**
+     * @param array{
+     *   id: string,
+     *   type: string,
+     *   bank_account_id: string,
+     *   amount: int,
+     *   currency: string,
+     *   original_amount: int,
+     *   original_currency: string,
+     *   exchange_rate: float,
+     *   occurred_at: string,
+     * } $data
+     */
+    public static function fromRaw(array $data): self
+    {
+        return new self(
+            new TransactionId($data['id']),
+            TransactionType::from($data['type']),
+            new BankAccountId($data['bank_account_id']),
+            new Money($data['amount'], Currency::from($data['currency'])),
+            new Money($data['original_amount'], Currency::from($data['original_currency'])),
+            new ExchangeRate(
+                Currency::fromString($data['original_currency']),
+                Currency::fromString($data['currency']),
+                (float) $data['exchange_rate'],
+            ),
+            new \DateTimeImmutable($data['occurred_at']),
+        );
     }
 
     public static function createTransferWithdrawal(
@@ -93,40 +124,5 @@ final class Transaction
             ExchangeRate::identity($amount->getCurrency()),
             $occurredAt,
         );
-    }
-
-    public function getId(): TransactionId
-    {
-        return $this->id;
-    }
-
-    public function getType(): TransactionType
-    {
-        return $this->type;
-    }
-
-    public function getBankAccountId(): BankAccountId
-    {
-        return $this->bankAccountId;
-    }
-
-    public function getAmount(): Money
-    {
-        return $this->amount;
-    }
-
-    public function getOriginalAmount(): Money
-    {
-        return $this->originalAmount;
-    }
-
-    public function getExchangeRate(): ExchangeRate
-    {
-        return $this->exchangeRate;
-    }
-
-    public function getOccurredAt(): \DateTimeImmutable
-    {
-        return $this->occurredAt;
     }
 }

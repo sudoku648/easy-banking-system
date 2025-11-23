@@ -29,7 +29,7 @@ final readonly class LocaleListener
             $user = $token->getUser();
 
             if ($user instanceof SecurityUser) {
-                $locale = $user->getUser()->getLocale()->value;
+                $locale = $user->getUser()->locale->value;
                 $request->setLocale($locale);
                 $request->attributes->set('_locale', $locale);
                 $request->getSession()->set('_locale', $locale);

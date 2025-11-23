@@ -64,7 +64,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         // Create an account for the customer
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
@@ -89,14 +89,14 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         // Create accounts
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer1->getId()->getValue(),
+                customerId: $customer1->id->getValue(),
                 currency: 'PLN',
             ),
         );
 
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer2->getId()->getValue(),
+                customerId: $customer2->id->getValue(),
                 currency: 'EUR',
             ),
         );
@@ -107,20 +107,20 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
 
         // Verify accounts are shown
-        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->getId()->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->getId()->getValue());
+        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->id->getValue());
+        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
         $accounts1 = $this->bankAccountRepository->findByCustomerId($customerId1);
         $accounts2 = $this->bankAccountRepository->findByCustomerId($customerId2);
 
         foreach ($accounts1 as $account) {
-            if ($account->isActive()) {
-                $this->assertPageContains($account->getIban()->getValue());
+            if ($account->isActive) {
+                $this->assertPageContains($account->iban->getValue());
             }
         }
 
         foreach ($accounts2 as $account) {
-            if ($account->isActive()) {
-                $this->assertPageContains($account->getIban()->getValue());
+            if ($account->isActive) {
+                $this->assertPageContains($account->iban->getValue());
             }
         }
     }
@@ -135,20 +135,20 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         // Create account
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
 
         // Get account
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
 
         $form = $crawler->selectButton('Deposit')->form([
-            'deposit_money_form[bankAccountId]' => $account->getId()->getValue(),
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
             'deposit_money_form[amount]' => '250.50',
         ]);
 
@@ -169,31 +169,31 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         // Initial balance should be 0
-        self::assertSame(0, $account->getBalance()->getAmount());
+        self::assertSame(0, $account->balance->getAmount());
 
         $this->loginAsEmployeeUser($employee);
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
 
         $form = $crawler->selectButton('Deposit')->form([
-            'deposit_money_form[bankAccountId]' => $account->getId()->getValue(),
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
             'deposit_money_form[amount]' => '100.00',
         ]);
 
         $this->client->submit($form);
 
         // Verify balance updated
-        $accountAfter = $this->bankAccountRepository->findById($account->getId());
+        $accountAfter = $this->bankAccountRepository->findById($account->id);
         self::assertNotNull($accountAfter);
-        self::assertSame(10000, $accountAfter->getBalance()->getAmount()); // 100.00 in cents
+        self::assertSame(10000, $accountAfter->balance->getAmount()); // 100.00 in cents
     }
 
     public function testDepositCreatesTransaction(): void
@@ -203,19 +203,19 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
 
         $form = $crawler->selectButton('Deposit')->form([
-            'deposit_money_form[bankAccountId]' => $account->getId()->getValue(),
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
             'deposit_money_form[amount]' => '50.00',
         ]);
 
@@ -223,12 +223,12 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         // Verify transaction created
         $transactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->getId()->getValue()),
+            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
         );
 
         self::assertCount(1, $transactions);
-        self::assertSame(5000, $transactions[0]->getAmount()->getAmount());
-        self::assertSame('CASH_DEPOSIT', $transactions[0]->getType()->value);
+        self::assertSame(5000, $transactions[0]->amount->getAmount());
+        self::assertSame('CASH_DEPOSIT', $transactions[0]->type->value);
     }
 
     public function testDepositWithZeroAmountShowsError(): void
@@ -238,19 +238,19 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
 
         $form = $crawler->selectButton('Deposit')->form([
-            'deposit_money_form[bankAccountId]' => $account->getId()->getValue(),
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
             'deposit_money_form[amount]' => '0',
         ]);
 
@@ -268,19 +268,19 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
 
         $form = $crawler->selectButton('Deposit')->form([
-            'deposit_money_form[bankAccountId]' => $account->getId()->getValue(),
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
             'deposit_money_form[amount]' => '-50.00',
         ]);
 
@@ -298,12 +298,12 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'PLN',
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
@@ -311,7 +311,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         // First deposit
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
         $form = $crawler->selectButton('Deposit')->form([
-            'deposit_money_form[bankAccountId]' => $account->getId()->getValue(),
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
             'deposit_money_form[amount]' => '100.00',
         ]);
         $this->client->submit($form);
@@ -319,15 +319,15 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         // Second deposit
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
         $form = $crawler->selectButton('Deposit')->form([
-            'deposit_money_form[bankAccountId]' => $account->getId()->getValue(),
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
             'deposit_money_form[amount]' => '50.00',
         ]);
         $this->client->submit($form);
 
         // Verify accumulated balance
-        $accountAfter = $this->bankAccountRepository->findById($account->getId());
+        $accountAfter = $this->bankAccountRepository->findById($account->id);
         self::assertNotNull($accountAfter);
-        self::assertSame(15000, $accountAfter->getBalance()->getAmount()); // 150.00 in cents
+        self::assertSame(15000, $accountAfter->balance->getAmount()); // 150.00 in cents
     }
 
     public function testDepositIntoEurAccount(): void
@@ -337,28 +337,28 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         $this->messageBus->dispatch(
             new OpenBankAccountCommand(
-                customerId: $customer->getId()->getValue(),
+                customerId: $customer->id->getValue(),
                 currency: 'EUR',
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->getId()->getValue());
+        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
 
         $form = $crawler->selectButton('Deposit')->form([
-            'deposit_money_form[bankAccountId]' => $account->getId()->getValue(),
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
             'deposit_money_form[amount]' => '75.25',
         ]);
 
         $this->client->submit($form);
 
         // Verify balance in EUR
-        $accountAfter = $this->bankAccountRepository->findById($account->getId());
+        $accountAfter = $this->bankAccountRepository->findById($account->id);
         self::assertNotNull($accountAfter);
-        self::assertSame(7525, $accountAfter->getBalance()->getAmount()); // 75.25 EUR in cents
-        self::assertSame('EUR', $accountAfter->getBalance()->getCurrency()->value);
+        self::assertSame(7525, $accountAfter->balance->getAmount()); // 75.25 EUR in cents
+        self::assertSame('EUR', $accountAfter->balance->getCurrency()->value);
     }
 }

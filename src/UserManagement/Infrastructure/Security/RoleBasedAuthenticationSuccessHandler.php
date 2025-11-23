@@ -22,7 +22,7 @@ final readonly class RoleBasedAuthenticationSuccessHandler implements Authentica
         // Set user's preferred locale in the session
         $user = $token->getUser();
         if ($user instanceof SecurityUser) {
-            $locale = $user->getUser()->getLocale()->value;
+            $locale = $user->getUser()->locale->value;
             $request->getSession()->set('_locale', $locale);
         }
 

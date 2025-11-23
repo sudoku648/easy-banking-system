@@ -21,7 +21,7 @@ final class InMemoryBankAccountRepository implements BankAccountRepositoryInterf
 
     public function save(BankAccount $bankAccount): void
     {
-        $this->accounts[$bankAccount->getId()->getValue()] = $bankAccount;
+        $this->accounts[$bankAccount->id->getValue()] = $bankAccount;
     }
 
     public function findById(BankAccountId $id): ?BankAccount
@@ -32,7 +32,7 @@ final class InMemoryBankAccountRepository implements BankAccountRepositoryInterf
     public function findByIban(Iban $iban): ?BankAccount
     {
         foreach ($this->accounts as $account) {
-            if ($account->getIban()->equals($iban)) {
+            if ($account->iban->equals($iban)) {
                 return $account;
             }
         }
@@ -48,7 +48,7 @@ final class InMemoryBankAccountRepository implements BankAccountRepositoryInterf
         return array_values(
             array_filter(
                 $this->accounts,
-                fn (BankAccount $account): bool => $account->getCustomerId()->equals($customerId),
+                fn (BankAccount $account): bool => $account->customerId->equals($customerId),
             ),
         );
     }
@@ -61,7 +61,7 @@ final class InMemoryBankAccountRepository implements BankAccountRepositoryInterf
         return array_values(
             array_filter(
                 $this->accounts,
-                fn (BankAccount $account): bool => $account->isActive(),
+                fn (BankAccount $account): bool => $account->isActive,
             ),
         );
     }
