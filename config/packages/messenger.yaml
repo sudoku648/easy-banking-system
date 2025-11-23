@@ -9,5 +9,15 @@ framework:
         
         transports:
             sync: 'sync://'
+            async: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
+            # Route all async commands to async transport
+            'App\Shared\Application\Command\AsyncCommandInterface': async
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                # In test environment, use sync transport for async commands
+                async: 'sync://'

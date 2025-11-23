@@ -176,6 +176,20 @@ composer phpstan    # Run static analysis
 
 See [docs/ADDING_LOCALES.md](docs/ADDING_LOCALES.md) for detailed instructions on adding new locales.
 
+### Asynchronous Commands
+```bash
+# In production, run the messenger worker to process async commands
+php bin/console messenger:consume async
+
+# View failed messages
+php bin/console messenger:failed:show
+
+# Retry failed messages
+php bin/console messenger:failed:retry
+```
+
+See [docs/ASYNC_COMMANDS.md](docs/ASYNC_COMMANDS.md) for detailed instructions on implementing async commands.
+
 ## Project Scope
 
 ### Features

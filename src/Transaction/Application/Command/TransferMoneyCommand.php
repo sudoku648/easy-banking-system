@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Transaction\Application\Command;
 
-final readonly class TransferMoneyCommand
+use App\Shared\Application\Command\AsyncCommandInterface;
+
+final readonly class TransferMoneyCommand implements AsyncCommandInterface
 {
     public function __construct(
         public string $fromBankAccountId,

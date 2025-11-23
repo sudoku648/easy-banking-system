@@ -84,7 +84,12 @@ Application follows hexagonal architecture with clear separation between bounded
   - Encapsulate validation (use `webmozart/assert`)
   - Common base classes: `StringValueObject`, `IntValueObject`, `BoolValueObject`, `DateTimeValueObject`, `UuidValueObject`
   - Always implement `equals()` and `getValue()` methods
-- **Message handling**: Sync processing via Symfony Messenger
+- **Message handling**: Sync processing via Symfony Messenger by default
+- **Async commands**: Commands implementing `App\Shared\Application\Command\AsyncCommandInterface` are routed to async transport
+  - In test environment, async commands run synchronously
+  - No handler changes needed - just implement the marker interface
+  - Example: `TransferMoneyCommand implements AsyncCommandInterface`
+  - See `docs/ASYNC_COMMANDS.md` for details
 - **Data Mappers**: Used for transforming between domain entities and database records
 
 ## Docker
