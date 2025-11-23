@@ -6,9 +6,14 @@ namespace App\Shared\Domain\ValueObject;
 
 abstract class StringValueObject implements ValueObject
 {
-    public function __construct(
+    protected function __construct(
         protected readonly string $value,
     ) {
+    }
+
+    final public static function fromString(string $value): static
+    {
+        return new static($value);
     }
 
     public function getValue(): string

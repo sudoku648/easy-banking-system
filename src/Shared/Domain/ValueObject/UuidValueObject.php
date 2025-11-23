@@ -11,10 +11,15 @@ abstract class UuidValueObject implements ValueObject
 {
     private const string UUID_PATTERN = '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i';
 
-    public function __construct(
+    protected function __construct(
         protected readonly string $value,
     ) {
         Assert::regex($this->value, self::UUID_PATTERN, 'Invalid UUID format');
+    }
+
+    final public static function fromString(string $value): static
+    {
+        return new static($value);
     }
 
     public static function generate(): static

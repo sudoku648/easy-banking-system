@@ -78,10 +78,10 @@ abstract class PresentationTestCase extends WebTestCase
 
         $customer = Customer::create(
             id: UserId::generate(),
-            username: new Username($username),
-            password: new HashedPassword('temp'),
-            firstName: new FirstName($firstName),
-            lastName: new LastName($lastName),
+            username: Username::fromString($username),
+            password: HashedPassword::fromString('temp'),
+            firstName: FirstName::fromString($firstName),
+            lastName: LastName::fromString($lastName),
         );
 
         // Hash the password properly using Symfony's hasher
@@ -93,7 +93,7 @@ abstract class PresentationTestCase extends WebTestCase
         $customer = Customer::create(
             id: $customer->id,
             username: $customer->username,
-            password: new HashedPassword($hashedPassword),
+            password: HashedPassword::fromString($hashedPassword),
             firstName: $customer->firstName,
             lastName: $customer->lastName,
         );
@@ -119,10 +119,10 @@ abstract class PresentationTestCase extends WebTestCase
 
         $employee = Employee::create(
             id: UserId::generate(),
-            username: new Username($username),
-            password: new HashedPassword('temp'),
-            firstName: new FirstName($firstName),
-            lastName: new LastName($lastName),
+            username: Username::fromString($username),
+            password: HashedPassword::fromString('temp'),
+            firstName: FirstName::fromString($firstName),
+            lastName: LastName::fromString($lastName),
         );
 
         // Hash the password properly using Symfony's hasher
@@ -134,7 +134,7 @@ abstract class PresentationTestCase extends WebTestCase
         $employee = Employee::create(
             id: $employee->id,
             username: $employee->username,
-            password: new HashedPassword($hashedPassword),
+            password: HashedPassword::fromString($hashedPassword),
             firstName: $employee->firstName,
             lastName: $employee->lastName,
         );

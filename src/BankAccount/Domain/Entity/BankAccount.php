@@ -35,9 +35,9 @@ final class BankAccount
     public static function fromRaw(array $data): self
     {
         return new self(
-            new BankAccountId($data['id']),
-            new Iban($data['iban']),
-            new CustomerId($data['customer_id']),
+            BankAccountId::fromString($data['id']),
+            Iban::fromString($data['iban']),
+            CustomerId::fromString($data['customer_id']),
             new Money($data['balance'], Currency::from($data['currency'])),
             (bool) $data['is_active'],
         );

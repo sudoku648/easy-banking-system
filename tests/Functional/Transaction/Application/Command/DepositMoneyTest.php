@@ -94,7 +94,7 @@ final class DepositMoneyTest extends ApplicationTestCase
 
         // Verify transaction
         $transactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
+            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
         );
 
         self::assertCount(1, $transactions);
@@ -245,7 +245,7 @@ final class DepositMoneyTest extends ApplicationTestCase
 
         // Verify transactions
         $transactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
+            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
         );
 
         self::assertCount(3, $transactions);

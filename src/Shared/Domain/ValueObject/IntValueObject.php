@@ -6,9 +6,14 @@ namespace App\Shared\Domain\ValueObject;
 
 abstract class IntValueObject implements ValueObject
 {
-    public function __construct(
+    protected function __construct(
         protected readonly int $value,
     ) {
+    }
+
+    final public static function fromInt(int $value): static
+    {
+        return new static($value);
     }
 
     public function getValue(): int

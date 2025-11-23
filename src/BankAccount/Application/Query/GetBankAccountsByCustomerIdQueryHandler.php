@@ -21,7 +21,7 @@ final readonly class GetBankAccountsByCustomerIdQueryHandler
     public function __invoke(GetBankAccountsByCustomerIdQuery $query): array
     {
         return $this->bankAccountRepository->findByCustomerId(
-            new CustomerId($query->customerId),
+            CustomerId::fromString($query->customerId),
         );
     }
 }

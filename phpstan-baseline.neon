@@ -22,6 +22,18 @@ parameters:
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
+			path: src/Shared/Domain/ValueObject/IntValueObject.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Shared/Domain/ValueObject/StringValueObject.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 2
 			path: src/Shared/Domain/ValueObject/UuidValueObject.php
 
 		-

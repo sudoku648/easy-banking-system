@@ -12,14 +12,14 @@ final class UsernameTest extends TestCase
 {
     public function testConstructorCreatesValidUsername(): void
     {
-        $username = new Username('john.doe');
+        $username = Username::fromString('john.doe');
 
         self::assertSame('john.doe', $username->getValue());
     }
 
     public function testConstructorTrimsWhitespace(): void
     {
-        $username = new Username('  john.doe  ');
+        $username = Username::fromString('  john.doe  ');
 
         self::assertSame('john.doe', $username->getValue());
     }
@@ -29,7 +29,7 @@ final class UsernameTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Username cannot be empty');
 
-        new Username('');
+        Username::fromString('');
     }
 
     public function testConstructorThrowsExceptionForWhitespaceOnly(): void
@@ -37,7 +37,7 @@ final class UsernameTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Username cannot be empty');
 
-        new Username('   ');
+        Username::fromString('   ');
     }
 
     public function testConstructorThrowsExceptionForTooShortUsername(): void
@@ -45,7 +45,7 @@ final class UsernameTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Username must be at least 3 characters long');
 
-        new Username('jo');
+        Username::fromString('jo');
     }
 
     public function testConstructorThrowsExceptionForTooLongUsername(): void
@@ -53,12 +53,12 @@ final class UsernameTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Username cannot be longer than 50 characters');
 
-        new Username(str_repeat('a', 51));
+        Username::fromString(str_repeat('a', 51));
     }
 
     public function testConstructorAcceptsMinimumLength(): void
     {
-        $username = new Username('joe');
+        $username = Username::fromString('joe');
 
         self::assertSame('joe', $username->getValue());
     }
@@ -66,23 +66,23 @@ final class UsernameTest extends TestCase
     public function testConstructorAcceptsMaximumLength(): void
     {
         $longUsername = str_repeat('a', 50);
-        $username = new Username($longUsername);
+        $username = Username::fromString($longUsername);
 
         self::assertSame($longUsername, $username->getValue());
     }
 
     public function testEqualsReturnsTrueForSameUsername(): void
     {
-        $username1 = new Username('john.doe');
-        $username2 = new Username('john.doe');
+        $username1 = Username::fromString('john.doe');
+        $username2 = Username::fromString('john.doe');
 
         self::assertTrue($username1->equals($username2));
     }
 
     public function testEqualsReturnsFalseForDifferentUsernames(): void
     {
-        $username1 = new Username('john.doe');
-        $username2 = new Username('jane.smith');
+        $username1 = Username::fromString('john.doe');
+        $username2 = Username::fromString('jane.smith');
 
         self::assertFalse($username1->equals($username2));
     }

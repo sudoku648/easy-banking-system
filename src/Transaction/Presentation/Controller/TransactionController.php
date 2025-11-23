@@ -78,7 +78,7 @@ final class TransactionController extends AbstractController
 
             try {
                 // Find the "To" account to get its ID
-                $toIban = new Iban($dto->toIban);
+                $toIban = Iban::fromString($dto->toIban);
                 $toAccount = $this->bankAccountRepository->findByIban($toIban);
 
                 if ($toAccount === null) {
@@ -90,7 +90,7 @@ final class TransactionController extends AbstractController
 
                 // Get source account to determine currency
                 $fromAccount = $this->bankAccountRepository->findById(
-                    new BankAccountId($dto->fromBankAccountId),
+                    BankAccountId::fromString($dto->fromBankAccountId),
                 );
 
                 if ($fromAccount === null) {
@@ -132,7 +132,7 @@ final class TransactionController extends AbstractController
         );
 
         $accountIds = array_map(
-            fn (BankAccount $account): \App\Transaction\Domain\ValueObject\BankAccountId => new \App\Transaction\Domain\ValueObject\BankAccountId($account->id->getValue()),
+            fn (BankAccount $account): \App\Transaction\Domain\ValueObject\BankAccountId => \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
             $accounts,
         );
 

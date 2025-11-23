@@ -13,7 +13,7 @@ final class UuidTest extends TestCase
     public function testConstructorCreatesValidUuid(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $uuid = new Uuid($uuidString);
+        $uuid = Uuid::fromString($uuidString);
 
         self::assertSame($uuidString, $uuid->getValue());
     }
@@ -23,7 +23,7 @@ final class UuidTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid UUID format');
 
-        new Uuid('invalid-uuid');
+        Uuid::fromString('invalid-uuid');
     }
 
     public function testGenerateCreatesValidUuid(): void
@@ -47,16 +47,16 @@ final class UuidTest extends TestCase
     public function testEqualsReturnsTrueForSameUuid(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $uuid1 = new Uuid($uuidString);
-        $uuid2 = new Uuid($uuidString);
+        $uuid1 = Uuid::fromString($uuidString);
+        $uuid2 = Uuid::fromString($uuidString);
 
         self::assertTrue($uuid1->equals($uuid2));
     }
 
     public function testEqualsReturnsFalseForDifferentUuids(): void
     {
-        $uuid1 = new Uuid('123e4567-e89b-12d3-a456-426614174000');
-        $uuid2 = new Uuid('123e4567-e89b-12d3-a456-426614174001');
+        $uuid1 = Uuid::fromString('123e4567-e89b-12d3-a456-426614174000');
+        $uuid2 = Uuid::fromString('123e4567-e89b-12d3-a456-426614174001');
 
         self::assertFalse($uuid1->equals($uuid2));
     }
@@ -64,7 +64,7 @@ final class UuidTest extends TestCase
     public function testToStringReturnsUuidValue(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $uuid = new Uuid($uuidString);
+        $uuid = Uuid::fromString($uuidString);
 
         self::assertSame($uuidString, (string) $uuid);
     }

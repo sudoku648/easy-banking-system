@@ -20,7 +20,7 @@ final readonly class CloseBankAccountCommandHandler
 
     public function __invoke(CloseBankAccountCommand $command): void
     {
-        $bankAccountId = new BankAccountId($command->bankAccountId);
+        $bankAccountId = BankAccountId::fromString($command->bankAccountId);
         $bankAccount = $this->bankAccountRepository->findById($bankAccountId);
 
         if ($bankAccount === null) {

@@ -80,7 +80,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->assertPageNotContains('No bank accounts');
 
         // Check that account details are displayed
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $account = $accounts[0];
 
@@ -115,7 +115,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->assertPageContains('PLN');
         $this->assertPageContains('EUR');
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         foreach ($accounts as $account) {
             $this->assertPageContains($account->iban->getValue());

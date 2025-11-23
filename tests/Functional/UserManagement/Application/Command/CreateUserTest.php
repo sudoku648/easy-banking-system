@@ -38,7 +38,7 @@ final class CreateUserTest extends ApplicationTestCase
 
         $handler($command);
 
-        $user = $this->userRepository->findByUsername(new Username('john.doe'));
+        $user = $this->userRepository->findByUsername(Username::fromString('john.doe'));
 
         self::assertInstanceOf(Customer::class, $user);
         self::assertSame('john.doe', $user->username->getValue());
@@ -79,7 +79,7 @@ final class CreateUserTest extends ApplicationTestCase
 
         $handler($command);
 
-        $user = $this->userRepository->findByUsername(new Username('jane.smith'));
+        $user = $this->userRepository->findByUsername(Username::fromString('jane.smith'));
 
         self::assertInstanceOf(Employee::class, $user);
         self::assertSame('jane.smith', $user->username->getValue());
@@ -130,8 +130,8 @@ final class CreateUserTest extends ApplicationTestCase
         $customerHandler($customerCommand);
         $employeeHandler($employeeCommand);
 
-        $customer = $this->userRepository->findByUsername(new Username('user1'));
-        $employee = $this->userRepository->findByUsername(new Username('user2'));
+        $customer = $this->userRepository->findByUsername(Username::fromString('user1'));
+        $employee = $this->userRepository->findByUsername(Username::fromString('user2'));
 
         self::assertInstanceOf(Customer::class, $customer);
         self::assertInstanceOf(Employee::class, $employee);

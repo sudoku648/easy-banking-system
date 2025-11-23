@@ -169,11 +169,11 @@ final class TransferMoneyTest extends ApplicationTestCase
 
         // Verify transactions
         $fromTransactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($fromAccount->id->getValue()),
+            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($fromAccount->id->getValue()),
         );
 
         $toTransactions = $this->transactionRepository->findByBankAccountId(
-            new \App\Transaction\Domain\ValueObject\BankAccountId($toAccount->id->getValue()),
+            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($toAccount->id->getValue()),
         );
 
         self::assertCount(1, $fromTransactions);

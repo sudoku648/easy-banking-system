@@ -21,7 +21,7 @@ final readonly class GetTransactionHistoryQueryHandler
     public function __invoke(GetTransactionHistoryQuery $query): array
     {
         return $this->transactionRepository->findByBankAccountId(
-            new BankAccountId($query->bankAccountId),
+            BankAccountId::fromString($query->bankAccountId),
         );
     }
 }

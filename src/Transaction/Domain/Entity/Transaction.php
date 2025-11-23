@@ -40,9 +40,9 @@ final class Transaction
     public static function fromRaw(array $data): self
     {
         return new self(
-            new TransactionId($data['id']),
+            TransactionId::fromString($data['id']),
             TransactionType::from($data['type']),
-            new BankAccountId($data['bank_account_id']),
+            BankAccountId::fromString($data['bank_account_id']),
             new Money($data['amount'], Currency::from($data['currency'])),
             new Money($data['original_amount'], Currency::from($data['original_currency'])),
             new ExchangeRate(

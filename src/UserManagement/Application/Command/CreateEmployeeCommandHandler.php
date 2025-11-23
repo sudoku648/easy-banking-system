@@ -21,7 +21,7 @@ final readonly class CreateEmployeeCommandHandler
 
     public function __invoke(CreateEmployeeCommand $command): void
     {
-        $username = new Username($command->username);
+        $username = Username::fromString($command->username);
 
         if ($this->userRepository->existsByUsername($username)) {
             throw UsernameAlreadyExistsException::forUsername($username->getValue());
@@ -31,8 +31,8 @@ final readonly class CreateEmployeeCommandHandler
             $this->userRepository->nextIdentity(),
             $username,
             HashedPassword::fromPlainPassword($command->password),
-            new FirstName($command->firstName),
-            new LastName($command->lastName),
+            FirstName::fromString($command->firstName),
+            LastName::fromString($command->lastName),
         );
 
         $this->userRepository->save($employee);

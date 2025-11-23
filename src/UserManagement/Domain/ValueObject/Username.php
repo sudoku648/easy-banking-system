@@ -12,7 +12,7 @@ final class Username extends StringValueObject
     private const int MIN_LENGTH = 3;
     private const int MAX_LENGTH = 50;
 
-    public function __construct(string $value)
+    protected function __construct(string $value)
     {
         $value = trim($value);
 

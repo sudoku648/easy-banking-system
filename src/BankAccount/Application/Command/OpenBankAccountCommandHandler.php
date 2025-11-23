@@ -35,7 +35,7 @@ final readonly class OpenBankAccountCommandHandler
         $bankAccount = BankAccount::open(
             $this->bankAccountRepository->nextIdentity(),
             $iban,
-            new CustomerId($command->customerId),
+            CustomerId::fromString($command->customerId),
             Money::zero($currency),
         );
 

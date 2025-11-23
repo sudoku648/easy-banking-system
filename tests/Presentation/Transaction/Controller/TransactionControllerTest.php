@@ -105,7 +105,7 @@ final class TransactionControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
 
         // Verify accounts are shown
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
 
         foreach ($accounts as $account) {
@@ -158,8 +158,8 @@ final class TransactionControllerTest extends PresentationTestCase
         );
 
         // Get accounts
-        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->id->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
+        $customerId1 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer1->id->getValue());
+        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
@@ -197,7 +197,7 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsCustomerUser($customer);
@@ -235,8 +235,8 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
@@ -275,8 +275,8 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
@@ -357,8 +357,8 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->id->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
+        $customerId1 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer1->id->getValue());
+        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
@@ -408,8 +408,8 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId1 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer1->id->getValue());
-        $customerId2 = new \App\BankAccount\Domain\ValueObject\CustomerId($customer2->id->getValue());
+        $customerId1 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer1->id->getValue());
+        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 

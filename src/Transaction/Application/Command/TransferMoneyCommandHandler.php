@@ -26,8 +26,8 @@ final readonly class TransferMoneyCommandHandler
 
     public function __invoke(TransferMoneyCommand $command): void
     {
-        $fromBankAccountId = new \App\BankAccount\Domain\ValueObject\BankAccountId($command->fromBankAccountId);
-        $toBankAccountId = new \App\BankAccount\Domain\ValueObject\BankAccountId($command->toBankAccountId);
+        $fromBankAccountId = \App\BankAccount\Domain\ValueObject\BankAccountId::fromString($command->fromBankAccountId);
+        $toBankAccountId = \App\BankAccount\Domain\ValueObject\BankAccountId::fromString($command->toBankAccountId);
 
         $fromAccount = $this->bankAccountRepository->findById($fromBankAccountId);
         $toAccount = $this->bankAccountRepository->findById($toBankAccountId);
@@ -71,7 +71,7 @@ final readonly class TransferMoneyCommandHandler
         // Create withdrawal transaction
         $withdrawalTransaction = Transaction::createTransferWithdrawal(
             $this->transactionRepository->nextIdentity(),
-            new BankAccountId($command->fromBankAccountId),
+            BankAccountId::fromString($command->fromBankAccountId),
             $amountToWithdraw,
             $transferAmount,
             $withdrawalRate,
@@ -81,7 +81,7 @@ final readonly class TransferMoneyCommandHandler
         // Create deposit transaction
         $depositTransaction = Transaction::createTransferDeposit(
             $this->transactionRepository->nextIdentity(),
-            new BankAccountId($command->toBankAccountId),
+            BankAccountId::fromString($command->toBankAccountId),
             $amountToDeposit,
             $transferAmount,
             $depositRate,

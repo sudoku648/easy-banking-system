@@ -23,7 +23,7 @@ final readonly class DatabaseUserProvider implements UserProviderInterface
             throw new \InvalidArgumentException(\sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
-        $username = new Username($user->getUserIdentifier());
+        $username = Username::fromString($user->getUserIdentifier());
         $refreshedUser = $this->userRepository->findByUsername($username);
 
         if ($refreshedUser === null) {
@@ -40,7 +40,7 @@ final readonly class DatabaseUserProvider implements UserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $username = new Username($identifier);
+        $username = Username::fromString($identifier);
         $user = $this->userRepository->findByUsername($username);
 
         if ($user === null || !$user->isActive) {

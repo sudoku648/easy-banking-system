@@ -12,7 +12,7 @@ final class LastName extends StringValueObject
     private const int MIN_LENGTH = 2;
     private const int MAX_LENGTH = 50;
 
-    public function __construct(string $value)
+    protected function __construct(string $value)
     {
         $value = trim($value);
 

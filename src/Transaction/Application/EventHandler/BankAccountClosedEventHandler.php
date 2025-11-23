@@ -24,7 +24,7 @@ final readonly class BankAccountClosedEventHandler
 
         $transaction = Transaction::createCashWithdrawal(
             $this->transactionRepository->nextIdentity(),
-            new BankAccountId($event->bankAccountId->getValue()),
+            BankAccountId::fromString($event->bankAccountId->getValue()),
             $event->withdrawnBalance,
             $event->occurredOn(),
         );

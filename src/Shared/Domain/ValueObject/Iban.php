@@ -11,7 +11,7 @@ final class Iban extends StringValueObject
     private const string IBAN_PATTERN = '/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/';
     private const string POLAND_COUNTRY_CODE = 'PL';
 
-    public function __construct(string $value)
+    protected function __construct(string $value)
     {
         $value = strtoupper(str_replace(' ', '', $value));
 

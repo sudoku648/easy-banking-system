@@ -24,7 +24,7 @@ final readonly class DepositMoneyCommandHandler
 
     public function __invoke(DepositMoneyCommand $command): void
     {
-        $bankAccountId = new \App\BankAccount\Domain\ValueObject\BankAccountId($command->bankAccountId);
+        $bankAccountId = \App\BankAccount\Domain\ValueObject\BankAccountId::fromString($command->bankAccountId);
 
         $bankAccount = $this->bankAccountRepository->findById($bankAccountId);
 
@@ -51,7 +51,7 @@ final readonly class DepositMoneyCommandHandler
         // Create deposit transaction
         $depositTransaction = Transaction::createCashDeposit(
             $this->transactionRepository->nextIdentity(),
-            new BankAccountId($command->bankAccountId),
+            BankAccountId::fromString($command->bankAccountId),
             $depositAmount,
             $occurredAt,
         );

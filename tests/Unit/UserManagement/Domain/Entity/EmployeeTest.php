@@ -18,10 +18,10 @@ final class EmployeeTest extends TestCase
     public function testCreateCreatesValidEmployee(): void
     {
         $userId = UserId::generate();
-        $username = new Username('john.doe');
-        $password = new HashedPassword('$2y$13$hashedpassword');
-        $firstName = new FirstName('John');
-        $lastName = new LastName('Doe');
+        $username = Username::fromString('john.doe');
+        $password = HashedPassword::fromString('$2y$13$hashedpassword');
+        $firstName = FirstName::fromString('John');
+        $lastName = LastName::fromString('Doe');
 
         $employee = Employee::create($userId, $username, $password, $firstName, $lastName);
 
@@ -37,10 +37,10 @@ final class EmployeeTest extends TestCase
     {
         $employee = Employee::create(
             UserId::generate(),
-            new Username('john.doe'),
-            new HashedPassword('$2y$13$hashedpassword'),
-            new FirstName('John'),
-            new LastName('Doe'),
+            Username::fromString('john.doe'),
+            HashedPassword::fromString('$2y$13$hashedpassword'),
+            FirstName::fromString('John'),
+            LastName::fromString('Doe'),
         );
 
         self::assertSame(UserRole::EMPLOYEE, $employee->getRole());
@@ -50,10 +50,10 @@ final class EmployeeTest extends TestCase
     {
         $employee = Employee::create(
             UserId::generate(),
-            new Username('john.doe'),
-            new HashedPassword('$2y$13$hashedpassword'),
-            new FirstName('John'),
-            new LastName('Doe'),
+            Username::fromString('john.doe'),
+            HashedPassword::fromString('$2y$13$hashedpassword'),
+            FirstName::fromString('John'),
+            LastName::fromString('Doe'),
         );
 
         self::assertSame('John Doe', $employee->getFullName());
@@ -63,10 +63,10 @@ final class EmployeeTest extends TestCase
     {
         $employee = Employee::create(
             UserId::generate(),
-            new Username('john.doe'),
-            new HashedPassword('$2y$13$hashedpassword'),
-            new FirstName('John'),
-            new LastName('Doe'),
+            Username::fromString('john.doe'),
+            HashedPassword::fromString('$2y$13$hashedpassword'),
+            FirstName::fromString('John'),
+            LastName::fromString('Doe'),
         );
 
         $employee->deactivate();
@@ -78,10 +78,10 @@ final class EmployeeTest extends TestCase
     {
         $employee = Employee::create(
             UserId::generate(),
-            new Username('john.doe'),
-            new HashedPassword('$2y$13$hashedpassword'),
-            new FirstName('John'),
-            new LastName('Doe'),
+            Username::fromString('john.doe'),
+            HashedPassword::fromString('$2y$13$hashedpassword'),
+            FirstName::fromString('John'),
+            LastName::fromString('Doe'),
         );
 
         $employee->deactivate();

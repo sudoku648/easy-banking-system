@@ -13,7 +13,7 @@ final class CustomerIdTest extends TestCase
     public function testConstructorCreatesValidCustomerId(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $customerId = new CustomerId($uuidString);
+        $customerId = CustomerId::fromString($uuidString);
 
         self::assertSame($uuidString, $customerId->getValue());
     }
@@ -23,7 +23,7 @@ final class CustomerIdTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid UUID format');
 
-        new CustomerId('invalid-uuid');
+        CustomerId::fromString('invalid-uuid');
     }
 
     public function testGenerateCreatesValidCustomerId(): void
@@ -39,16 +39,16 @@ final class CustomerIdTest extends TestCase
     public function testEqualsReturnsTrueForSameCustomerId(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $customerId1 = new CustomerId($uuidString);
-        $customerId2 = new CustomerId($uuidString);
+        $customerId1 = CustomerId::fromString($uuidString);
+        $customerId2 = CustomerId::fromString($uuidString);
 
         self::assertTrue($customerId1->equals($customerId2));
     }
 
     public function testEqualsReturnsFalseForDifferentCustomerIds(): void
     {
-        $customerId1 = new CustomerId('123e4567-e89b-12d3-a456-426614174000');
-        $customerId2 = new CustomerId('123e4567-e89b-12d3-a456-426614174001');
+        $customerId1 = CustomerId::fromString('123e4567-e89b-12d3-a456-426614174000');
+        $customerId2 = CustomerId::fromString('123e4567-e89b-12d3-a456-426614174001');
 
         self::assertFalse($customerId1->equals($customerId2));
     }

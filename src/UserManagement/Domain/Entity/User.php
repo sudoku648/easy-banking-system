@@ -40,11 +40,11 @@ abstract class User
     public static function fromRaw(array $data): self
     {
         return new static(
-            new UserId($data['id']),
-            new Username($data['username']),
-            new HashedPassword($data['password']),
-            new FirstName($data['first_name']),
-            new LastName($data['last_name']),
+            UserId::fromString($data['id']),
+            Username::fromString($data['username']),
+            HashedPassword::fromString($data['password']),
+            FirstName::fromString($data['first_name']),
+            LastName::fromString($data['last_name']),
             (bool) $data['is_active'],
             Locale::from($data['locale']),
         );

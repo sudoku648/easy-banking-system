@@ -151,7 +151,7 @@ abstract class ApplicationTestCase extends KernelTestCase
         }
 
         $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
-        $userId = new \App\UserManagement\Domain\ValueObject\UserId($customerId);
+        $userId = \App\UserManagement\Domain\ValueObject\UserId::fromString($customerId);
 
         // Check if customer already exists
         if ($userRepository->findById($userId) !== null) {
@@ -161,10 +161,10 @@ abstract class ApplicationTestCase extends KernelTestCase
         // Create a dummy customer for testing
         $customer = \App\UserManagement\Domain\Entity\Customer::create(
             id: $userId,
-            username: new \App\UserManagement\Domain\ValueObject\Username('customer_' . substr($customerId, 0, 8)),
-            password: new \App\UserManagement\Domain\ValueObject\HashedPassword('$2y$10$test'),
-            firstName: new \App\UserManagement\Domain\ValueObject\FirstName('Test'),
-            lastName: new \App\UserManagement\Domain\ValueObject\LastName('Customer'),
+            username: \App\UserManagement\Domain\ValueObject\Username::fromString('customer_' . substr($customerId, 0, 8)),
+            password: \App\UserManagement\Domain\ValueObject\HashedPassword::fromString('$2y$10$test'),
+            firstName: \App\UserManagement\Domain\ValueObject\FirstName::fromString('Test'),
+            lastName: \App\UserManagement\Domain\ValueObject\LastName::fromString('Customer'),
         );
 
         $userRepository->save($customer);

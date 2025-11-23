@@ -13,7 +13,7 @@ final class TransactionIdTest extends TestCase
     public function testConstructorCreatesValidTransactionId(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $transactionId = new TransactionId($uuidString);
+        $transactionId = TransactionId::fromString($uuidString);
 
         self::assertSame($uuidString, $transactionId->getValue());
     }
@@ -23,7 +23,7 @@ final class TransactionIdTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid UUID format');
 
-        new TransactionId('invalid-uuid');
+        TransactionId::fromString('invalid-uuid');
     }
 
     public function testGenerateCreatesValidTransactionId(): void
@@ -39,16 +39,16 @@ final class TransactionIdTest extends TestCase
     public function testEqualsReturnsTrueForSameTransactionId(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $transactionId1 = new TransactionId($uuidString);
-        $transactionId2 = new TransactionId($uuidString);
+        $transactionId1 = TransactionId::fromString($uuidString);
+        $transactionId2 = TransactionId::fromString($uuidString);
 
         self::assertTrue($transactionId1->equals($transactionId2));
     }
 
     public function testEqualsReturnsFalseForDifferentTransactionIds(): void
     {
-        $transactionId1 = new TransactionId('123e4567-e89b-12d3-a456-426614174000');
-        $transactionId2 = new TransactionId('123e4567-e89b-12d3-a456-426614174001');
+        $transactionId1 = TransactionId::fromString('123e4567-e89b-12d3-a456-426614174000');
+        $transactionId2 = TransactionId::fromString('123e4567-e89b-12d3-a456-426614174001');
 
         self::assertFalse($transactionId1->equals($transactionId2));
     }

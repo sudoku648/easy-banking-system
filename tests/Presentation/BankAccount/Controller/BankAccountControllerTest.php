@@ -201,7 +201,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->assertHasFlashMessage('success', 'Bank account opened successfully');
 
         // Verify account was created
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         self::assertCount(1, $accounts);
         self::assertSame('EUR', $accounts[0]->balance->getCurrency()->value);
@@ -250,7 +250,7 @@ final class BankAccountControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $accountToClose = $accounts[0];
 
@@ -294,7 +294,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
 
         // Should show the active account's IBAN
-        $customerId = new \App\BankAccount\Domain\ValueObject\CustomerId($customer->id->getValue());
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $this->assertPageContains($accounts[0]->iban->getValue());
     }

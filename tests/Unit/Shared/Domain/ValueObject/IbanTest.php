@@ -12,21 +12,21 @@ final class IbanTest extends TestCase
 {
     public function testConstructorCreatesValidIban(): void
     {
-        $iban = new Iban('PL61109010140000071219812874');
+        $iban = Iban::fromString('PL61109010140000071219812874');
 
         self::assertSame('PL61109010140000071219812874', $iban->getValue());
     }
 
     public function testConstructorNormalizesIbanWithSpaces(): void
     {
-        $iban = new Iban('PL61 1090 1014 0000 0712 1981 2874');
+        $iban = Iban::fromString('PL61 1090 1014 0000 0712 1981 2874');
 
         self::assertSame('PL61109010140000071219812874', $iban->getValue());
     }
 
     public function testConstructorNormalizesLowercaseIban(): void
     {
-        $iban = new Iban('pl61109010140000071219812874');
+        $iban = Iban::fromString('pl61109010140000071219812874');
 
         self::assertSame('PL61109010140000071219812874', $iban->getValue());
     }
@@ -36,7 +36,7 @@ final class IbanTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid IBAN format');
 
-        new Iban('INVALID');
+        Iban::fromString('INVALID');
     }
 
     public function testConstructorThrowsExceptionForTooShortIban(): void
@@ -44,7 +44,7 @@ final class IbanTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('IBAN is too short');
 
-        new Iban('PL6110901014');
+        Iban::fromString('PL6110901014');
     }
 
     public function testConstructorThrowsExceptionForTooLongIban(): void
@@ -52,7 +52,7 @@ final class IbanTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('IBAN is too long');
 
-        new Iban('PL611090101400000712198128741234567890123456789');
+        Iban::fromString('PL611090101400000712198128741234567890123456789');
     }
 
     public function testGeneratePolishIbanCreatesValidIban(): void
@@ -95,37 +95,37 @@ final class IbanTest extends TestCase
 
     public function testGetCountryCodeReturnsCorrectCountryCode(): void
     {
-        $iban = new Iban('PL61109010140000071219812874');
+        $iban = Iban::fromString('PL61109010140000071219812874');
 
         self::assertSame('PL', $iban->getCountryCode());
     }
 
     public function testGetCheckDigitsReturnsCorrectCheckDigits(): void
     {
-        $iban = new Iban('PL61109010140000071219812874');
+        $iban = Iban::fromString('PL61109010140000071219812874');
 
         self::assertSame('61', $iban->getCheckDigits());
     }
 
     public function testGetAccountNumberReturnsCorrectAccountNumber(): void
     {
-        $iban = new Iban('PL61109010140000071219812874');
+        $iban = Iban::fromString('PL61109010140000071219812874');
 
         self::assertSame('109010140000071219812874', $iban->getAccountNumber());
     }
 
     public function testEqualsReturnsTrueForSameIban(): void
     {
-        $iban1 = new Iban('PL61109010140000071219812874');
-        $iban2 = new Iban('PL61109010140000071219812874');
+        $iban1 = Iban::fromString('PL61109010140000071219812874');
+        $iban2 = Iban::fromString('PL61109010140000071219812874');
 
         self::assertTrue($iban1->equals($iban2));
     }
 
     public function testEqualsReturnsFalseForDifferentIbans(): void
     {
-        $iban1 = new Iban('PL61109010140000071219812874');
-        $iban2 = new Iban('PL10105000997603123456789123');
+        $iban1 = Iban::fromString('PL61109010140000071219812874');
+        $iban2 = Iban::fromString('PL10105000997603123456789123');
 
         self::assertFalse($iban1->equals($iban2));
     }

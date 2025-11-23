@@ -52,7 +52,7 @@ final class EmployeeTransactionController extends AbstractController
 
                 // Get account to determine currency
                 $account = $this->bankAccountRepository->findById(
-                    new BankAccountId($dto->bankAccountId),
+                    BankAccountId::fromString($dto->bankAccountId),
                 );
 
                 if ($account === null) {

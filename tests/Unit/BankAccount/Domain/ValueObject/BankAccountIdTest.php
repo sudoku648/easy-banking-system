@@ -13,7 +13,7 @@ final class BankAccountIdTest extends TestCase
     public function testConstructorCreatesValidBankAccountId(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $bankAccountId = new BankAccountId($uuidString);
+        $bankAccountId = BankAccountId::fromString($uuidString);
 
         self::assertSame($uuidString, $bankAccountId->getValue());
     }
@@ -23,7 +23,7 @@ final class BankAccountIdTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid UUID format');
 
-        new BankAccountId('invalid-uuid');
+        BankAccountId::fromString('invalid-uuid');
     }
 
     public function testGenerateCreatesValidBankAccountId(): void
@@ -39,16 +39,16 @@ final class BankAccountIdTest extends TestCase
     public function testEqualsReturnsTrueForSameBankAccountId(): void
     {
         $uuidString = '123e4567-e89b-12d3-a456-426614174000';
-        $bankAccountId1 = new BankAccountId($uuidString);
-        $bankAccountId2 = new BankAccountId($uuidString);
+        $bankAccountId1 = BankAccountId::fromString($uuidString);
+        $bankAccountId2 = BankAccountId::fromString($uuidString);
 
         self::assertTrue($bankAccountId1->equals($bankAccountId2));
     }
 
     public function testEqualsReturnsFalseForDifferentBankAccountIds(): void
     {
-        $bankAccountId1 = new BankAccountId('123e4567-e89b-12d3-a456-426614174000');
-        $bankAccountId2 = new BankAccountId('123e4567-e89b-12d3-a456-426614174001');
+        $bankAccountId1 = BankAccountId::fromString('123e4567-e89b-12d3-a456-426614174000');
+        $bankAccountId2 = BankAccountId::fromString('123e4567-e89b-12d3-a456-426614174001');
 
         self::assertFalse($bankAccountId1->equals($bankAccountId2));
     }

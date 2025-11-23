@@ -61,7 +61,7 @@ final class BankAccountController extends AbstractController
 
                 // Get the newly created customer ID
                 $customer = $this->userRepository->findByUsername(
-                    new Username($dto->username),
+                    Username::fromString($dto->username),
                 );
 
                 if ($customer === null) {

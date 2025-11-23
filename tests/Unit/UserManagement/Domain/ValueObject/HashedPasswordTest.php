@@ -12,7 +12,7 @@ final class HashedPasswordTest extends TestCase
     public function testConstructorCreatesValidHashedPassword(): void
     {
         $hash = '$2y$13$hashedpassword';
-        $hashedPassword = new HashedPassword($hash);
+        $hashedPassword = HashedPassword::fromString($hash);
 
         self::assertSame($hash, $hashedPassword->getValue());
     }
@@ -56,16 +56,16 @@ final class HashedPasswordTest extends TestCase
     public function testEqualsReturnsTrueForSameHashedPassword(): void
     {
         $hash = '$2y$13$hashedpassword';
-        $hashedPassword1 = new HashedPassword($hash);
-        $hashedPassword2 = new HashedPassword($hash);
+        $hashedPassword1 = HashedPassword::fromString($hash);
+        $hashedPassword2 = HashedPassword::fromString($hash);
 
         self::assertTrue($hashedPassword1->equals($hashedPassword2));
     }
 
     public function testEqualsReturnsFalseForDifferentHashedPasswords(): void
     {
-        $hashedPassword1 = new HashedPassword('$2y$13$hashedpassword1');
-        $hashedPassword2 = new HashedPassword('$2y$13$hashedpassword2');
+        $hashedPassword1 = HashedPassword::fromString('$2y$13$hashedpassword1');
+        $hashedPassword2 = HashedPassword::fromString('$2y$13$hashedpassword2');
 
         self::assertFalse($hashedPassword1->equals($hashedPassword2));
     }

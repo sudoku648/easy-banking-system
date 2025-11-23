@@ -18,10 +18,10 @@ final class CustomerTest extends TestCase
     public function testCreateCreatesValidCustomer(): void
     {
         $userId = UserId::generate();
-        $username = new Username('jane.smith');
-        $password = new HashedPassword('$2y$13$hashedpassword');
-        $firstName = new FirstName('Jane');
-        $lastName = new LastName('Smith');
+        $username = Username::fromString('jane.smith');
+        $password = HashedPassword::fromString('$2y$13$hashedpassword');
+        $firstName = FirstName::fromString('Jane');
+        $lastName = LastName::fromString('Smith');
 
         $customer = Customer::create($userId, $username, $password, $firstName, $lastName);
 
@@ -37,10 +37,10 @@ final class CustomerTest extends TestCase
     {
         $customer = Customer::create(
             UserId::generate(),
-            new Username('jane.smith'),
-            new HashedPassword('$2y$13$hashedpassword'),
-            new FirstName('Jane'),
-            new LastName('Smith'),
+            Username::fromString('jane.smith'),
+            HashedPassword::fromString('$2y$13$hashedpassword'),
+            FirstName::fromString('Jane'),
+            LastName::fromString('Smith'),
         );
 
         self::assertSame(UserRole::CUSTOMER, $customer->getRole());
@@ -50,10 +50,10 @@ final class CustomerTest extends TestCase
     {
         $customer = Customer::create(
             UserId::generate(),
-            new Username('jane.smith'),
-            new HashedPassword('$2y$13$hashedpassword'),
-            new FirstName('Jane'),
-            new LastName('Smith'),
+            Username::fromString('jane.smith'),
+            HashedPassword::fromString('$2y$13$hashedpassword'),
+            FirstName::fromString('Jane'),
+            LastName::fromString('Smith'),
         );
 
         self::assertSame('Jane Smith', $customer->getFullName());
@@ -63,10 +63,10 @@ final class CustomerTest extends TestCase
     {
         $customer = Customer::create(
             UserId::generate(),
-            new Username('jane.smith'),
-            new HashedPassword('$2y$13$hashedpassword'),
-            new FirstName('Jane'),
-            new LastName('Smith'),
+            Username::fromString('jane.smith'),
+            HashedPassword::fromString('$2y$13$hashedpassword'),
+            FirstName::fromString('Jane'),
+            LastName::fromString('Smith'),
         );
 
         $customer->deactivate();
@@ -78,10 +78,10 @@ final class CustomerTest extends TestCase
     {
         $customer = Customer::create(
             UserId::generate(),
-            new Username('jane.smith'),
-            new HashedPassword('$2y$13$hashedpassword'),
-            new FirstName('Jane'),
-            new LastName('Smith'),
+            Username::fromString('jane.smith'),
+            HashedPassword::fromString('$2y$13$hashedpassword'),
+            FirstName::fromString('Jane'),
+            LastName::fromString('Smith'),
         );
 
         $customer->deactivate();

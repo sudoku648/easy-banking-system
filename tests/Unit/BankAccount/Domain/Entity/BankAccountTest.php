@@ -22,7 +22,7 @@ final class BankAccountTest extends TestCase
     protected function setUp(): void
     {
         $this->accountId = BankAccountId::generate();
-        $this->iban = new Iban('PL61109010140000071219812874');
+        $this->iban = Iban::fromString('PL61109010140000071219812874');
         $this->customerId = CustomerId::generate();
     }
 

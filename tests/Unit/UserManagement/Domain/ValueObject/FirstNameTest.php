@@ -12,14 +12,14 @@ final class FirstNameTest extends TestCase
 {
     public function testConstructorCreatesValidFirstName(): void
     {
-        $firstName = new FirstName('John');
+        $firstName = FirstName::fromString('John');
 
         self::assertSame('John', $firstName->getValue());
     }
 
     public function testConstructorTrimsWhitespace(): void
     {
-        $firstName = new FirstName('  John  ');
+        $firstName = FirstName::fromString('  John  ');
 
         self::assertSame('John', $firstName->getValue());
     }
@@ -29,7 +29,7 @@ final class FirstNameTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First name cannot be empty');
 
-        new FirstName('');
+        FirstName::fromString('');
     }
 
     public function testConstructorThrowsExceptionForWhitespaceOnly(): void
@@ -37,7 +37,7 @@ final class FirstNameTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First name cannot be empty');
 
-        new FirstName('   ');
+        FirstName::fromString('   ');
     }
 
     public function testConstructorThrowsExceptionForTooShortName(): void
@@ -45,7 +45,7 @@ final class FirstNameTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First name must be at least 2 characters long');
 
-        new FirstName('J');
+        FirstName::fromString('J');
     }
 
     public function testConstructorThrowsExceptionForTooLongName(): void
@@ -53,12 +53,12 @@ final class FirstNameTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First name cannot be longer than 50 characters');
 
-        new FirstName(str_repeat('a', 51));
+        FirstName::fromString(str_repeat('a', 51));
     }
 
     public function testConstructorAcceptsMinimumLength(): void
     {
-        $firstName = new FirstName('Jo');
+        $firstName = FirstName::fromString('Jo');
 
         self::assertSame('Jo', $firstName->getValue());
     }
@@ -66,23 +66,23 @@ final class FirstNameTest extends TestCase
     public function testConstructorAcceptsMaximumLength(): void
     {
         $longName = str_repeat('a', 50);
-        $firstName = new FirstName($longName);
+        $firstName = FirstName::fromString($longName);
 
         self::assertSame($longName, $firstName->getValue());
     }
 
     public function testEqualsReturnsTrueForSameFirstName(): void
     {
-        $firstName1 = new FirstName('John');
-        $firstName2 = new FirstName('John');
+        $firstName1 = FirstName::fromString('John');
+        $firstName2 = FirstName::fromString('John');
 
         self::assertTrue($firstName1->equals($firstName2));
     }
 
     public function testEqualsReturnsFalseForDifferentFirstNames(): void
     {
-        $firstName1 = new FirstName('John');
-        $firstName2 = new FirstName('Jane');
+        $firstName1 = FirstName::fromString('John');
+        $firstName2 = FirstName::fromString('Jane');
 
         self::assertFalse($firstName1->equals($firstName2));
     }
