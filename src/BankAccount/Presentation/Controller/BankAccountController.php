@@ -76,11 +76,11 @@ final class BankAccountController extends AbstractController
                     ),
                 );
 
-                $this->addFlash('success', 'Bank account opened successfully for new customer!');
+                $this->addFlash('success', 'flash.bank_account.opened_new_customer');
 
                 return $this->redirectToRoute('employee_dashboard');
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Error: ' . $e->getMessage());
+                $this->addFlash('danger', json_encode(['key' => 'flash.bank_account.error', 'parameters' => ['error' => $e->getMessage()]], JSON_THROW_ON_ERROR));
             }
         }
 
@@ -112,11 +112,11 @@ final class BankAccountController extends AbstractController
                     ),
                 );
 
-                $this->addFlash('success', 'Bank account opened successfully for existing customer!');
+                $this->addFlash('success', 'flash.bank_account.opened_existing_customer');
 
                 return $this->redirectToRoute('employee_dashboard');
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Error: ' . $e->getMessage());
+                $this->addFlash('danger', json_encode(['key' => 'flash.bank_account.error', 'parameters' => ['error' => $e->getMessage()]], JSON_THROW_ON_ERROR));
             }
         }
 
@@ -147,11 +147,11 @@ final class BankAccountController extends AbstractController
                     ),
                 );
 
-                $this->addFlash('success', 'Bank account closed successfully!');
+                $this->addFlash('success', 'flash.bank_account.closed');
 
                 return $this->redirectToRoute('employee_dashboard');
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Error: ' . $e->getMessage());
+                $this->addFlash('danger', json_encode(['key' => 'flash.bank_account.error', 'parameters' => ['error' => $e->getMessage()]], JSON_THROW_ON_ERROR));
             }
         }
 

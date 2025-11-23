@@ -2,3 +2,15 @@
 flash.warning: Warning
 flash.success: Success
 flash.error: Error
+flash.danger: Error
+
+# Bank Account flash messages
+flash.bank_account.opened_new_customer: Bank account opened successfully for new customer!
+flash.bank_account.opened_existing_customer: Bank account opened successfully for existing customer!
+flash.bank_account.closed: Bank account closed successfully!
+flash.bank_account.error: 'Error: {error}'
+
+# Transaction flash messages
+flash.transaction.transfer_completed: Transfer completed successfully!
+flash.transaction.deposit_completed: Cash deposited successfully!
+flash.transaction.error: 'Error: {error}'

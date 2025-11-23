@@ -106,11 +106,11 @@ final class TransactionController extends AbstractController
                     ),
                 );
 
-                $this->addFlash('success', 'Transfer completed successfully!');
+                $this->addFlash('success', 'flash.transaction.transfer_completed');
 
                 return $this->redirectToRoute('customer_dashboard');
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Error: ' . $e->getMessage());
+                $this->addFlash('danger', json_encode(['key' => 'flash.transaction.error', 'parameters' => ['error' => $e->getMessage()]], JSON_THROW_ON_ERROR));
             }
         }
 

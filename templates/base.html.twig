@@ -88,8 +88,13 @@
             {% block flash_messages %}
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
+                        {% set messageData = message starts with '{' ? message|json_decode : null %}
                         <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                            {{ message }}
+                            {% if messageData %}
+                                {{ messageData.key|trans(messageData.parameters|default({}), 'flash') }}
+                            {% else %}
+                                {{ message|trans({}, 'flash') }}
+                            {% endif %}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     {% endfor %}

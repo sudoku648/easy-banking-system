@@ -67,11 +67,11 @@ final class EmployeeTransactionController extends AbstractController
                     ),
                 );
 
-                $this->addFlash('success', 'Cash deposited successfully!');
+                $this->addFlash('success', 'flash.transaction.deposit_completed');
 
                 return $this->redirectToRoute('employee_dashboard');
             } catch (\Exception $e) {
-                $this->addFlash('danger', 'Error: ' . $e->getMessage());
+                $this->addFlash('danger', json_encode(['key' => 'flash.transaction.error', 'parameters' => ['error' => $e->getMessage()]], JSON_THROW_ON_ERROR));
             }
         }
 
