@@ -10,21 +10,21 @@ final class OpenAccountNewCustomerDto
 {
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 50)]
-    public string $username = '';
+    public ?string $username = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 6)]
-    public string $password = '';
+    public ?string $password = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 50)]
-    public string $firstName = '';
+    public ?string $firstName = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 50)]
-    public string $lastName = '';
+    public ?string $lastName = null;
 
     #[Assert\NotBlank]
     #[Assert\Choice(['PLN', 'EUR'])]
-    public string $currency = '';
+    public ?string $currency = null;
 }

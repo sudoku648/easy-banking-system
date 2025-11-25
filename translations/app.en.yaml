@@ -22,3 +22,20 @@ common.no: No
 common.account_closed: Account Closed
 common.first_name: First Name
 common.last_name: Last Name
+
+user.change_password: Change Password
+user.change_password_description: Update your account password for security
+user.change_password_submit: Change Password
+user.current_password: Current Password
+user.new_password: New Password
+user.confirm_new_password: Confirm New Password
+user.placeholder_current_password: Enter your current password
+user.placeholder_new_password: Enter new password (min. 8 characters)
+user.placeholder_confirm_new_password: Confirm your new password
+user.help_current_password: Enter your current password to verify your identity
+user.help_new_password: Password must contain at least 8 characters
+user.help_confirm_new_password: Re-enter your new password to confirm
+user.password_security_note: After changing your password, you will remain logged in on this device
+user.password_changed_successfully: Password changed successfully
+user.current_password_incorrect: Current password is incorrect
+user.passwords_must_match: Passwords must match

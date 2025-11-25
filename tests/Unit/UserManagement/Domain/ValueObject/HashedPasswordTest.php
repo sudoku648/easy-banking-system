@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\UserManagement\Domain\ValueObject;
 
+use App\UserManagement\Domain\Exception\InvalidPasswordException;
 use App\UserManagement\Domain\ValueObject\HashedPassword;
 use PHPUnit\Framework\TestCase;
 
@@ -68,5 +69,28 @@ final class HashedPasswordTest extends TestCase
         $hashedPassword2 = HashedPassword::fromString('$2y$13$hashedpassword2');
 
         self::assertFalse($hashedPassword1->equals($hashedPassword2));
+    }
+
+    public function testFromPlainPasswordThrowsExceptionForTooShortPassword(): void
+    {
+        $this->expectException(InvalidPasswordException::class);
+        $this->expectExceptionMessage('Password must be at least 8 characters long');
+
+        HashedPassword::fromPlainPassword('short');
+    }
+
+    public function testFromPlainPasswordAcceptsMinimumLengthPassword(): void
+    {
+        $hashedPassword = HashedPassword::fromPlainPassword('12345678'); // Exactly 8 characters
+
+        self::assertTrue($hashedPassword->verify('12345678'));
+    }
+
+    public function testFromPlainPasswordThrowsExceptionForEmptyPassword(): void
+    {
+        $this->expectException(InvalidPasswordException::class);
+        $this->expectExceptionMessage('Password must be at least 8 characters long');
+
+        HashedPassword::fromPlainPassword('');
     }
 }

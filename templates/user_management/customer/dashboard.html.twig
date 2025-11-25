@@ -101,4 +101,18 @@
         } %}
     </div>
 </div>
+
+<div class="row mt-4">
+    <div class="col-md-6 mb-3">
+        {% include '_partials/dashboard_card.html.twig' with {
+            icon: 'key',
+            iconColor: 'warning',
+            title: 'user.change_password'|trans({}, 'app'),
+            description: 'user.change_password_description'|trans({}, 'app'),
+            buttonText: 'user.change_password'|trans({}, 'app'),
+            buttonColor: 'warning',
+            route: 'customer_change_password'
+        } %}
+    </div>
+</div>
 {% endblock %}

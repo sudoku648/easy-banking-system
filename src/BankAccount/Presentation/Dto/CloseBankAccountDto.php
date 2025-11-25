@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class CloseBankAccountDto
 {
     #[Assert\NotBlank]
-    public string $bankAccountId = '';
+    public ?string $bankAccountId = null;
 }

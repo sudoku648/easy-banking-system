@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class OpenAccountExistingCustomerDto
 {
     #[Assert\NotBlank]
-    public string $customerId = '';
+    public ?string $customerId = null;
 
     #[Assert\NotBlank]
     #[Assert\Choice(['PLN', 'EUR'])]
-    public string $currency = '';
+    public ?string $currency = null;
 }

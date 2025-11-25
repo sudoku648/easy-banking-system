@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class DepositMoneyDto
 {
     #[Assert\NotBlank]
-    public string $bankAccountId = '';
+    public ?string $bankAccountId = null;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public float $amount = 0.0;
+    public ?float $amount = null;
 }

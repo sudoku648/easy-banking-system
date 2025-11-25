@@ -8,6 +8,7 @@ final readonly class CreateCustomerCommand
 {
     public function __construct(
         public string $username,
+        #[\SensitiveParameter]
         public string $password,
         public string $firstName,
         public string $lastName,

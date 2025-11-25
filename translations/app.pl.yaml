@@ -22,3 +22,20 @@ common.no: Nie
 common.account_closed: Konto zamknięte
 common.first_name: Imię
 common.last_name: Nazwisko
+
+user.change_password: Zmień hasło
+user.change_password_description: Zaktualizuj hasło do konta w celu zwiększenia bezpieczeństwa
+user.change_password_submit: Zmień hasło
+user.current_password: Obecne hasło
+user.new_password: Nowe hasło
+user.confirm_new_password: Potwierdź nowe hasło
+user.placeholder_current_password: Wprowadź obecne hasło
+user.placeholder_new_password: Wprowadź nowe hasło (min. 8 znaków)
+user.placeholder_confirm_new_password: Potwierdź nowe hasło
+user.help_current_password: Wprowadź obecne hasło, aby zweryfikować swoją tożsamość
+user.help_new_password: Hasło musi zawierać co najmniej 8 znaków
+user.help_confirm_new_password: Wprowadź ponownie nowe hasło, aby je potwierdzić
+user.password_security_note: Po zmianie hasła pozostaniesz zalogowany na tym urządzeniu
+user.password_changed_successfully: Hasło zostało pomyślnie zmienione
+user.current_password_incorrect: Obecne hasło jest nieprawidłowe
+user.passwords_must_match: Hasła muszą być takie same

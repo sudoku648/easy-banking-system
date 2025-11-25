@@ -71,4 +71,9 @@ abstract class User
     {
         $this->locale = $locale;
     }
+
+    public function changePassword(#[\SensitiveParameter] string $newPlainPassword): void
+    {
+        $this->password = HashedPassword::fromPlainPassword($newPlainPassword);
+    }
 }
