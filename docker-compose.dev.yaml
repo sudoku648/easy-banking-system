@@ -7,6 +7,9 @@ services:
       target: dev
       context: .
       dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     volumes:

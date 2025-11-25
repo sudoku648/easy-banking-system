@@ -59,6 +59,12 @@ USER root
 # Copy Xdebug configuration for test environment
 COPY docker/php/ext-xdebug.ini /usr/local/etc/php/conf.d/50_xdebug.ini
 
+# Allow www-data to match host user permissions
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+RUN usermod -u ${USER_ID} www-data && \
+    groupmod -g ${GROUP_ID} www-data
+
 USER www-data
 WORKDIR /app
 
@@ -72,6 +78,12 @@ USER root
 
 # Copy Xdebug configuration for dev environment
 COPY docker/php/ext-xdebug.ini /usr/local/etc/php/conf.d/50_xdebug.ini
+
+# Allow www-data to match host user permissions
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+RUN usermod -u ${USER_ID} www-data && \
+    groupmod -g ${GROUP_ID} www-data
 
 USER www-data
 WORKDIR /app
