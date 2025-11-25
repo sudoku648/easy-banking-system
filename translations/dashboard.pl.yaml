@@ -15,3 +15,4 @@ dashboard.quick_info.currency: Możesz tworzyć konta w walutach PLN lub EUR
 dashboard.quick_info.iban: Numery IBAN są generowane automatycznie
 dashboard.quick_info.close: Podczas zamykania konta wszystkie pozostałe środki są wypłacane
 dashboard.quick_info.history: Zobacz historię transakcji klienta za pomocą zarządzania kontem
+dashboard.go_to_dashboard: Wróć do panelu

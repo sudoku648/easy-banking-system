@@ -7,8 +7,8 @@ transaction.type: Typ
 transaction.make_transfer: Wykonaj przelew
 transaction.history_title: Historia transakcji
 transaction.no_transactions: Brak transakcji
-transaction.transfer_withdrawal: Przelew (wypłata)
-transaction.transfer_deposit: Przelew (wpłata)
+transaction.transfer_withdrawal: Przelew wychodzący
+transaction.transfer_deposit: Przelew przychodzący
 transaction.cash_withdrawal: Wypłata gotówki
 transaction.cash_deposit: Wpłata gotówki
 transaction.original_amount: Kwota oryginalna
@@ -19,4 +19,16 @@ transaction.currency_exchange_note: Jeśli konto docelowe ma inną walutę, kwot
 transaction.placeholder_select_source_account: -- Wybierz konto źródłowe --
 transaction.placeholder_to_iban: PL12345678901234567890123456
 transaction.placeholder_select_bank_account: -- Wybierz konto bankowe --
+transaction.placeholder_select_customer: -- Wybierz klienta --
 transaction.iban: IBAN
+transaction.select_customer: Wybierz klienta
+transaction.select_bank_account: Wybierz konto bankowe
+transaction.select_customer_for_history: Wybierz klienta lub konto bankowe
+transaction.select_customer_or_account: Wybierz klienta, aby zobaczyć wszystkie jego transakcje, lub wybierz konkretne konto bankowe. Wybór klienta automatycznie przefiltruje listę kont.
+transaction.help_select_customer_for_history: Wybierz klienta, aby zobaczyć historię transakcji dla wszystkich jego kont. Lista kont zostanie automatycznie przefiltrowana.
+transaction.help_select_account_for_history: Wybierz konkretne konto bankowe, aby zobaczyć jego historię transakcji. Automatycznie wybierze właściciela konta.
+transaction.view_history: Zobacz historię
+transaction.customer_history: Historia transakcji klienta
+transaction.view_customer_history: Zobacz historię transakcji klienta lub konta
+transaction.customer_history_title: Historia transakcji klienta
+transaction.exchange_rate: Kurs wymiany

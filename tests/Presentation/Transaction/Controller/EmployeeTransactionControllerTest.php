@@ -361,4 +361,268 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         self::assertSame(7525, $accountAfter->balance->getAmount()); // 75.25 EUR in cents
         self::assertSame('EUR', $accountAfter->balance->getCurrency()->value);
     }
+
+    // Transaction History Tests
+
+    public function testUnauthenticatedUserCannotAccessHistorySelect(): void
+    {
+        $this->client->request('GET', '/employee/transaction/history/select');
+
+        $this->assertRedirectsToRoute('login');
+    }
+
+    public function testCustomerCannotAccessHistorySelect(): void
+    {
+        $customer = $this->createCustomer('customer1', 'pass123');
+        $this->loginAsCustomerUser($customer);
+
+        $this->client->request('GET', '/employee/transaction/history/select');
+
+        $this->assertResponseStatusCodeSame(403);
+    }
+
+    public function testEmployeeCanAccessHistorySelect(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $this->loginAsEmployeeUser($employee);
+
+        $this->client->request('GET', '/employee/transaction/history/select');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains('Select Customer');
+    }
+
+    public function testHistorySelectFormRendersCorrectly(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $customer = $this->createCustomer('customer1', 'pass123');
+
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer->id->getValue(),
+                currency: 'PLN',
+            ),
+        );
+
+        $this->loginAsEmployeeUser($employee);
+        $crawler = $this->client->request('GET', '/employee/transaction/history/select');
+
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->selectButton('View History')->form();
+        self::assertNotNull($form->get('select_customer_for_history_form[customerId]'));
+        self::assertNotNull($form->get('select_customer_for_history_form[bankAccountId]'));
+    }
+
+    public function testHistorySelectFormShowsAllCustomers(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $customer1 = $this->createCustomer('customer1', 'pass123');
+        $customer2 = $this->createCustomer('customer2', 'pass123');
+
+        $this->loginAsEmployeeUser($employee);
+        $this->client->request('GET', '/employee/transaction/history/select');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains($customer1->firstName->getValue());
+        $this->assertPageContains($customer2->firstName->getValue());
+    }
+
+    public function testHistorySelectFormAccountsHaveCustomerIdAttribute(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $customer = $this->createCustomer('customer1', 'pass123');
+
+        // Create account
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer->id->getValue(),
+                currency: 'PLN',
+            ),
+        );
+
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
+
+        $this->loginAsEmployeeUser($employee);
+        $crawler = $this->client->request('GET', '/employee/transaction/history/select');
+
+        $this->assertResponseIsSuccessful();
+
+        // Check that account options have data-customer-id attribute
+        $accountOptions = $crawler->filter('#select_customer_for_history_form_bankAccountId option[value="' . $account->id->getValue() . '"]');
+        self::assertCount(1, $accountOptions);
+
+        $option = $accountOptions->first();
+        self::assertEquals($customer->id->getValue(), $option->attr('data-customer-id'));
+    }
+
+    public function testHistorySelectFormIncludesJavaScriptFile(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $this->loginAsEmployeeUser($employee);
+
+        $crawler = $this->client->request('GET', '/employee/transaction/history/select');
+
+        $this->assertResponseIsSuccessful();
+
+        // Check that the JavaScript file is included
+        $scripts = $crawler->filter('script[src*="customer-account-selector.js"]');
+        self::assertGreaterThan(0, $scripts->count(), 'Expected JavaScript file to be included');
+    }
+
+    public function testViewHistoryByCustomerId(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $customer = $this->createCustomer('customer1', 'pass123');
+
+        // Create account and make deposit
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer->id->getValue(),
+                currency: 'PLN',
+            ),
+        );
+
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
+
+        // Make a deposit to create transaction
+        $this->loginAsEmployeeUser($employee);
+        $crawler = $this->client->request('GET', '/employee/transaction/deposit');
+        $form = $crawler->selectButton('Deposit')->form([
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
+            'deposit_money_form[amount]' => '100.00',
+        ]);
+        $this->client->submit($form);
+
+        // Now view history by customer ID
+        $this->client->request('GET', '/employee/transaction/history/view', [
+            'customerId' => $customer->id->getValue(),
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains('Customer Transaction History');
+        $this->assertPageContains($account->iban->getValue());
+        $this->assertPageContains('100.00');
+    }
+
+    public function testViewHistoryByBankAccountId(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $customer = $this->createCustomer('customer1', 'pass123');
+
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer->id->getValue(),
+                currency: 'PLN',
+            ),
+        );
+
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
+
+        // Make a deposit
+        $this->loginAsEmployeeUser($employee);
+        $crawler = $this->client->request('GET', '/employee/transaction/deposit');
+        $form = $crawler->selectButton('Deposit')->form([
+            'deposit_money_form[bankAccountId]' => $account->id->getValue(),
+            'deposit_money_form[amount]' => '50.00',
+        ]);
+        $this->client->submit($form);
+
+        // View history by bank account ID
+        $this->client->request('GET', '/employee/transaction/history/view', [
+            'bankAccountId' => $account->id->getValue(),
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains('Customer Transaction History');
+        $this->assertPageContains($account->iban->getValue());
+        $this->assertPageContains('50.00');
+    }
+
+    public function testViewHistoryWithoutParametersRedirects(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $this->loginAsEmployeeUser($employee);
+
+        $this->client->request('GET', '/employee/transaction/history/view');
+
+        $this->assertResponseRedirects('/employee/transaction/history/select');
+    }
+
+    public function testViewHistoryForCustomerWithMultipleAccounts(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $customer = $this->createCustomer('customer1', 'pass123');
+
+        // Create two accounts
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer->id->getValue(),
+                currency: 'PLN',
+            ),
+        );
+
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer->id->getValue(),
+                currency: 'EUR',
+            ),
+        );
+
+        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
+
+        // Make deposits to both accounts
+        $this->loginAsEmployeeUser($employee);
+        
+        $crawler = $this->client->request('GET', '/employee/transaction/deposit');
+        $form = $crawler->selectButton('Deposit')->form([
+            'deposit_money_form[bankAccountId]' => $accounts[0]->id->getValue(),
+            'deposit_money_form[amount]' => '100.00',
+        ]);
+        $this->client->submit($form);
+
+        $crawler = $this->client->request('GET', '/employee/transaction/deposit');
+        $form = $crawler->selectButton('Deposit')->form([
+            'deposit_money_form[bankAccountId]' => $accounts[1]->id->getValue(),
+            'deposit_money_form[amount]' => '50.00',
+        ]);
+        $this->client->submit($form);
+
+        // View history for customer
+        $this->client->request('GET', '/employee/transaction/history/view', [
+            'customerId' => $customer->id->getValue(),
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains($accounts[0]->iban->getValue());
+        $this->assertPageContains($accounts[1]->iban->getValue());
+        $this->assertPageContains('100.00');
+        $this->assertPageContains('50.00');
+    }
+
+    public function testViewHistoryShowsNoTransactionsForNewAccount(): void
+    {
+        $employee = $this->createEmployee('employee1', 'pass123');
+        $customer = $this->createCustomer('customer1', 'pass123');
+
+        $this->messageBus->dispatch(
+            new OpenBankAccountCommand(
+                customerId: $customer->id->getValue(),
+                currency: 'PLN',
+            ),
+        );
+
+        $this->loginAsEmployeeUser($employee);
+
+        $this->client->request('GET', '/employee/transaction/history/view', [
+            'customerId' => $customer->id->getValue(),
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertPageContains('No transactions');
+    }
 }

@@ -15,3 +15,4 @@ dashboard.quick_info.currency: You can create accounts in PLN or EUR currency
 dashboard.quick_info.iban: IBAN numbers are generated automatically
 dashboard.quick_info.close: When closing an account, all remaining funds are withdrawn
 dashboard.quick_info.history: View customer transaction history using the account management
+dashboard.go_to_dashboard: Go back to dashboard
