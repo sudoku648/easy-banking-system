@@ -68,13 +68,8 @@ analyse:
 test:
 ifdef suite
 	$(call highlight,Running test suite: $(suite))
-ifeq ($(suite),integration)
-	$(DOCKER_EXEC_WITH_USER_TEST) "INTEGRATION_TESTS=1 $(PHPUNIT_CMD) --testsuite=$(suite)"
-else
 	$(DOCKER_EXEC_WITH_USER_TEST) "$(PHPUNIT_CMD) --testsuite=$(suite)"
-endif
 else
 	$(call highlight,Running all test suites)
-	@echo "Note: Warnings about duplicate test files in functional/integration suites are expected"
 	$(DOCKER_EXEC_WITH_USER_TEST) "$(PHPUNIT_CMD) || test \$$? -eq 1"
 endif

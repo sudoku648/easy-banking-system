@@ -44,19 +44,6 @@ final class TransferMoneyTest extends ApplicationTestCase
         }
     }
 
-    private function getEventBus(): ?InMemoryEventBus
-    {
-        if ($this->eventBus instanceof InMemoryEventBus) {
-            return $this->eventBus;
-        }
-        return null;
-    }
-
-    private function isUsingInMemoryEventBus(): bool
-    {
-        return $this->eventBus instanceof InMemoryEventBus;
-    }
-
     public function testTransferMoneyBetweenAccountsWithSameCurrency(): void
     {
         $handler = $this->createTransferMoneyHandler();
@@ -188,10 +175,6 @@ final class TransferMoneyTest extends ApplicationTestCase
 
     public function testTransferMoneyDispatchesMoneyTransferredEvent(): void
     {
-        if (!$this->isUsingInMemoryEventBus()) {
-            self::markTestSkipped('Event assertions only work with InMemoryEventBus (functional mode)');
-        }
-
         $handler = $this->createTransferMoneyHandler();
 
         $customerId1 = CustomerId::generate();
@@ -209,7 +192,8 @@ final class TransferMoneyTest extends ApplicationTestCase
         $fromAccount->deposit(new Money(100000, Currency::PLN));
         $this->bankAccountRepository->save($fromAccount);
 
-        $eventBus = $this->getEventBus();
+        /** @var InMemoryEventBus $eventBus */
+        $eventBus = $this->eventBus;
         $eventBus->clear();
 
         $command = new TransferMoneyCommand(
@@ -326,7 +310,6 @@ final class TransferMoneyTest extends ApplicationTestCase
 
     private function openBankAccount(CustomerId $customerId, string $currency): void
     {
-        $this->ensureCustomerExists($customerId->getValue());
         $handler = new OpenBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
         $command = new OpenBankAccountCommand($customerId->getValue(), $currency);
         $handler($command);

@@ -25,14 +25,11 @@
         <testsuite name="functional">
             <directory>tests/Functional</directory>
         </testsuite>
+        <testsuite name="integration">
+            <directory>tests/Integration</directory>
+        </testsuite>
         <testsuite name="presentation">
             <directory>tests/Presentation</directory>
-        </testsuite>
-        <!-- Integration suite: runs same tests as functional but with real database -->
-        <!-- Note: When running all tests, PHPUnit will warn about duplicate test files -->
-        <!-- This is expected - integration tests reuse functional test files -->
-        <testsuite name="integration">
-            <directory>tests/Functional</directory>
         </testsuite>
     </testsuites>
 

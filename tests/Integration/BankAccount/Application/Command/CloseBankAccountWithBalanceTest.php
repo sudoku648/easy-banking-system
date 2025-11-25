@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\BankAccount\Application\Command;
+namespace App\Tests\Integration\BankAccount\Application\Command;
 
 use App\BankAccount\Application\Command\CloseBankAccountCommand;
 use App\BankAccount\Application\Command\CloseBankAccountCommandHandler;
@@ -11,17 +11,24 @@ use App\BankAccount\Application\Command\OpenBankAccountCommandHandler;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Shared\Domain\Event\EventBus;
-use App\Tests\Shared\ApplicationTestCase;
-use App\Tests\Support\Repository\InMemoryTransactionRepository;
+use App\Tests\Integration\IntegrationTestCase;
 use App\Transaction\Application\Command\DepositMoneyCommand;
 use App\Transaction\Application\Command\DepositMoneyCommandHandler;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Domain\ValueObject\TransactionType;
+use App\UserManagement\Domain\Entity\Customer;
+use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
+use App\UserManagement\Domain\ValueObject\FirstName;
+use App\UserManagement\Domain\ValueObject\HashedPassword;
+use App\UserManagement\Domain\ValueObject\LastName;
+use App\UserManagement\Domain\ValueObject\UserId;
+use App\UserManagement\Domain\ValueObject\Username;
 
-final class CloseBankAccountWithBalanceTest extends ApplicationTestCase
+final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
 {
     private BankAccountRepositoryInterface $bankAccountRepository;
     private TransactionRepositoryInterface $transactionRepository;
+    private UserRepositoryInterface $userRepository;
     private EventBus $eventBus;
 
     protected function setUp(): void
@@ -29,18 +36,29 @@ final class CloseBankAccountWithBalanceTest extends ApplicationTestCase
         parent::setUp();
         $this->bankAccountRepository = self::getContainer()->get(BankAccountRepositoryInterface::class);
         $this->transactionRepository = self::getContainer()->get(TransactionRepositoryInterface::class);
+        $this->userRepository = self::getContainer()->get(UserRepositoryInterface::class);
         $this->eventBus = self::getContainer()->get(EventBus::class);
+    }
+
+    private function createCustomer(): CustomerId
+    {
+        $customer = Customer::create(
+            id: UserId::generate(),
+            username: Username::fromString('customer_' . uniqid()),
+            password: HashedPassword::fromString('$2y$10$hashedPassword'),
+            firstName: FirstName::fromString('Test'),
+            lastName: LastName::fromString('Customer'),
+        );
+
+        $this->userRepository->save($customer);
+
+        return CustomerId::fromString($customer->id->getValue());
     }
 
     public function testClosingAccountWithBalanceCreatesWithdrawalTransaction(): void
     {
-        if ($this->isUsingInMemoryTransactionRepository()) {
-            self::markTestSkipped('Does not work in functional mode');
-        }
-
-        // Arrange: Open account and deposit money
-        $customerId = CustomerId::generate();
-        $this->ensureCustomerExists($customerId->getValue());
+        // Arrange: Create customer and open account
+        $customerId = $this->createCustomer();
 
         $openHandler = new OpenBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
         $openHandler(new OpenBankAccountCommand($customerId->getValue(), 'PLN'));
@@ -104,9 +122,8 @@ final class CloseBankAccountWithBalanceTest extends ApplicationTestCase
 
     public function testClosingAccountWithZeroBalanceDoesNotCreateTransaction(): void
     {
-        // Arrange: Open account with zero balance
-        $customerId = CustomerId::generate();
-        $this->ensureCustomerExists($customerId->getValue());
+        // Arrange: Create customer and open account with zero balance
+        $customerId = $this->createCustomer();
 
         $openHandler = new OpenBankAccountCommandHandler($this->bankAccountRepository, $this->eventBus);
         $openHandler(new OpenBankAccountCommand($customerId->getValue(), 'PLN'));
@@ -134,10 +151,5 @@ final class CloseBankAccountWithBalanceTest extends ApplicationTestCase
             \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
         );
         self::assertCount(0, $transactionsAfter); // Still no transactions
-    }
-
-    private function isUsingInMemoryTransactionRepository(): bool
-    {
-        return $this->transactionRepository instanceof InMemoryTransactionRepository;
     }
 }
