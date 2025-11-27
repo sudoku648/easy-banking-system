@@ -55,9 +55,29 @@ final class TransactionFixture extends AbstractFixture
                     'now',
                 )->format('Y-m-d H:i:s.uP');
 
-                // For simplicity, we'll use the same currency for original amount (no exchange)
-                // In a real scenario, you might want to mix currencies for transfer transactions
-                $exchangeRate = 1.0;
+                // Randomly decide if this transaction involves currency exchange
+                // 40% chance for transfers, 10% chance for cash operations
+                $shouldUseDifferentCurrency = $this->faker->boolean(
+                    \in_array($type, ['TRANSFER_DEPOSIT', 'TRANSFER_WITHDRAWAL'], true) ? 40 : 10,
+                );
+
+                if ($shouldUseDifferentCurrency) {
+                    // Use different currency for original amount
+                    $originalCurrency = $currency->value === 'PLN' ? Currency::EUR : Currency::PLN;
+                    // Generate realistic exchange rate (PLN/EUR typically between 4.0 and 4.8)
+                    if ($originalCurrency->value === 'PLN') {
+                        $exchangeRate = $this->faker->randomFloat(4, 4.0, 4.8); // EUR -> PLN
+                        $originalAmount = (int) \round($amount / $exchangeRate);
+                    } else {
+                        $exchangeRate = $this->faker->randomFloat(4, 0.208, 0.250); // PLN -> EUR
+                        $originalAmount = (int) \round($amount / $exchangeRate);
+                    }
+                } else {
+                    // Same currency, no exchange
+                    $originalCurrency = $currency;
+                    $originalAmount = $amount;
+                    $exchangeRate = 1.0;
+                }
 
                 $this->connection->insert('transaction', [
                     'id' => $this->faker->uuid(),
@@ -65,8 +85,8 @@ final class TransactionFixture extends AbstractFixture
                     'bank_account_id' => $account['id'],
                     'amount' => $amount,
                     'currency' => $currency->value,
-                    'original_amount' => $amount,
-                    'original_currency' => $currency->value,
+                    'original_amount' => $originalAmount,
+                    'original_currency' => $originalCurrency->value,
                     'exchange_rate' => $exchangeRate,
                     'occurred_at' => $occurredAt,
                 ]);
