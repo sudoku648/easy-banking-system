@@ -49,9 +49,7 @@ final class SelectCustomerForHistoryFormType extends AbstractType
             ->add('bankAccountId', ChoiceType::class, [
                 'label' => 'transaction.select_bank_account',
                 'choices' => $accountChoices,
-                'choice_attr' => function ($choice) use ($accountAttributes): array {
-                    return $accountAttributes[$choice] ?? [];
-                },
+                'choice_attr' => static fn (string $choice): array => $accountAttributes[$choice] ?? [],
                 'placeholder' => 'transaction.placeholder_select_bank_account',
                 'required' => false,
                 'translation_domain' => 'transaction',

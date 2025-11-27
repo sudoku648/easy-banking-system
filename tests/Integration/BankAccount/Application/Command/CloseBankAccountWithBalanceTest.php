@@ -15,6 +15,7 @@ use App\Tests\Integration\IntegrationTestCase;
 use App\Transaction\Application\Command\DepositMoneyCommand;
 use App\Transaction\Application\Command\DepositMoneyCommandHandler;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
+use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\TransactionType;
 use App\UserManagement\Domain\Entity\Customer;
 use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
@@ -85,7 +86,7 @@ final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
 
         // Get transactions before closing
         $transactionsBefore = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+            BankAccountId::fromString($account->id->getValue()),
         );
         self::assertCount(1, $transactionsBefore); // Only deposit transaction
         self::assertSame(TransactionType::CASH_DEPOSIT, $transactionsBefore[0]->type);
@@ -102,7 +103,7 @@ final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
 
         // Assert: Withdrawal transaction was created
         $transactionsAfter = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+            BankAccountId::fromString($account->id->getValue()),
         );
         self::assertCount(2, $transactionsAfter); // Deposit + withdrawal transactions
 
@@ -138,7 +139,7 @@ final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
 
         // Get transactions before closing
         $transactionsBefore = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+            BankAccountId::fromString($account->id->getValue()),
         );
         self::assertCount(0, $transactionsBefore); // No transactions
 
@@ -148,7 +149,7 @@ final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
 
         // Assert: No withdrawal transaction should be created
         $transactionsAfter = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+            BankAccountId::fromString($account->id->getValue()),
         );
         self::assertCount(0, $transactionsAfter); // Still no transactions
     }

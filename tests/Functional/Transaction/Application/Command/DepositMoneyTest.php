@@ -16,6 +16,7 @@ use App\Transaction\Application\Command\DepositMoneyCommand;
 use App\Transaction\Application\Command\DepositMoneyCommandHandler;
 use App\Transaction\Domain\Event\MoneyDeposited;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
+use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\TransactionType;
 
 final class DepositMoneyTest extends ApplicationTestCase
@@ -81,7 +82,7 @@ final class DepositMoneyTest extends ApplicationTestCase
 
         // Verify transaction
         $transactions = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+            BankAccountId::fromString($account->id->getValue()),
         );
 
         self::assertCount(1, $transactions);
@@ -229,7 +230,7 @@ final class DepositMoneyTest extends ApplicationTestCase
 
         // Verify transactions
         $transactions = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+            BankAccountId::fromString($account->id->getValue()),
         );
 
         self::assertCount(3, $transactions);

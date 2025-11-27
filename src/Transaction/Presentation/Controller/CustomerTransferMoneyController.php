@@ -10,7 +10,6 @@ use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\Shared\Domain\ValueObject\Iban;
 use App\Transaction\Application\Command\TransferMoneyCommand;
-use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Presentation\Dto\TransferMoneyDto;
 use App\Transaction\Presentation\Form\TransferMoneyFormType;
 use App\UserManagement\Infrastructure\Security\SecurityUser;
@@ -22,22 +21,20 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/customer/transaction')]
+#[Route('/customer/transaction/transfer', name: 'transaction_transfer')]
 #[IsGranted('ROLE_CUSTOMER')]
-final class TransactionController extends AbstractController
+final class CustomerTransferMoneyController extends AbstractController
 {
     use HandleTrait;
 
     public function __construct(
         MessageBusInterface $messageBus,
         private readonly BankAccountRepositoryInterface $bankAccountRepository,
-        private readonly TransactionRepositoryInterface $transactionRepository,
     ) {
         $this->messageBus = $messageBus;
     }
 
-    #[Route('/transfer', name: 'transaction_transfer')]
-    public function transfer(Request $request): Response
+    public function __invoke(Request $request): Response
     {
         /** @var SecurityUser $securityUser */
         $securityUser = $this->getUser();
@@ -116,54 +113,6 @@ final class TransactionController extends AbstractController
 
         return $this->render('transaction/transfer.html.twig', [
             'form' => $form,
-        ]);
-    }
-
-    #[Route('/history', name: 'transaction_history')]
-    public function history(): Response
-    {
-        /** @var SecurityUser $securityUser */
-        $securityUser = $this->getUser();
-        $user = $securityUser->getUser();
-
-        /** @var array<BankAccount> $accounts */
-        $accounts = $this->handle(
-            new GetBankAccountsByCustomerIdQuery($user->id->getValue()),
-        );
-
-        $accountIds = array_map(
-            fn (BankAccount $account): \App\Transaction\Domain\ValueObject\BankAccountId => \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
-            $accounts,
-        );
-
-        $transactions = $this->transactionRepository->findByBankAccountIds($accountIds);
-
-        // Map to array for template
-        $transactionsData = array_map(
-            function ($transaction) use ($accounts): array {
-                $filteredAccounts = array_filter(
-                    $accounts,
-                    fn (BankAccount $acc): bool => $acc->id->getValue() === $transaction->bankAccountId->getValue(),
-                );
-                $account = reset($filteredAccounts);
-
-                return [
-                    'id' => $transaction->id->getValue(),
-                    'type' => $transaction->type->value,
-                    'amount' => $transaction->amount->getAmount() / 100,
-                    'currency' => $transaction->amount->getCurrency()->value,
-                    'originalAmount' => $transaction->originalAmount->getAmount() / 100,
-                    'originalCurrency' => $transaction->originalAmount->getCurrency()->value,
-                    'exchangeRate' => $transaction->exchangeRate->getRate(),
-                    'occurredAt' => $transaction->occurredAt->format('Y-m-d H:i:s'),
-                    'accountIban' => $account instanceof BankAccount ? $account->iban->getValue() : 'N/A',
-                ];
-            },
-            $transactions,
-        );
-
-        return $this->render('transaction/history.html.twig', [
-            'transactions' => $transactionsData,
         ]);
     }
 }

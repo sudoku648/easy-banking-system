@@ -24,7 +24,7 @@ final class ChangePasswordDto
     #[Assert\Callback]
     public function validatePasswordsMatch(ExecutionContextInterface $context): void
     {
-        if ($this->newPassword !== null && $this->confirmNewPassword !== null 
+        if ($this->newPassword !== null && $this->confirmNewPassword !== null
             && $this->newPassword !== $this->confirmNewPassword) {
             $context->buildViolation('user.passwords_must_match')
                 ->atPath('confirmNewPassword')

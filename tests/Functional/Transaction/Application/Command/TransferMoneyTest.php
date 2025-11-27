@@ -20,6 +20,7 @@ use App\Transaction\Application\Command\TransferMoneyCommandHandler;
 use App\Transaction\Domain\Event\MoneyTransferred;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Domain\Provider\ExchangeRateProviderInterface;
+use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\TransactionType;
 
 final class TransferMoneyTest extends ApplicationTestCase
@@ -156,11 +157,11 @@ final class TransferMoneyTest extends ApplicationTestCase
 
         // Verify transactions
         $fromTransactions = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($fromAccount->id->getValue()),
+            BankAccountId::fromString($fromAccount->id->getValue()),
         );
 
         $toTransactions = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($toAccount->id->getValue()),
+            BankAccountId::fromString($toAccount->id->getValue()),
         );
 
         self::assertCount(1, $fromTransactions);

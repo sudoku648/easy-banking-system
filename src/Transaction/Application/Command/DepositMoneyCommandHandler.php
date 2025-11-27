@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Transaction\Application\Command;
 
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
+use App\BankAccount\Domain\ValueObject\BankAccountId as BankAccountIdVO;
 use App\Shared\Domain\Event\EventBus;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Money;
@@ -24,7 +25,7 @@ final readonly class DepositMoneyCommandHandler
 
     public function __invoke(DepositMoneyCommand $command): void
     {
-        $bankAccountId = \App\BankAccount\Domain\ValueObject\BankAccountId::fromString($command->bankAccountId);
+        $bankAccountId = BankAccountIdVO::fromString($command->bankAccountId);
 
         $bankAccount = $this->bankAccountRepository->findById($bankAccountId);
 

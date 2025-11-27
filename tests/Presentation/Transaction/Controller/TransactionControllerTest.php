@@ -6,6 +6,9 @@ namespace App\Tests\Presentation\Transaction\Controller;
 
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
+use App\BankAccount\Domain\ValueObject\CustomerId;
+use App\Shared\Domain\ValueObject\Currency;
+use App\Shared\Domain\ValueObject\Money;
 use App\Tests\Presentation\PresentationTestCase;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -105,7 +108,7 @@ final class TransactionControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
 
         // Verify accounts are shown
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
 
         foreach ($accounts as $account) {
@@ -158,13 +161,13 @@ final class TransactionControllerTest extends PresentationTestCase
         );
 
         // Get accounts
-        $customerId1 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer1->id->getValue());
-        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
+        $customerId1 = CustomerId::fromString($customer1->id->getValue());
+        $customerId2 = CustomerId::fromString($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
         // Add money to account1 using deposit method
-        $account1->deposit(new \App\Shared\Domain\ValueObject\Money(50000, \App\Shared\Domain\ValueObject\Currency::PLN));
+        $account1->deposit(new Money(50000, Currency::PLN));
         $this->bankAccountRepository->save($account1);
 
         $this->loginAsCustomerUser($customer1);
@@ -197,7 +200,7 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsCustomerUser($customer);
@@ -235,8 +238,8 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
-        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
+        $customerId2 = CustomerId::fromString($customer2->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
@@ -275,8 +278,8 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
-        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
+        $customerId2 = CustomerId::fromString($customer2->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
@@ -357,13 +360,13 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId1 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer1->id->getValue());
-        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
+        $customerId1 = CustomerId::fromString($customer1->id->getValue());
+        $customerId2 = CustomerId::fromString($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
         // Add money to account1 using deposit method
-        $account1->deposit(new \App\Shared\Domain\ValueObject\Money(50000, \App\Shared\Domain\ValueObject\Currency::PLN));
+        $account1->deposit(new Money(50000, Currency::PLN));
         $this->bankAccountRepository->save($account1);
 
         // Create a transfer
@@ -408,16 +411,16 @@ final class TransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId1 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer1->id->getValue());
-        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
+        $customerId1 = CustomerId::fromString($customer1->id->getValue());
+        $customerId2 = CustomerId::fromString($customer2->id->getValue());
         $account1 = $this->bankAccountRepository->findByCustomerId($customerId1)[0];
         $account2 = $this->bankAccountRepository->findByCustomerId($customerId2)[0];
 
         // Add money to both accounts
-        $account1->deposit(new \App\Shared\Domain\ValueObject\Money(50000, \App\Shared\Domain\ValueObject\Currency::PLN));
+        $account1->deposit(new Money(50000, Currency::PLN));
         $this->bankAccountRepository->save($account1);
 
-        $account2->deposit(new \App\Shared\Domain\ValueObject\Money(30000, \App\Shared\Domain\ValueObject\Currency::PLN));
+        $account2->deposit(new Money(30000, Currency::PLN));
         $this->bankAccountRepository->save($account2);
 
         // Create a transfer from customer1 to customer2

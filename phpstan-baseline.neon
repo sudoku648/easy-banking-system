@@ -13,6 +13,60 @@ parameters:
 			path: src/BankAccount/Infrastructure/Persistence/Repository/DbalBankAccountRepository.php
 
 		-
+			message: '#^Parameter \#1 \$bankAccountId of class App\\BankAccount\\Application\\Command\\CloseBankAccountCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeCloseBankAccountController.php
+
+		-
+			message: '#^Parameter \#1 \$customerId of class App\\BankAccount\\Application\\Command\\OpenBankAccountCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountExistingCustomerController.php
+
+		-
+			message: '#^Parameter \#2 \$currency of class App\\BankAccount\\Application\\Command\\OpenBankAccountCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountExistingCustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$username of class App\\UserManagement\\Application\\Command\\CreateCustomerCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method App\\Shared\\Domain\\ValueObject\\StringValueObject\:\:fromString\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
+			message: '#^Parameter \#2 \$currency of class App\\BankAccount\\Application\\Command\\OpenBankAccountCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
+			message: '#^Parameter \#2 \$password of class App\\UserManagement\\Application\\Command\\CreateCustomerCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
+			message: '#^Parameter \#3 \$firstName of class App\\UserManagement\\Application\\Command\\CreateCustomerCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
+			message: '#^Parameter \#4 \$lastName of class App\\UserManagement\\Application\\Command\\CreateCustomerCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 2
@@ -37,16 +91,40 @@ parameters:
 			path: src/Shared/Domain/ValueObject/UuidValueObject.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: src/UserManagement/Domain/Entity/User.php 
-
-		-
 			message: '#^Parameter \#1 \$data of method App\\Transaction\\Infrastructure\\Persistence\\Repository\\DbalTransactionRepository\:\:mapToEntity\(\) expects array\{id\: string, type\: string, bank_account_id\: string, amount\: int, currency\: string, original_amount\: int, original_currency\: string, exchange_rate\: float, \.\.\.\}, array\<string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Transaction/Infrastructure/Persistence/Repository/DbalTransactionRepository.php
+
+		-
+			message: '#^Parameter \#1 \$fromBankAccountId of class App\\Transaction\\Application\\Command\\TransferMoneyCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Presentation/Controller/CustomerTransferMoneyController.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method App\\Shared\\Domain\\ValueObject\\StringValueObject\:\:fromString\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Presentation/Controller/CustomerTransferMoneyController.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method App\\Shared\\Domain\\ValueObject\\UuidValueObject\:\:fromString\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Presentation/Controller/CustomerTransferMoneyController.php
+
+		-
+			message: '#^Parameter \#1 \$bankAccountId of class App\\Transaction\\Application\\Command\\DepositMoneyCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Presentation/Controller/EmployeeDepositMoneyController.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method App\\Shared\\Domain\\ValueObject\\UuidValueObject\:\:fromString\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Presentation/Controller/EmployeeDepositMoneyController.php
 
 		-
 			message: '#^Parameter \#1 \$username of class App\\UserManagement\\Application\\Command\\CreateEmployeeCommand constructor expects string, mixed given\.$#'
@@ -79,6 +157,12 @@ parameters:
 			path: src/UserManagement/Cli/CreateEmployeeConsoleCommand.php
 
 		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/UserManagement/Domain/Entity/User.php
+
+		-
 			message: '#^Parameter \#1 \$data of method App\\UserManagement\\Infrastructure\\Persistence\\Repository\\DbalUserRepository\:\:mapToEntity\(\) expects array\{id\: string, username\: string, password\: string, first_name\: string, last_name\: string, is_active\: bool, role\: string, locale\: string\}, array\<string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 3
@@ -95,3 +179,33 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/UserManagement/Infrastructure/Security/SecurityUser.php
+
+		-
+			message: '#^Parameter \$currentPassword of class App\\UserManagement\\Application\\Command\\ChangePasswordCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Presentation/Controller/CustomerChangePasswordController.php
+
+		-
+			message: '#^Parameter \$newPassword of class App\\UserManagement\\Application\\Command\\ChangePasswordCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Presentation/Controller/CustomerChangePasswordController.php
+
+		-
+			message: '#^Parameter \$currentPassword of class App\\UserManagement\\Application\\Command\\ChangePasswordCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Presentation/Controller/EmployeeChangePasswordController.php
+
+		-
+			message: '#^Parameter \$newPassword of class App\\UserManagement\\Application\\Command\\ChangePasswordCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/UserManagement/Presentation/Controller/EmployeeChangePasswordController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/UserManagement/Presentation/Validator/CurrentPasswordValidator.php

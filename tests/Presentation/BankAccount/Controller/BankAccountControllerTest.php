@@ -6,6 +6,7 @@ namespace App\Tests\Presentation\BankAccount\Controller;
 
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
+use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Tests\Presentation\PresentationTestCase;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -201,7 +202,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->assertHasFlashMessage('success', 'Bank account opened successfully');
 
         // Verify account was created
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         self::assertCount(1, $accounts);
         self::assertSame('EUR', $accounts[0]->balance->getCurrency()->value);
@@ -250,7 +251,7 @@ final class BankAccountControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $accountToClose = $accounts[0];
 
@@ -294,7 +295,7 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
 
         // Should show the active account's IBAN
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $this->assertPageContains($accounts[0]->iban->getValue());
     }

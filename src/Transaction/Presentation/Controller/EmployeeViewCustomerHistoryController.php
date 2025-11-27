@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace App\Transaction\Presentation\Controller;
 
-use App\BankAccount\Application\Query\GetAllActiveBankAccountsQuery;
 use App\BankAccount\Application\Query\GetBankAccountsByCustomerIdQuery;
 use App\BankAccount\Domain\Entity\BankAccount;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
-use App\Transaction\Application\Command\DepositMoneyCommand;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
-use App\Transaction\Presentation\Dto\DepositMoneyDto;
-use App\Transaction\Presentation\Dto\SelectCustomerForHistoryDto;
-use App\Transaction\Presentation\Form\DepositMoneyFormType;
-use App\Transaction\Presentation\Form\SelectCustomerForHistoryFormType;
-use App\UserManagement\Application\Query\GetAllCustomersQuery;
+use App\Transaction\Domain\ValueObject\BankAccountId as BankAccountIdVO;
 use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
 use App\UserManagement\Domain\ValueObject\UserId;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,9 +20,9 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/employee/transaction')]
+#[Route('/employee/transaction/history/view', name: 'employee_transaction_history_view')]
 #[IsGranted('ROLE_EMPLOYEE')]
-final class EmployeeTransactionController extends AbstractController
+final class EmployeeViewCustomerHistoryController extends AbstractController
 {
     use HandleTrait;
 
@@ -41,95 +35,7 @@ final class EmployeeTransactionController extends AbstractController
         $this->messageBus = $messageBus;
     }
 
-    #[Route('/deposit', name: 'employee_transaction_deposit')]
-    public function deposit(Request $request): Response
-    {
-        /** @var array<array{id: string, iban: string, customerId: string, balance: int, currency: string}> $accounts */
-        $accounts = $this->handle(new GetAllActiveBankAccountsQuery());
-
-        $form = $this->createForm(DepositMoneyFormType::class, null, [
-            'accounts' => $accounts,
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var DepositMoneyDto $dto */
-            $dto = $form->getData();
-
-            try {
-                // Convert amount to cents
-                $amountInCents = (int) round($dto->amount * 100);
-
-                // Get account to determine currency
-                $account = $this->bankAccountRepository->findById(
-                    BankAccountId::fromString($dto->bankAccountId),
-                );
-
-                if ($account === null) {
-                    throw new \DomainException('Bank account not found');
-                }
-
-                $this->handle(
-                    new DepositMoneyCommand(
-                        $dto->bankAccountId,
-                        $amountInCents,
-                        $account->balance->getCurrency()->value,
-                    ),
-                );
-
-                $this->addFlash('success', 'flash.transaction.deposit_completed');
-
-                return $this->redirectToRoute('employee_dashboard');
-            } catch (\Exception $e) {
-                $this->addFlash('danger', json_encode(['key' => 'flash.transaction.error', 'parameters' => ['error' => $e->getMessage()]], JSON_THROW_ON_ERROR));
-            }
-        }
-
-        return $this->render('transaction/deposit.html.twig', [
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/history/select', name: 'employee_transaction_history_select')]
-    public function selectCustomerForHistory(Request $request): Response
-    {
-        /** @var array<int, array{id: string, username: string, firstName: string, lastName: string, fullName: string, isActive: bool}> $customers */
-        $customers = $this->handle(new GetAllCustomersQuery());
-
-        /** @var array<array{id: string, iban: string, customerId: string, balance: int, currency: string}> $accounts */
-        $accounts = $this->handle(new GetAllActiveBankAccountsQuery());
-
-        $form = $this->createForm(SelectCustomerForHistoryFormType::class, null, [
-            'customers' => $customers,
-            'accounts' => $accounts,
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var SelectCustomerForHistoryDto $dto */
-            $dto = $form->getData();
-
-            // Priority: if bank account is selected, use it; otherwise use customer
-            if ($dto->bankAccountId !== null) {
-                return $this->redirectToRoute('employee_transaction_history_view', [
-                    'bankAccountId' => $dto->bankAccountId,
-                ]);
-            }
-
-            if ($dto->customerId !== null) {
-                return $this->redirectToRoute('employee_transaction_history_view', [
-                    'customerId' => $dto->customerId,
-                ]);
-            }
-        }
-
-        return $this->render('transaction/select_customer_for_history.html.twig', [
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/history/view', name: 'employee_transaction_history_view')]
-    public function viewCustomerHistory(Request $request): Response
+    public function __invoke(Request $request): Response
     {
         $customerId = $request->query->get('customerId');
         $bankAccountId = $request->query->get('bankAccountId');
@@ -155,7 +61,7 @@ final class EmployeeTransactionController extends AbstractController
 
                 $accountIban = $account->iban->getValue();
                 $transactions = $this->transactionRepository->findByBankAccountId(
-                    \App\Transaction\Domain\ValueObject\BankAccountId::fromString((string) $bankAccountId),
+                    BankAccountIdVO::fromString((string) $bankAccountId),
                 );
 
                 // Get customer name for display
@@ -177,7 +83,7 @@ final class EmployeeTransactionController extends AbstractController
                 }
 
                 $accountIds = array_map(
-                    fn (BankAccount $account): \App\Transaction\Domain\ValueObject\BankAccountId => \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+                    fn (BankAccount $account): BankAccountIdVO => BankAccountIdVO::fromString($account->id->getValue()),
                     $accounts,
                 );
 
@@ -215,7 +121,7 @@ final class EmployeeTransactionController extends AbstractController
 
             return $this->render('transaction/employee_customer_history.html.twig', [
                 'transactions' => $transactionsData,
-                'customerName' => $customerName ?? 'N/A',
+                'customerName' => $customerName,
                 'accountIban' => $accountIban,
             ]);
         } catch (\Exception $e) {

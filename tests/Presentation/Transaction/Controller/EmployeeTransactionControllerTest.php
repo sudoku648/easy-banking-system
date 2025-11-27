@@ -6,8 +6,10 @@ namespace App\Tests\Presentation\Transaction\Controller;
 
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
+use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Tests\Presentation\PresentationTestCase;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
+use App\Transaction\Domain\ValueObject\BankAccountId;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final class EmployeeTransactionControllerTest extends PresentationTestCase
@@ -107,8 +109,8 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         $this->assertResponseIsSuccessful();
 
         // Verify accounts are shown
-        $customerId1 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer1->id->getValue());
-        $customerId2 = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer2->id->getValue());
+        $customerId1 = CustomerId::fromString($customer1->id->getValue());
+        $customerId2 = CustomerId::fromString($customer2->id->getValue());
         $accounts1 = $this->bankAccountRepository->findByCustomerId($customerId1);
         $accounts2 = $this->bankAccountRepository->findByCustomerId($customerId2);
 
@@ -141,7 +143,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
         );
 
         // Get account
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
@@ -174,7 +176,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         // Initial balance should be 0
@@ -208,7 +210,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
@@ -223,7 +225,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         // Verify transaction created
         $transactions = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+            BankAccountId::fromString($account->id->getValue()),
         );
 
         self::assertCount(1, $transactions);
@@ -243,7 +245,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
@@ -273,7 +275,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
@@ -303,7 +305,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
@@ -342,7 +344,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
@@ -441,7 +443,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         $this->loginAsEmployeeUser($employee);
@@ -484,7 +486,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         // Make a deposit to create transaction
@@ -519,7 +521,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $account = $this->bankAccountRepository->findByCustomerId($customerId)[0];
 
         // Make a deposit
@@ -572,7 +574,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
             ),
         );
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
 
         // Make deposits to both accounts

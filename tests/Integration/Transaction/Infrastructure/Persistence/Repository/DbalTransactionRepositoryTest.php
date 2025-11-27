@@ -6,6 +6,7 @@ namespace App\Tests\Integration\Transaction\Infrastructure\Persistence\Repositor
 
 use App\BankAccount\Domain\Entity\BankAccount;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
+use App\BankAccount\Domain\ValueObject\BankAccountId as BankAccountIdVO;
 use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Iban;
@@ -240,7 +241,7 @@ final class DbalTransactionRepositoryTest extends IntegrationTestCase
         $this->userRepository->save($customer);
 
         $customerId = CustomerId::fromString($customer->id->getValue());
-        $bankAccountId = \App\BankAccount\Domain\ValueObject\BankAccountId::generate();
+        $bankAccountId = BankAccountIdVO::generate();
 
         $account = BankAccount::open(
             id: $bankAccountId,

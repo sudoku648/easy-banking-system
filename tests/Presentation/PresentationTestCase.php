@@ -14,8 +14,10 @@ use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
 use App\UserManagement\Domain\ValueObject\FirstName;
 use App\UserManagement\Domain\ValueObject\HashedPassword;
 use App\UserManagement\Domain\ValueObject\LastName;
+use App\UserManagement\Domain\ValueObject\Locale;
 use App\UserManagement\Domain\ValueObject\UserId;
 use App\UserManagement\Domain\ValueObject\Username;
+use App\UserManagement\Infrastructure\Security\SecurityUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
@@ -86,7 +88,7 @@ abstract class PresentationTestCase extends WebTestCase
 
         // Hash the password properly using Symfony's hasher
         $hashedPassword = $hasher->hashPassword(
-            new \App\UserManagement\Infrastructure\Security\SecurityUser($customer),
+            new SecurityUser($customer),
             $password,
         );
 
@@ -97,7 +99,7 @@ abstract class PresentationTestCase extends WebTestCase
             firstName: $customer->firstName,
             lastName: $customer->lastName,
         );
-        $customer->changeLocale(\App\UserManagement\Domain\ValueObject\Locale::ENGLISH);
+        $customer->changeLocale(Locale::ENGLISH);
 
         $repository->save($customer);
 
@@ -127,7 +129,7 @@ abstract class PresentationTestCase extends WebTestCase
 
         // Hash the password properly using Symfony's hasher
         $hashedPassword = $hasher->hashPassword(
-            new \App\UserManagement\Infrastructure\Security\SecurityUser($employee),
+            new SecurityUser($employee),
             $password,
         );
 
@@ -138,7 +140,7 @@ abstract class PresentationTestCase extends WebTestCase
             firstName: $employee->firstName,
             lastName: $employee->lastName,
         );
-        $employee->changeLocale(\App\UserManagement\Domain\ValueObject\Locale::ENGLISH);
+        $employee->changeLocale(Locale::ENGLISH);
 
         $repository->save($employee);
 
@@ -188,7 +190,7 @@ abstract class PresentationTestCase extends WebTestCase
      */
     protected function loginAsCustomerUser(Customer $customer): void
     {
-        $securityUser = new \App\UserManagement\Infrastructure\Security\SecurityUser($customer);
+        $securityUser = new SecurityUser($customer);
         $this->client->loginUser($securityUser, 'main');
     }
 
@@ -197,7 +199,7 @@ abstract class PresentationTestCase extends WebTestCase
      */
     protected function loginAsEmployeeUser(Employee $employee): void
     {
-        $securityUser = new \App\UserManagement\Infrastructure\Security\SecurityUser($employee);
+        $securityUser = new SecurityUser($employee);
         $this->client->loginUser($securityUser, 'main');
     }
 

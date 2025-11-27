@@ -36,6 +36,5 @@ user.help_current_password: Wprowadź obecne hasło, aby zweryfikować swoją to
 user.help_new_password: Hasło musi zawierać co najmniej 8 znaków
 user.help_confirm_new_password: Wprowadź ponownie nowe hasło, aby je potwierdzić
 user.password_security_note: Po zmianie hasła pozostaniesz zalogowany na tym urządzeniu
-user.password_changed_successfully: Hasło zostało pomyślnie zmienione
 user.current_password_incorrect: Obecne hasło jest nieprawidłowe
 user.passwords_must_match: Hasła muszą być takie same

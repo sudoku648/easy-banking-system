@@ -14,3 +14,6 @@ flash.bank_account.error: 'Błąd: {error}'
 flash.transaction.transfer_completed: Przelew został zrealizowany pomyślnie!
 flash.transaction.deposit_completed: Gotówka została pomyślnie wpłacona!
 flash.transaction.error: 'Błąd: {error}'
+
+# User flash messages
+flash.user.password_changed_successfully: Hasło zostało pomyślnie zmienione!

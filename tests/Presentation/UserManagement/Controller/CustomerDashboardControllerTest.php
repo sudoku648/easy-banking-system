@@ -6,6 +6,7 @@ namespace App\Tests\Presentation\UserManagement\Controller;
 
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
+use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Tests\Presentation\PresentationTestCase;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -80,7 +81,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->assertPageNotContains('No bank accounts');
 
         // Check that account details are displayed
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         $account = $accounts[0];
 
@@ -115,7 +116,7 @@ final class CustomerDashboardControllerTest extends PresentationTestCase
         $this->assertPageContains('PLN');
         $this->assertPageContains('EUR');
 
-        $customerId = \App\BankAccount\Domain\ValueObject\CustomerId::fromString($customer->id->getValue());
+        $customerId = CustomerId::fromString($customer->id->getValue());
         $accounts = $this->bankAccountRepository->findByCustomerId($customerId);
         foreach ($accounts as $account) {
             $this->assertPageContains($account->iban->getValue());

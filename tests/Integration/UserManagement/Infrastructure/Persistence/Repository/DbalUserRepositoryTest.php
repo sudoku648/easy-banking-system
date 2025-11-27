@@ -11,6 +11,7 @@ use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
 use App\UserManagement\Domain\ValueObject\FirstName;
 use App\UserManagement\Domain\ValueObject\HashedPassword;
 use App\UserManagement\Domain\ValueObject\LastName;
+use App\UserManagement\Domain\ValueObject\Locale;
 use App\UserManagement\Domain\ValueObject\UserId;
 use App\UserManagement\Domain\ValueObject\Username;
 
@@ -175,13 +176,13 @@ final class DbalUserRepositoryTest extends IntegrationTestCase
         self::assertTrue($customer->isActive);
 
         // Change locale
-        $customer->changeLocale(\App\UserManagement\Domain\ValueObject\Locale::ENGLISH);
+        $customer->changeLocale(Locale::ENGLISH);
         $this->repository->save($customer);
 
         $updatedCustomer = $this->repository->findById($customer->id);
 
         self::assertNotNull($updatedCustomer);
-        self::assertSame(\App\UserManagement\Domain\ValueObject\Locale::ENGLISH, $updatedCustomer->locale);
+        self::assertSame(Locale::ENGLISH, $updatedCustomer->locale);
     }
 
     public function testNextIdentityGeneratesUniqueIds(): void

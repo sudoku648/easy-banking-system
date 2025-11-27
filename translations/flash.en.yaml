@@ -14,3 +14,6 @@ flash.bank_account.error: 'Error: {error}'
 flash.transaction.transfer_completed: Transfer completed successfully!
 flash.transaction.deposit_completed: Cash deposited successfully!
 flash.transaction.error: 'Error: {error}'
+
+# User flash messages
+flash.user.password_changed_successfully: Password changed successfully!
