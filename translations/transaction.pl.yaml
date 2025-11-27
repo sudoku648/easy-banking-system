@@ -32,3 +32,4 @@ transaction.customer_history: Historia transakcji klienta
 transaction.view_customer_history: Zobacz historię transakcji klienta lub konta
 transaction.customer_history_title: Historia transakcji klienta
 transaction.exchange_rate: Kurs wymiany
+transaction.validation.please_select_customer: Proszę wybrać klienta

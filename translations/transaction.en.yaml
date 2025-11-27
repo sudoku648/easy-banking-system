@@ -32,3 +32,4 @@ transaction.customer_history: Customer Transaction History
 transaction.view_customer_history: View customer or account transaction history
 transaction.customer_history_title: Customer Transaction History
 transaction.exchange_rate: Exchange Rate
+transaction.validation.please_select_customer: Please select a customer
