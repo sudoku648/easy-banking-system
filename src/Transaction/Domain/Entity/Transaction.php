@@ -125,4 +125,21 @@ final class Transaction
             $occurredAt,
         );
     }
+
+    public static function createAtmWithdrawal(
+        TransactionId $id,
+        BankAccountId $bankAccountId,
+        Money $amount,
+        \DateTimeImmutable $occurredAt,
+    ): self {
+        return new self(
+            $id,
+            TransactionType::ATM_WITHDRAWAL,
+            $bankAccountId,
+            $amount,
+            $amount,
+            ExchangeRate::identity($amount->getCurrency()),
+            $occurredAt,
+        );
+    }
 }

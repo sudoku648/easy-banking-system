@@ -2,6 +2,7 @@ imports:
     - { resource: 'services_test.yaml', ignore_errors: true }
 
 parameters:
+    env(API_KEY): 'default_api_key_change_in_production'
 
 services:
     _defaults:
@@ -75,9 +76,17 @@ services:
     App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface:
         alias: App\BankAccount\Infrastructure\Persistence\Repository\DbalBankAccountRepository
 
+    App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface:
+        alias: App\BankAccount\Infrastructure\Persistence\Repository\DbalDebitCardRepository
+
     App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface:
         alias: App\Transaction\Infrastructure\Persistence\Repository\DbalTransactionRepository
 
     # Providers
     App\Transaction\Domain\Provider\ExchangeRateProviderInterface:
         alias: App\Transaction\Infrastructure\Provider\StaticExchangeRateProvider
+
+    # API Key Authenticator
+    App\Shared\Infrastructure\Security\ApiKeyAuthenticator:
+        arguments:
+            $validApiKey: '%env(API_KEY)%'

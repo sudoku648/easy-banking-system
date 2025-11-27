@@ -11,6 +11,7 @@ transaction.transfer_withdrawal: Przelew wychodzący
 transaction.transfer_deposit: Przelew przychodzący
 transaction.cash_withdrawal: Wypłata gotówki
 transaction.cash_deposit: Wpłata gotówki
+transaction.atm_withdrawal: Wypłata z bankomatu
 transaction.original_amount: Kwota oryginalna
 transaction.help_select_source_account: Wybierz konto, z którego chcesz wysłać pieniądze
 transaction.help_enter_destination_iban: Wprowadź IBAN konta docelowego (musi być w naszym banku)

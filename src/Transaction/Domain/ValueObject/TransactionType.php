@@ -10,6 +10,7 @@ enum TransactionType: string
     case TRANSFER_DEPOSIT = 'TRANSFER_DEPOSIT';
     case CASH_WITHDRAWAL = 'CASH_WITHDRAWAL';
     case CASH_DEPOSIT = 'CASH_DEPOSIT';
+    case ATM_WITHDRAWAL = 'ATM_WITHDRAWAL';
 
     public static function fromString(string $value): self
     {

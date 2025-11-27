@@ -56,6 +56,10 @@
                                                 <span class="badge bg-danger">
                                                     <i class="bi bi-cash"></i> {{ 'transaction.cash_withdrawal'|trans({}, 'transaction') }}
                                                 </span>
+                                            {% elseif transaction.type == 'ATM_WITHDRAWAL' %}
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-credit-card"></i> {{ 'transaction.atm_withdrawal'|trans({}, 'transaction') }}
+                                                </span>
                                             {% elseif transaction.type == 'CASH_DEPOSIT' %}
                                                 <span class="badge bg-primary">
                                                     <i class="bi bi-cash-coin"></i> {{ 'transaction.cash_deposit'|trans({}, 'transaction') }}
@@ -67,7 +71,7 @@
                                                 <span class="text-success">
                                                     +{{ transaction.amount|number_format(2, '.', ',') }}
                                                 </span>
-                                            {% else %}
+                                            {% elseif transaction.type == 'TRANSFER_WITHDRAWAL' or transaction.type == 'CASH_WITHDRAWAL' or transaction.type == 'ATM_WITHDRAWAL' %}
                                                 <span class="text-danger">
                                                     -{{ transaction.amount|number_format(2, '.', ',') }}
                                                 </span>

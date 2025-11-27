@@ -17,6 +17,11 @@ when@test:
             public: true
             shared: true
 
+        App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface:
+            class: App\Tests\Support\Repository\InMemoryDebitCardRepository
+            public: true
+            shared: true
+
         App\Transaction\Domain\Provider\ExchangeRateProviderInterface:
             class: App\Tests\Support\Provider\MockExchangeRateProvider
             public: true

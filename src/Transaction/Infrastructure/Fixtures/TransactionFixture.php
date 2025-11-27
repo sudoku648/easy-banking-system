@@ -44,6 +44,7 @@ final class TransactionFixture extends AbstractFixture
                     'CASH_WITHDRAWAL',
                     'TRANSFER_DEPOSIT',
                     'TRANSFER_WITHDRAWAL',
+                    'ATM_WITHDRAWAL',
                 ]);
 
                 // Generate transaction amount (in minor units)
@@ -58,7 +59,7 @@ final class TransactionFixture extends AbstractFixture
                 // Randomly decide if this transaction involves currency exchange
                 // 40% chance for transfers, 10% chance for cash operations
                 $shouldUseDifferentCurrency = $this->faker->boolean(
-                    \in_array($type, ['TRANSFER_DEPOSIT', 'TRANSFER_WITHDRAWAL'], true) ? 40 : 10,
+                    \in_array($type, ['TRANSFER_DEPOSIT', 'TRANSFER_WITHDRAWAL', 'ATM_WITHDRAWAL'], true) ? 40 : 10,
                 );
 
                 if ($shouldUseDifferentCurrency) {

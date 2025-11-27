@@ -11,6 +11,7 @@ transaction.transfer_withdrawal: Transfer (withdrawal)
 transaction.transfer_deposit: Transfer (deposit)
 transaction.cash_withdrawal: Cash withdrawal
 transaction.cash_deposit: Cash deposit
+transaction.atm_withdrawal: ATM withdrawal
 transaction.original_amount: Original Amount
 transaction.help_select_source_account: Select the account to send money from
 transaction.help_enter_destination_iban: Enter the IBAN of the destination account (must be in our bank)

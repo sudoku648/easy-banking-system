@@ -11,6 +11,11 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            custom_authenticators:
+                - App\Shared\Infrastructure\Security\ApiKeyAuthenticator
         main:
             lazy: true
             provider: database_users
@@ -25,6 +30,7 @@ security:
                 target: login_redirect
 
     access_control:
+        - { path: ^/api/, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: '^/[a-z]{2}/login', roles: PUBLIC_ACCESS }
         - { path: ^/change-locale, roles: PUBLIC_ACCESS }

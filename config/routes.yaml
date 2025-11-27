@@ -1,4 +1,4 @@
-# Controllers loaded from Presentation layers in bounded contexts
+# Controllers loaded from Presentation and Api layers in bounded contexts
 _presentation_controllers:
     resource: ../src/
     type: attribute
