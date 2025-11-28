@@ -9,9 +9,11 @@ use App\BankAccount\Application\Command\OpenBankAccountCommandHandler;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Shared\Domain\Event\EventBus;
+use App\Shared\Domain\Provider\ClockInterface;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Tests\Shared\ApplicationTestCase;
 use App\Tests\Support\Event\InMemoryEventBus;
+use App\Tests\Support\Provider\MockClock;
 use App\Transaction\Application\Command\DepositMoneyCommand;
 use App\Transaction\Application\Command\DepositMoneyCommandHandler;
 use App\Transaction\Domain\Event\MoneyDeposited;
@@ -24,6 +26,7 @@ final class DepositMoneyTest extends ApplicationTestCase
     private BankAccountRepositoryInterface $bankAccountRepository;
     private TransactionRepositoryInterface $transactionRepository;
     private EventBus $eventBus;
+    private MockClock $clock;
 
     protected function setUp(): void
     {
@@ -31,6 +34,7 @@ final class DepositMoneyTest extends ApplicationTestCase
         $this->bankAccountRepository = self::getContainer()->get(BankAccountRepositoryInterface::class);
         $this->transactionRepository = self::getContainer()->get(TransactionRepositoryInterface::class);
         $this->eventBus = self::getContainer()->get(EventBus::class);
+        $this->clock = self::getContainer()->get(ClockInterface::class);
     }
 
     public function testDepositMoneyIntoAccount(): void
@@ -242,6 +246,7 @@ final class DepositMoneyTest extends ApplicationTestCase
             $this->transactionRepository,
             $this->eventBus,
             $this->bankAccountRepository,
+            $this->clock,
         );
     }
 

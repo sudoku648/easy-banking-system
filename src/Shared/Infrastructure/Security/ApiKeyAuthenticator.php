@@ -25,7 +25,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
     ) {
     }
 
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool
     {
         // Only support requests to /api/* endpoints
         return str_starts_with($request->getPathInfo(), '/api/');
@@ -56,7 +56,7 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
         return null;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         return new JsonResponse([
             'status' => 'error',

@@ -10,10 +10,12 @@ use App\BankAccount\Domain\Exception\InsufficientFundsException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Shared\Domain\Event\EventBus;
+use App\Shared\Domain\Provider\ClockInterface;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Money;
 use App\Tests\Shared\ApplicationTestCase;
 use App\Tests\Support\Event\InMemoryEventBus;
+use App\Tests\Support\Provider\MockClock;
 use App\Tests\Support\Provider\MockExchangeRateProvider;
 use App\Transaction\Application\Command\TransferMoneyCommand;
 use App\Transaction\Application\Command\TransferMoneyCommandHandler;
@@ -29,6 +31,7 @@ final class TransferMoneyTest extends ApplicationTestCase
     private TransactionRepositoryInterface $transactionRepository;
     private ExchangeRateProviderInterface $exchangeRateProvider;
     private EventBus $eventBus;
+    private MockClock $clock;
 
     protected function setUp(): void
     {
@@ -37,6 +40,7 @@ final class TransferMoneyTest extends ApplicationTestCase
         $this->transactionRepository = self::getContainer()->get(TransactionRepositoryInterface::class);
         $this->exchangeRateProvider = self::getContainer()->get(ExchangeRateProviderInterface::class);
         $this->eventBus = self::getContainer()->get(EventBus::class);
+        $this->clock = self::getContainer()->get(ClockInterface::class);
 
         // Setup default exchange rates for MockExchangeRateProvider
         if ($this->exchangeRateProvider instanceof MockExchangeRateProvider) {
@@ -306,6 +310,7 @@ final class TransferMoneyTest extends ApplicationTestCase
             $this->exchangeRateProvider,
             $this->eventBus,
             $this->bankAccountRepository,
+            $this->clock,
         );
     }
 

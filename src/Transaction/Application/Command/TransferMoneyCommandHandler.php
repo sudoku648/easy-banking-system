@@ -7,6 +7,7 @@ namespace App\Transaction\Application\Command;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId as BankAccountIdVO;
 use App\Shared\Domain\Event\EventBus;
+use App\Shared\Domain\Provider\ClockInterface;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Money;
 use App\Transaction\Domain\Entity\Transaction;
@@ -22,6 +23,7 @@ final readonly class TransferMoneyCommandHandler
         private ExchangeRateProviderInterface $exchangeRateProvider,
         private EventBus $eventBus,
         private BankAccountRepositoryInterface $bankAccountRepository,
+        private ClockInterface $clock,
     ) {
     }
 
@@ -67,7 +69,7 @@ final readonly class TransferMoneyCommandHandler
         $this->bankAccountRepository->save($fromAccount);
         $this->bankAccountRepository->save($toAccount);
 
-        $occurredAt = new \DateTimeImmutable();
+        $occurredAt = $this->clock->now();
 
         // Create withdrawal transaction
         $withdrawalTransaction = Transaction::createTransferWithdrawal(

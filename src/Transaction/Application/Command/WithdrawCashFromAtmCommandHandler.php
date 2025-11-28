@@ -8,6 +8,7 @@ use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface
 use App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\DebitCardNumber;
 use App\Shared\Domain\Event\EventBus;
+use App\Shared\Domain\Provider\ClockInterface;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Money;
 use App\Transaction\Domain\Entity\Transaction;
@@ -24,6 +25,7 @@ final readonly class WithdrawCashFromAtmCommandHandler
         private BankAccountRepositoryInterface $bankAccountRepository,
         private DebitCardRepositoryInterface $debitCardRepository,
         private ExchangeRateProviderInterface $exchangeRateProvider,
+        private ClockInterface $clock,
     ) {
     }
 
@@ -58,19 +60,17 @@ final readonly class WithdrawCashFromAtmCommandHandler
         $accountCurrency = $bankAccount->balance->getCurrency();
         if (!$atmCurrency->equals($accountCurrency)) {
             $exchangeRate = $this->exchangeRateProvider->getRate($atmCurrency, $accountCurrency);
-            $convertedAmount = (int) round($command->amount * $exchangeRate->getValue());
-            $withdrawalAmount = new Money($convertedAmount, $accountCurrency);
+            $withdrawalAmount = $exchangeRate->convert($atmAmount);
         } else {
             $withdrawalAmount = $atmAmount;
         }
-
         // Withdraw money from account (will throw InsufficientFundsException if balance is insufficient)
         $bankAccount->withdraw($withdrawalAmount);
 
         // Save account
         $this->bankAccountRepository->save($bankAccount);
 
-        $occurredAt = new \DateTimeImmutable();
+        $occurredAt = $this->clock->now();
 
         // Create ATM withdrawal transaction
         $withdrawalTransaction = Transaction::createAtmWithdrawal(

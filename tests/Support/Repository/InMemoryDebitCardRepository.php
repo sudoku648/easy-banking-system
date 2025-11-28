@@ -47,7 +47,7 @@ final class InMemoryDebitCardRepository implements DebitCardRepositoryInterface
     public function generateCardNumber(): DebitCardNumber
     {
         // Generate simple sequential card numbers for testing
-        $count = count($this->cards) + 1;
+        $count = \count($this->cards) + 1;
         $cardNumber = '4532' . str_pad((string) $count, 12, '0', STR_PAD_LEFT);
 
         return DebitCardNumber::fromString($cardNumber);

@@ -13,10 +13,34 @@ parameters:
 			path: src/BankAccount/Infrastructure/Persistence/Repository/DbalBankAccountRepository.php
 
 		-
+			message: '#^Parameter \#1 \$data of method App\\BankAccount\\Infrastructure\\Persistence\\Repository\\DbalDebitCardRepository\:\:mapToEntity\(\) expects array\{id\: string, card_number\: string, bank_account_id\: string, is_active\: bool, issued_at\: string, blocked_at\: string\|null\}, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/BankAccount/Infrastructure/Persistence/Repository/DbalDebitCardRepository.php
+
+		-
+			message: '#^Parameter \#1 \$debitCardId of class App\\BankAccount\\Application\\Command\\BlockDebitCardCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/CustomerBlockDebitCardController.php
+
+		-
+			message: '#^Parameter \#1 \$debitCardId of class App\\BankAccount\\Application\\Command\\BlockDebitCardCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeBlockDebitCardController.php
+
+		-
 			message: '#^Parameter \#1 \$bankAccountId of class App\\BankAccount\\Application\\Command\\CloseBankAccountCommand constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/BankAccount/Presentation/Controller/EmployeeCloseBankAccountController.php
+
+		-
+			message: '#^Parameter \#1 \$bankAccountId of class App\\BankAccount\\Application\\Command\\IssueDebitCardCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeIssueDebitCardController.php
 
 		-
 			message: '#^Parameter \#1 \$customerId of class App\\BankAccount\\Application\\Command\\OpenBankAccountCommand constructor expects string, string\|null given\.$#'
@@ -89,6 +113,24 @@ parameters:
 			identifier: new.static
 			count: 2
 			path: src/Shared/Domain/ValueObject/UuidValueObject.php
+
+		-
+			message: '#^Parameter \#1 \$cardNumber of class App\\Transaction\\Application\\Command\\WithdrawCashFromAtmCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Api/Controller/AtmWithdrawalController.php
+
+		-
+			message: '#^Parameter \#1 \$string of function substr expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Api/Controller/AtmWithdrawalController.php
+
+		-
+			message: '#^Parameter \#3 \$currency of class App\\Transaction\\Application\\Command\\WithdrawCashFromAtmCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Api/Controller/AtmWithdrawalController.php
 
 		-
 			message: '#^Parameter \#1 \$data of method App\\Transaction\\Infrastructure\\Persistence\\Repository\\DbalTransactionRepository\:\:mapToEntity\(\) expects array\{id\: string, type\: string, bank_account_id\: string, amount\: int, currency\: string, original_amount\: int, original_currency\: string, exchange_rate\: float, \.\.\.\}, array\<string, mixed\> given\.$#'

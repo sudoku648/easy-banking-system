@@ -27,6 +27,11 @@ when@test:
             public: true
             shared: true
 
+        App\Shared\Domain\Provider\ClockInterface:
+            class: App\Tests\Support\Provider\MockClock
+            public: true
+            shared: true
+
         App\Shared\Domain\Event\EventBus:
             class: App\Tests\Support\Event\InMemoryEventBus
             public: true

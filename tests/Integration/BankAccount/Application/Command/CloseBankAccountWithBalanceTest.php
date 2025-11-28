@@ -11,7 +11,9 @@ use App\BankAccount\Application\Command\OpenBankAccountCommandHandler;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Shared\Domain\Event\EventBus;
+use App\Shared\Domain\Provider\ClockInterface;
 use App\Tests\Integration\IntegrationTestCase;
+use App\Tests\Support\Provider\MockClock;
 use App\Transaction\Application\Command\DepositMoneyCommand;
 use App\Transaction\Application\Command\DepositMoneyCommandHandler;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
@@ -31,6 +33,7 @@ final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
     private TransactionRepositoryInterface $transactionRepository;
     private UserRepositoryInterface $userRepository;
     private EventBus $eventBus;
+    private MockClock $clock;
 
     protected function setUp(): void
     {
@@ -39,6 +42,7 @@ final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
         $this->transactionRepository = self::getContainer()->get(TransactionRepositoryInterface::class);
         $this->userRepository = self::getContainer()->get(UserRepositoryInterface::class);
         $this->eventBus = self::getContainer()->get(EventBus::class);
+        $this->clock = self::getContainer()->get(ClockInterface::class);
     }
 
     private function createCustomer(): CustomerId
@@ -72,6 +76,7 @@ final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
             $this->transactionRepository,
             $this->eventBus,
             $this->bankAccountRepository,
+            $this->clock,
         );
         $depositHandler(new DepositMoneyCommand(
             bankAccountId: $account->id->getValue(),
