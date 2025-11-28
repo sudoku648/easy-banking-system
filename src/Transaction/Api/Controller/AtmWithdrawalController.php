@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Transaction\Api\Controller;
 
+use App\Shared\Infrastructure\Http\ApiSuccessResponse;
+use App\Shared\Infrastructure\Http\BadRequestResponse;
+use App\Shared\Infrastructure\Http\InternalServerErrorResponse;
+use App\Shared\Infrastructure\Http\UnprocessableEntityResponse;
+use App\Shared\Infrastructure\Http\ValidationErrorExtractor;
 use App\Transaction\Application\Command\WithdrawCashFromAtmCommand;
 use App\Transaction\Presentation\Dto\WithdrawCashFromAtmDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,26 +46,19 @@ final class AtmWithdrawalController extends AbstractController
                 'json',
             );
         } catch (NotEncodableValueException $e) {
-            return new JsonResponse([
-                'status' => 'error',
-                'message' => 'Invalid JSON format',
-            ], Response::HTTP_BAD_REQUEST);
+            return new BadRequestResponse(
+                message: 'Invalid JSON format',
+            )->toJsonResponse();
         }
 
         try {
             // Validate DTO
             $errors = $this->validator->validate($dto);
-            if (count($errors) > 0) {
-                $errorMessages = [];
-                foreach ($errors as $error) {
-                    $errorMessages[$error->getPropertyPath()] = $error->getMessage();
-                }
-
-                return new JsonResponse([
-                    'status' => 'error',
-                    'message' => 'Validation failed',
-                    'errors' => $errorMessages,
-                ], Response::HTTP_BAD_REQUEST);
+            if (\count($errors) > 0) {
+                return new BadRequestResponse(
+                    message: 'Validation failed',
+                    errors: ValidationErrorExtractor::extract($errors),
+                )->toJsonResponse();
             }
 
             // Convert amount to cents
@@ -74,36 +72,31 @@ final class AtmWithdrawalController extends AbstractController
                 ),
             );
 
-            return new JsonResponse([
-                'status' => 'success',
-                'message' => 'Cash withdrawn successfully from ATM',
-                'data' => [
+            return new ApiSuccessResponse(
+                message: 'Cash withdrawn successfully from ATM',
+                data: [
                     'cardNumber' => '****-****-****-' . substr($dto->cardNumber, -4),
                     'amount' => $dto->amount,
                 ],
-            ], Response::HTTP_OK);
+                statusCode: Response::HTTP_OK,
+            )->toJsonResponse();
         } catch (HandlerFailedException $e) {
             // Unwrap the original exception from Symfony Messenger
             $originalException = $e->getPrevious() ?? $e;
             
             if ($originalException instanceof \DomainException) {
-                return new JsonResponse([
-                    'status' => 'error',
-                    'message' => $originalException->getMessage(),
-                ], Response::HTTP_BAD_REQUEST);
+                return new UnprocessableEntityResponse(
+                    message: $originalException->getMessage(),
+                )->toJsonResponse();
             }
             
             throw $e; // Re-throw if not a domain exception
         } catch (\DomainException $e) {
-            return new JsonResponse([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            return new UnprocessableEntityResponse(
+                message: $e->getMessage(),
+            )->toJsonResponse();
         } catch (\Exception $e) {
-            return new JsonResponse([
-                'status' => 'error',
-                'message' => 'An unexpected error occurred',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new InternalServerErrorResponse()->toJsonResponse();
         }
     }
 }

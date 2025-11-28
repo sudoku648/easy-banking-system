@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Security;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Shared\Infrastructure\Http\ApiErrorResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -58,9 +58,9 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        return new JsonResponse([
-            'status' => 'error',
-            'message' => $exception->getMessageKey(),
-        ], Response::HTTP_UNAUTHORIZED);
+        return new ApiErrorResponse(
+            message: $exception->getMessageKey(),
+            statusCode: Response::HTTP_UNAUTHORIZED,
+        )->toJsonResponse();
     }
 }

@@ -190,6 +190,13 @@ php bin/console messenger:failed:retry
 
 See [docs/ASYNC_COMMANDS.md](docs/ASYNC_COMMANDS.md) for detailed instructions on implementing async commands.
 
+### API Development
+
+The project includes RESTful API endpoints with standardized response models. See [docs/API_RESPONSE_MODELS.md](docs/API_RESPONSE_MODELS.md) for detailed instructions on:
+- Using common API response models (`ApiSuccessResponse`, `ApiErrorResponse`)
+- Handling validation errors
+- Best practices for API development
+
 ## Project Scope
 
 ### Features

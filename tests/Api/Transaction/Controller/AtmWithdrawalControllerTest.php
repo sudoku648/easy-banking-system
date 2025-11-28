@@ -262,7 +262,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
             ],
         );
 
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(422);
 
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
@@ -301,7 +301,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
             ],
         );
 
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(422);
 
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
@@ -344,7 +344,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
             ],
         );
 
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(422);
 
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
