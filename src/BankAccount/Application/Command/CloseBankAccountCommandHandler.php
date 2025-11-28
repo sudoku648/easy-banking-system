@@ -38,10 +38,9 @@ final readonly class CloseBankAccountCommandHandler
         $this->bankAccountRepository->save($bankAccount);
 
         $this->eventBus->dispatch(
-            new BankAccountClosed(
+            BankAccountClosed::withData(
                 $bankAccount->id,
                 $balanceToWithdraw,
-                new \DateTimeImmutable(),
             ),
         );
     }

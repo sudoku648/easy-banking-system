@@ -8,17 +8,19 @@ use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\ValueObject\Money;
 
-final readonly class BankAccountClosed implements DomainEvent
+final class BankAccountClosed extends DomainEvent
 {
-    public function __construct(
-        public BankAccountId $bankAccountId,
-        public Money $withdrawnBalance,
-        private \DateTimeImmutable $occurredOn,
+    private function __construct(
+        public readonly BankAccountId $bankAccountId,
+        public readonly Money $withdrawnBalance,
     ) {
+        parent::__construct();
     }
 
-    public function occurredOn(): \DateTimeImmutable
-    {
-        return $this->occurredOn;
+    public static function withData(
+        BankAccountId $bankAccountId,
+        Money $withdrawnBalance,
+    ): self {
+        return new self($bankAccountId, $withdrawnBalance);
     }
 }

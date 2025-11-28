@@ -9,18 +9,21 @@ use App\BankAccount\Domain\ValueObject\DebitCardId;
 use App\BankAccount\Domain\ValueObject\DebitCardNumber;
 use App\Shared\Domain\Event\DomainEvent;
 
-final readonly class DebitCardIssued implements DomainEvent
+final class DebitCardIssued extends DomainEvent
 {
-    public function __construct(
-        public DebitCardId $debitCardId,
-        public DebitCardNumber $cardNumber,
-        public BankAccountId $bankAccountId,
-        private \DateTimeImmutable $occurredOn,
+    private function __construct(
+        public readonly DebitCardId $debitCardId,
+        public readonly DebitCardNumber $cardNumber,
+        public readonly BankAccountId $bankAccountId,
     ) {
+        parent::__construct();
     }
 
-    public function occurredOn(): \DateTimeImmutable
-    {
-        return $this->occurredOn;
+    public static function withData(
+        DebitCardId $debitCardId,
+        DebitCardNumber $cardNumber,
+        BankAccountId $bankAccountId,
+    ): self {
+        return new self($debitCardId, $cardNumber, $bankAccountId);
     }
 }

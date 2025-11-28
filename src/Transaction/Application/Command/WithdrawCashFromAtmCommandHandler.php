@@ -84,11 +84,10 @@ final readonly class WithdrawCashFromAtmCommandHandler
 
         // Dispatch event
         $this->eventBus->dispatch(
-            new CashWithdrawnFromAtm(
+            CashWithdrawnFromAtm::withData(
                 $withdrawalTransaction->id,
                 $bankAccount->iban,
                 $withdrawalAmount,
-                $occurredAt,
             ),
         );
     }

@@ -31,9 +31,8 @@ final readonly class BlockDebitCardCommandHandler
         $this->debitCardRepository->save($debitCard);
 
         $this->eventBus->dispatch(
-            new DebitCardBlocked(
+            DebitCardBlocked::withData(
                 $debitCard->id,
-                new \DateTimeImmutable(),
             ),
         );
     }

@@ -44,11 +44,10 @@ final readonly class IssueDebitCardCommandHandler
         $this->debitCardRepository->save($debitCard);
 
         $this->eventBus->dispatch(
-            new DebitCardIssued(
+            DebitCardIssued::withData(
                 $debitCard->id,
                 $debitCard->cardNumber,
                 $debitCard->bankAccountId,
-                new \DateTimeImmutable(),
             ),
         );
     }

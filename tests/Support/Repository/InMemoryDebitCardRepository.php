@@ -40,7 +40,7 @@ final class InMemoryDebitCardRepository implements DebitCardRepositoryInterface
     {
         return array_values(array_filter(
             $this->cards,
-            static fn (DebitCard $card): bool => $card->bankAccountId->equals($bankAccountId)
+            static fn (DebitCard $card): bool => $card->bankAccountId->equals($bankAccountId),
         ));
     }
 

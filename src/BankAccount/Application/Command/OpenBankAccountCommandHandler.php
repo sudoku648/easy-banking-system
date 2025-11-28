@@ -42,12 +42,11 @@ final readonly class OpenBankAccountCommandHandler
         $this->bankAccountRepository->save($bankAccount);
 
         $this->eventBus->dispatch(
-            new BankAccountOpened(
+            BankAccountOpened::withData(
                 $bankAccount->id,
                 $bankAccount->iban,
                 $bankAccount->customerId,
                 $currency,
-                new \DateTimeImmutable(),
             ),
         );
     }

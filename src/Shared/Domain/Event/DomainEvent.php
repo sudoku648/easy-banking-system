@@ -4,7 +4,17 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\Event;
 
-interface DomainEvent
+abstract class DomainEvent
 {
-    public function occurredOn(): \DateTimeImmutable;
+    protected readonly \DateTimeImmutable $occurredOn;
+
+    public function __construct()
+    {
+        $this->occurredOn = new \DateTimeImmutable();
+    }
+
+    final public function occurredOn(): \DateTimeImmutable
+    {
+        return $this->occurredOn;
+    }
 }

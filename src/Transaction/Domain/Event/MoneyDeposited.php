@@ -9,18 +9,21 @@ use App\Shared\Domain\ValueObject\Iban;
 use App\Shared\Domain\ValueObject\Money;
 use App\Transaction\Domain\ValueObject\TransactionId;
 
-final readonly class MoneyDeposited implements DomainEvent
+final class MoneyDeposited extends DomainEvent
 {
-    public function __construct(
-        public TransactionId $transactionId,
-        public Iban $iban,
-        public Money $amount,
-        private \DateTimeImmutable $occurredOn,
+    private function __construct(
+        public readonly TransactionId $transactionId,
+        public readonly Iban $iban,
+        public readonly Money $amount,
     ) {
+        parent::__construct();
     }
 
-    public function occurredOn(): \DateTimeImmutable
-    {
-        return $this->occurredOn;
+    public static function withData(
+        TransactionId $transactionId,
+        Iban $iban,
+        Money $amount,
+    ): self {
+        return new self($transactionId, $iban, $amount);
     }
 }

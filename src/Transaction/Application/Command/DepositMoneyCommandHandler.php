@@ -61,11 +61,10 @@ final readonly class DepositMoneyCommandHandler
 
         // Dispatch event
         $this->eventBus->dispatch(
-            new MoneyDeposited(
+            MoneyDeposited::withData(
                 $depositTransaction->id,
                 $bankAccount->iban,
                 $depositAmount,
-                $occurredAt,
             ),
         );
     }

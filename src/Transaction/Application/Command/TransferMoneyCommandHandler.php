@@ -94,12 +94,11 @@ final readonly class TransferMoneyCommandHandler
 
         // Dispatch event
         $this->eventBus->dispatch(
-            new MoneyTransferred(
+            MoneyTransferred::withData(
                 $withdrawalTransaction->id,
                 $fromAccount->iban,
                 $toAccount->iban,
                 $transferAmount,
-                $occurredAt,
             ),
         );
     }

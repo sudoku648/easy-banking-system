@@ -7,16 +7,17 @@ namespace App\BankAccount\Domain\Event;
 use App\BankAccount\Domain\ValueObject\DebitCardId;
 use App\Shared\Domain\Event\DomainEvent;
 
-final readonly class DebitCardBlocked implements DomainEvent
+final class DebitCardBlocked extends DomainEvent
 {
-    public function __construct(
-        public DebitCardId $debitCardId,
-        private \DateTimeImmutable $occurredOn,
+    private function __construct(
+        public readonly DebitCardId $debitCardId,
     ) {
+        parent::__construct();
     }
 
-    public function occurredOn(): \DateTimeImmutable
-    {
-        return $this->occurredOn;
+    public static function withData(
+        DebitCardId $debitCardId,
+    ): self {
+        return new self($debitCardId);
     }
 }
