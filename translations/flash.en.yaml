@@ -10,6 +10,11 @@ flash.bank_account.opened_existing_customer: Bank account opened successfully fo
 flash.bank_account.closed: Bank account closed successfully!
 flash.bank_account.error: 'Error: {error}'
 
+# Debit Card flash messages
+flash.debit_card.issued: Debit card issued successfully!
+flash.debit_card.blocked: Debit card blocked successfully!
+flash.debit_card.error: 'Error: {error}'
+
 # Transaction flash messages
 flash.transaction.transfer_completed: Transfer completed successfully!
 flash.transaction.deposit_completed: Cash deposited successfully!

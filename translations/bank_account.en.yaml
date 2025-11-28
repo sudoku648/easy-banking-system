@@ -25,3 +25,20 @@ bank_account.first_name: First Name
 bank_account.last_name: Last Name
 bank_account.username: Username
 bank_account.password: Password
+
+# Debit Card
+bank_account.debit_card: Debit Card
+bank_account.bank_account: Bank Account
+bank_account.issue_debit_card: Issue Debit Card
+bank_account.issue_debit_card_description: Issue a new debit card for a bank account
+bank_account.block_debit_card: Block Debit Card
+bank_account.block_debit_card_description: Block a debit card to prevent its use
+bank_account.block_my_debit_card: Block My Debit Card
+bank_account.block_my_debit_card_description: Block your own debit card to prevent unauthorized use
+bank_account.issue_card: Issue Card
+bank_account.block_card: Block Card
+bank_account.help_select_account_for_card: Select the bank account to issue a debit card for
+bank_account.help_select_card_to_block: Select the debit card to block
+bank_account.help_select_my_card_to_block: Select your debit card to block
+bank_account.placeholder_select_debit_card_to_block: -- Select debit card to block --
+bank_account.placeholder_select_account_to_issue_debit_card: -- Select account to issue debit card --

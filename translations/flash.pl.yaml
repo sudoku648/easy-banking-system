@@ -10,6 +10,11 @@ flash.bank_account.opened_existing_customer: Konto bankowe zostało pomyślnie o
 flash.bank_account.closed: Konto bankowe zostało pomyślnie zamknięte!
 flash.bank_account.error: 'Błąd: {error}'
 
+# Debit Card flash messages
+flash.debit_card.issued: Karta debetowa została pomyślnie wydana!
+flash.debit_card.blocked: Karta debetowa została pomyślnie zablokowana!
+flash.debit_card.error: 'Błąd: {error}'
+
 # Transaction flash messages
 flash.transaction.transfer_completed: Przelew został zrealizowany pomyślnie!
 flash.transaction.deposit_completed: Gotówka została pomyślnie wpłacona!

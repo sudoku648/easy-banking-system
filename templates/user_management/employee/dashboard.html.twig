@@ -59,6 +59,30 @@
 
     <div class="col-md-4 mb-3">
         {% include '_partials/dashboard_card.html.twig' with {
+            icon: 'credit-card',
+            iconColor: 'primary',
+            title: 'bank_account.issue_debit_card'|trans({}, 'bank_account'),
+            description: 'bank_account.issue_debit_card_description'|trans({}, 'bank_account'),
+            buttonText: 'bank_account.issue_card'|trans({}, 'bank_account'),
+            buttonColor: 'primary',
+            route: 'employee_issue_debit_card'
+        } %}
+    </div>
+
+    <div class="col-md-4 mb-3">
+        {% include '_partials/dashboard_card.html.twig' with {
+            icon: 'slash-circle',
+            iconColor: 'danger',
+            title: 'bank_account.block_debit_card'|trans({}, 'bank_account'),
+            description: 'bank_account.block_debit_card_description'|trans({}, 'bank_account'),
+            buttonText: 'bank_account.block_card'|trans({}, 'bank_account'),
+            buttonColor: 'danger',
+            route: 'employee_block_debit_card'
+        } %}
+    </div>
+
+    <div class="col-md-4 mb-3">
+        {% include '_partials/dashboard_card.html.twig' with {
             icon: 'clock-history',
             iconColor: 'info',
             title: 'transaction.customer_history'|trans({}, 'transaction'),

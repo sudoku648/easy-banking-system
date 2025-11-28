@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'bank_account.block_debit_card'|trans({}, 'bank_account') }} - {{ 'app.name'|trans({}, 'app') }}{% endblock %}
+
+{% block body %}
+{% embed '_partials/form_card.html.twig' with {
+    title: 'bank_account.block_my_debit_card'|trans({}, 'bank_account'),
+    icon: 'slash-circle',
+    color: 'danger',
+    description: 'bank_account.block_my_debit_card_description'|trans({}, 'bank_account'),
+    cancelRoute: 'customer_dashboard',
+    submitText: 'bank_account.block_card'|trans({}, 'bank_account'),
+    submitIcon: 'x-circle',
+    form: form
+} %}
+    {% block form_fields %}
+        <div class="mb-3">
+            <div class="form-group">
+                {{ form_label(form.debitCardId) }}
+                {{ form_widget(form.debitCardId, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(form.debitCardId) }}
+                <small class="form-text text-muted">{{ 'bank_account.help_select_my_card_to_block'|trans({}, 'bank_account') }}</small>
+            </div>
+        </div>
+    {% endblock %}
+{% endembed %}
+{% endblock %}

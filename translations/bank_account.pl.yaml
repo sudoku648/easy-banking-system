@@ -25,3 +25,20 @@ bank_account.first_name: Imię
 bank_account.last_name: Nazwisko
 bank_account.username: Nazwa użytkownika
 bank_account.password: Hasło
+
+# Debit Card
+bank_account.debit_card: Karta debetowa
+bank_account.bank_account: Konto bankowe
+bank_account.issue_debit_card: Wydaj kartę debetową
+bank_account.issue_debit_card_description: Wydaj nową kartę debetową dla konta bankowego
+bank_account.block_debit_card: Zablokuj kartę debetową
+bank_account.block_debit_card_description: Zablokuj kartę debetową, aby uniemożliwić jej użycie
+bank_account.block_my_debit_card: Zablokuj moją kartę debetową
+bank_account.block_my_debit_card_description: Zablokuj swoją kartę debetową, aby zapobiec nieuprawnionemu użyciu
+bank_account.issue_card: Wydaj kartę
+bank_account.block_card: Zablokuj kartę
+bank_account.help_select_account_for_card: Wybierz konto bankowe, dla którego chcesz wydać kartę debetową
+bank_account.help_select_card_to_block: Wybierz kartę debetową do zablokowania
+bank_account.help_select_my_card_to_block: Wybierz swoją kartę debetową do zablokowania
+bank_account.placeholder_select_debit_card_to_block: -- Wybierz kartę debetową do zablokowania --
+bank_account.placeholder_select_account_to_issue_debit_card: -- Wybierz konto bankowe, dla którego chcesz wydać kartę debetową --

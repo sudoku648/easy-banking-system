@@ -105,6 +105,18 @@
 <div class="row mt-4">
     <div class="col-md-6 mb-3">
         {% include '_partials/dashboard_card.html.twig' with {
+            icon: 'slash-circle',
+            iconColor: 'danger',
+            title: 'bank_account.block_my_debit_card'|trans({}, 'bank_account'),
+            description: 'bank_account.block_my_debit_card_description'|trans({}, 'bank_account'),
+            buttonText: 'bank_account.block_card'|trans({}, 'bank_account'),
+            buttonColor: 'danger',
+            route: 'customer_block_debit_card'
+        } %}
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {% include '_partials/dashboard_card.html.twig' with {
             icon: 'key',
             iconColor: 'warning',
             title: 'user.change_password'|trans({}, 'app'),

@@ -28,8 +28,8 @@ final readonly class DbalDebitCardRepository implements DebitCardRepositoryInter
             'card_number' => $debitCard->cardNumber->getValue(),
             'bank_account_id' => $debitCard->bankAccountId->getValue(),
             'is_active' => $debitCard->isActive,
-            'issued_at' => $debitCard->issuedAt->format('Y-m-d H:i:s'),
-            'blocked_at' => $debitCard->blockedAt?->format('Y-m-d H:i:s'),
+            'issued_at' => $debitCard->issuedAt,
+            'blocked_at' => $debitCard->blockedAt,
         ];
 
         $types = [
