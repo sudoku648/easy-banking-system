@@ -8,6 +8,8 @@ enum Currency: string
 {
     case PLN = 'PLN';
     case EUR = 'EUR';
+    case USD = 'USD';
+    case GBP = 'GBP';
 
     public static function fromString(string $value): self
     {

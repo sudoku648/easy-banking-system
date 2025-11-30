@@ -12,6 +12,6 @@ final class OpenAccountExistingCustomerDto
     public ?string $customerId = null;
 
     #[Assert\NotBlank]
-    #[Assert\Choice(['PLN', 'EUR'])]
+    #[Assert\Choice(['PLN', 'EUR', 'USD', 'GBP'])]
     public ?string $currency = null;
 }

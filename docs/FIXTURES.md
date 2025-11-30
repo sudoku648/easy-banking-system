@@ -77,7 +77,7 @@ Randomly generated customers with:
 ### Bank Accounts (1-3 per customer)
 Each customer gets 1-3 bank accounts with:
 - Valid Polish IBANs (PL + check digits + 26-digit account number)
-- Random currency: PLN or EUR
+- Random currency: PLN, EUR, USD, or GBP
 - Random balance: 0 to 100,000 (in major units)
 - 95% are active, 5% inactive
 - Unique IBAN generation

@@ -20,7 +20,21 @@ final class CurrencyTest extends TestCase
     {
         $this->expectException(\ValueError::class);
 
-        Currency::fromString('USD');
+        Currency::fromString('JPY');
+    }
+
+    public function testFromStringCreatesValidUSD(): void
+    {
+        $currency = Currency::fromString('USD');
+
+        self::assertSame(Currency::USD, $currency);
+    }
+
+    public function testFromStringCreatesValidGBP(): void
+    {
+        $currency = Currency::fromString('GBP');
+
+        self::assertSame(Currency::GBP, $currency);
     }
 
     public function testEqualsReturnsTrueForSameCurrency(): void
@@ -43,5 +57,7 @@ final class CurrencyTest extends TestCase
     {
         self::assertSame('PLN', Currency::PLN->value);
         self::assertSame('EUR', Currency::EUR->value);
+        self::assertSame('USD', Currency::USD->value);
+        self::assertSame('GBP', Currency::GBP->value);
     }
 }

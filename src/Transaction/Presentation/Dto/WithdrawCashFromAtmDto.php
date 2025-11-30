@@ -16,6 +16,6 @@ final class WithdrawCashFromAtmDto
     public ?int $amount = null;
 
     #[Assert\NotBlank]
-    #[Assert\Choice(choices: ['PLN', 'EUR'])]
+    #[Assert\Choice(choices: ['PLN', 'EUR', 'USD', 'GBP'])]
     public ?string $currency = null;
 }

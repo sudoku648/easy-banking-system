@@ -39,7 +39,7 @@ final class BankAccountFixture extends AbstractFixture
 
             for ($i = 0; $i < $accountsCount; $i++) {
                 /** @var Currency $currency */
-                $currency = $this->faker->randomElement([Currency::PLN, Currency::EUR]);
+                $currency = $this->faker->randomElement([Currency::PLN, Currency::EUR, Currency::USD, Currency::GBP]);
                 $balance = $this->faker->numberBetween(0, 100000) * 100; // 0 to 100,000 in major units
 
                 $this->connection->insert('bank_account', [

@@ -11,7 +11,7 @@ dashboard.transaction_history_desc: Zobacz historię transakcji
 dashboard.view_history: Zobacz historię
 dashboard.no_accounts: Nie masz jeszcze żadnych kont bankowych.
 dashboard.quick_info: Szybkie informacje
-dashboard.quick_info.currency: Możesz tworzyć konta w walutach PLN lub EUR
+dashboard.quick_info.currency: Możesz tworzyć konta w walutach PLN, EUR, USD lub GBP
 dashboard.quick_info.iban: Numery IBAN są generowane automatycznie
 dashboard.quick_info.close: Podczas zamykania konta wszystkie pozostałe środki są wypłacane
 dashboard.quick_info.history: Zobacz historię transakcji klienta za pomocą zarządzania kontem

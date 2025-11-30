@@ -39,6 +39,8 @@ final class OpenAccountExistingCustomerFormType extends AbstractType
                 'choices' => [
                     'PLN - Polish Zloty' => 'PLN',
                     'EUR - Euro' => 'EUR',
+                    'USD - US Dollar' => 'USD',
+                    'GBP - British Pound' => 'GBP',
                 ],
                 'translation_domain' => 'bank_account',
             ]);

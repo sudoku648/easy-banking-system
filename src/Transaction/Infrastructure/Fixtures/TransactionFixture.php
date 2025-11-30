@@ -64,15 +64,32 @@ final class TransactionFixture extends AbstractFixture
 
                 if ($shouldUseDifferentCurrency) {
                     // Use different currency for original amount
-                    $originalCurrency = $currency->value === 'PLN' ? Currency::EUR : Currency::PLN;
-                    // Generate realistic exchange rate (PLN/EUR typically between 4.0 and 4.8)
-                    if ($originalCurrency->value === 'PLN') {
-                        $exchangeRate = $this->faker->randomFloat(4, 4.0, 4.8); // EUR -> PLN
-                        $originalAmount = (int) \round($amount / $exchangeRate);
-                    } else {
-                        $exchangeRate = $this->faker->randomFloat(4, 0.208, 0.250); // PLN -> EUR
-                        $originalAmount = (int) \round($amount / $exchangeRate);
-                    }
+                    $availableCurrencies = [Currency::PLN, Currency::EUR, Currency::USD, Currency::GBP];
+                    // Remove current currency from options
+                    $availableCurrencies = array_filter(
+                        $availableCurrencies,
+                        fn ($c): bool => $c->value !== $currency->value,
+                    );
+                    $originalCurrency = $this->faker->randomElement($availableCurrencies);
+                    
+                    // Generate realistic exchange rates
+                    // Base rates to PLN: EUR=4.35, USD=4.00, GBP=5.20
+                    $ratesToPln = [
+                        'EUR' => 4.35,
+                        'USD' => 4.00,
+                        'GBP' => 5.20,
+                        'PLN' => 1.0,
+                    ];
+                    
+                    // Calculate exchange rate between two currencies through PLN
+                    $fromRate = $ratesToPln[$originalCurrency->value];
+                    $toRate = $ratesToPln[$currency->value];
+                    $exchangeRate = $fromRate / $toRate;
+                    
+                    // Add some variation (±5%)
+                    $exchangeRate *= $this->faker->randomFloat(4, 0.95, 1.05);
+                    
+                    $originalAmount = (int) \round($amount / $exchangeRate);
                 } else {
                     // Same currency, no exchange
                     $originalCurrency = $currency;

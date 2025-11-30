@@ -120,7 +120,7 @@ make fixtures
 This will create:
 - **3 employees** (john.smith, anna.kowalska, michael.brown)
 - **10 customers** with random names
-- **Bank accounts** (1-3 per customer) in PLN or EUR with random balances
+- **Bank accounts** (1-3 per customer) in PLN, EUR, USD, or GBP with random balances
 - **Transaction history** for each account
 
 **Default password for all users:** `password123`
@@ -202,14 +202,14 @@ The project includes RESTful API endpoints with standardized response models. Se
 ### Features
 
 1. **Bank Account Management**
-   - Create bank accounts in selected currency (PLN, EUR)
+   - Create bank accounts in selected currency (PLN, EUR, USD, GBP)
    - Automatic IBAN generation
    - Assign accounts to new or existing customers
    - Close bank accounts with automatic fund withdrawal
 
 2. **Money Transfers**
    - Internal bank transfers between accounts
-   - Multi-currency support with automatic conversion
+   - Multi-currency support (PLN, EUR, USD, GBP) with automatic conversion through PLN
    - Balance validation before transfer
    - Transaction history tracking
 
