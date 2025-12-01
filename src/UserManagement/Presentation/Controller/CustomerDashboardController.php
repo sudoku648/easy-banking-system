@@ -42,6 +42,8 @@ final class CustomerDashboardController extends AbstractController
                 'id' => $account->id->getValue(),
                 'iban' => $account->iban->getValue(),
                 'balance' => $account->balance->getAmount() / 100,
+                'blockedAmount' => $account->blockedAmount->getAmount() / 100,
+                'availableBalance' => $account->getAvailableBalance()->getAmount() / 100,
                 'currency' => $account->balance->getCurrency()->value,
                 'isActive' => $account->isActive,
             ],

@@ -8,7 +8,9 @@ use App\BankAccount\Application\Query\GetBankAccountsByCustomerIdQuery;
 use App\BankAccount\Domain\Entity\BankAccount;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
+use App\Shared\Domain\Provider\IbanProviderInterface;
 use App\Shared\Domain\ValueObject\Iban;
+use App\Transaction\Application\Command\InterbankTransferCommand;
 use App\Transaction\Application\Command\TransferMoneyCommand;
 use App\Transaction\Presentation\Dto\TransferMoneyDto;
 use App\Transaction\Presentation\Form\TransferMoneyFormType;
@@ -30,6 +32,7 @@ final class CustomerTransferMoneyController extends AbstractController
     public function __construct(
         MessageBusInterface $messageBus,
         private readonly BankAccountRepositoryInterface $bankAccountRepository,
+        private readonly IbanProviderInterface $ibanProvider,
     ) {
         $this->messageBus = $messageBus;
     }
@@ -74,14 +77,8 @@ final class CustomerTransferMoneyController extends AbstractController
             $dto = $form->getData();
 
             try {
-                // Find the "To" account to get its ID
                 $toIban = Iban::fromString($dto->toIban);
-                $toAccount = $this->bankAccountRepository->findByIban($toIban);
-
-                if ($toAccount === null) {
-                    throw new \DomainException('Destination account not found in our bank');
-                }
-
+                
                 // Convert amount to cents
                 $amountInCents = (int) round($dto->amount * 100);
 
@@ -94,16 +91,38 @@ final class CustomerTransferMoneyController extends AbstractController
                     throw new \DomainException('Source account not found');
                 }
 
-                $this->handle(
-                    new TransferMoneyCommand(
-                        $dto->fromBankAccountId,
-                        $toAccount->id->getValue(),
-                        $amountInCents,
-                        $fromAccount->balance->getCurrency()->value,
-                    ),
-                );
+                // Check if this is an internal or external transfer
+                if ($this->ibanProvider->isInternalIban($toIban)) {
+                    // Internal transfer
+                    $toAccount = $this->bankAccountRepository->findByIban($toIban);
 
-                $this->addFlash('success', 'flash.transaction.transfer_completed');
+                    if ($toAccount === null) {
+                        throw new \DomainException('Destination account not found in our bank');
+                    }
+
+                    $this->handle(
+                        new TransferMoneyCommand(
+                            $dto->fromBankAccountId,
+                            $toAccount->id->getValue(),
+                            $amountInCents,
+                            $fromAccount->balance->getCurrency()->value,
+                        ),
+                    );
+
+                    $this->addFlash('success', 'flash.transaction.transfer_completed');
+                } else {
+                    // External/interbank transfer
+                    $this->handle(
+                        new InterbankTransferCommand(
+                            $dto->fromBankAccountId,
+                            $toIban->getValue(),
+                            $amountInCents,
+                            $fromAccount->balance->getCurrency()->value,
+                        ),
+                    );
+
+                    $this->addFlash('success', 'flash.transaction.interbank_transfer_initiated');
+                }
 
                 return $this->redirectToRoute('customer_dashboard');
             } catch (\Exception $e) {

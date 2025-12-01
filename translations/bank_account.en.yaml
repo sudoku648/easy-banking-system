@@ -1,6 +1,8 @@
 # Bank Account English translations
 bank_account.iban: IBAN
 bank_account.balance: Balance
+bank_account.blocked_amount: Blocked
+bank_account.available_balance: Available
 bank_account.currency: Currency
 bank_account.open_new: Open New Account
 bank_account.open_for_new_customer: Open Account for New Customer

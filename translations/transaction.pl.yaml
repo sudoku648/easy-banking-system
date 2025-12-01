@@ -14,13 +14,14 @@ transaction.cash_deposit: Wpłata gotówki
 transaction.atm_withdrawal: Wypłata z bankomatu
 transaction.original_amount: Kwota oryginalna
 transaction.help_select_source_account: Wybierz konto, z którego chcesz wysłać pieniądze
-transaction.help_enter_destination_iban: Wprowadź IBAN konta docelowego (musi być w naszym banku)
+transaction.help_enter_destination_iban: Wprowadź IBAN konta docelowego
 transaction.help_enter_amount: Wprowadź kwotę do przelania. Wymiana walut zostanie zastosowana automatycznie, jeśli zajdzie taka potrzeba.
 transaction.currency_exchange_note: Jeśli konto docelowe ma inną walutę, kwota zostanie automatycznie przeliczona według aktualnego kursu wymiany.
 transaction.placeholder_select_source_account: -- Wybierz konto źródłowe --
 transaction.placeholder_to_iban: PL12345678901234567890123456
 transaction.placeholder_select_bank_account: -- Wybierz konto bankowe --
 transaction.placeholder_select_customer: -- Wybierz klienta --
+transaction.placeholder_amount: Wprowadź kwotę
 transaction.iban: IBAN
 transaction.select_customer: Wybierz klienta
 transaction.select_bank_account: Wybierz konto bankowe

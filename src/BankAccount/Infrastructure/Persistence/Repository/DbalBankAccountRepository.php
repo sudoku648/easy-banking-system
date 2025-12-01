@@ -28,6 +28,7 @@ final readonly class DbalBankAccountRepository implements BankAccountRepositoryI
             'iban' => $bankAccount->iban->getValue(),
             'customer_id' => $bankAccount->customerId->getValue(),
             'balance' => $bankAccount->balance->getAmount(),
+            'blocked_amount' => $bankAccount->blockedAmount->getAmount(),
             'currency' => $bankAccount->balance->getCurrency()->value,
             'is_active' => $bankAccount->isActive,
         ];
@@ -125,6 +126,7 @@ final readonly class DbalBankAccountRepository implements BankAccountRepositoryI
      *   iban: string,
      *   customer_id: string,
      *   balance: int,
+     *   blocked_amount: int,
      *   currency: string,
      *   is_active: bool,
      * } $data

@@ -82,12 +82,18 @@ services:
     App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface:
         alias: App\Transaction\Infrastructure\Persistence\Repository\DbalTransactionRepository
 
+    App\Transaction\Domain\Persistence\Repository\PendingInterbankTransferRepositoryInterface:
+        alias: App\Transaction\Infrastructure\Persistence\Repository\DbalPendingInterbankTransferRepository
+
     # Providers
     App\Transaction\Domain\Provider\ExchangeRateProviderInterface:
         alias: App\Transaction\Infrastructure\Provider\StaticExchangeRateProvider
 
     App\Shared\Domain\Provider\ClockInterface:
         alias: App\Shared\Infrastructure\Provider\SymfonyClock
+
+    App\Shared\Domain\Provider\IbanProviderInterface:
+        alias: App\Shared\Infrastructure\Provider\IbanProvider
 
     # API Key Authenticator
     App\Shared\Infrastructure\Security\ApiKeyAuthenticator:

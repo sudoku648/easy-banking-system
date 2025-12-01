@@ -142,4 +142,21 @@ final class Transaction
             $occurredAt,
         );
     }
+
+    public static function createInterbankWithdrawal(
+        TransactionId $id,
+        BankAccountId $bankAccountId,
+        Money $amount,
+        \DateTimeImmutable $occurredAt,
+    ): self {
+        return new self(
+            $id,
+            TransactionType::TRANSFER_WITHDRAWAL,
+            $bankAccountId,
+            $amount,
+            $amount,
+            ExchangeRate::identity($amount->getCurrency()),
+            $occurredAt,
+        );
+    }
 }

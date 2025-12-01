@@ -14,13 +14,14 @@ transaction.cash_deposit: Cash deposit
 transaction.atm_withdrawal: ATM withdrawal
 transaction.original_amount: Original Amount
 transaction.help_select_source_account: Select the account to send money from
-transaction.help_enter_destination_iban: Enter the IBAN of the destination account (must be in our bank)
+transaction.help_enter_destination_iban: Enter the IBAN of the destination account
 transaction.help_enter_amount: Enter the amount to transfer. Currency exchange will be applied automatically if needed.
 transaction.currency_exchange_note: If the destination account has a different currency, the amount will be automatically converted at the current exchange rate.
 transaction.placeholder_select_source_account: -- Select source account --
 transaction.placeholder_to_iban: PL12345678901234567890123456
 transaction.placeholder_select_bank_account: -- Select bank account --
 transaction.placeholder_select_customer: -- Select customer --
+transaction.placeholder_amount: Enter amount
 transaction.iban: IBAN
 transaction.select_customer: Select Customer
 transaction.select_bank_account: Select Bank Account

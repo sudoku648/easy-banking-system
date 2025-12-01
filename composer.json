@@ -10,8 +10,10 @@
         "doctrine/dbal": "*",
         "doctrine/doctrine-migrations-bundle": "*",
         "doctrine/orm": "*",
+        "dragonmantank/cron-expression": "^3.6",
         "symfony/asset": "7.3.*",
         "symfony/console": "7.3.*",
+        "symfony/doctrine-messenger": "7.3.*",
         "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
         "symfony/form": "7.3.*",
@@ -19,6 +21,7 @@
         "symfony/messenger": "7.3.*",
         "symfony/monolog-bundle": "^3.10",
         "symfony/runtime": "7.3.*",
+        "symfony/scheduler": "7.3.*",
         "symfony/security-bundle": "7.3.*",
         "symfony/security-csrf": "7.3.*",
         "symfony/serializer": "7.3.*",
@@ -73,7 +76,8 @@
             "bin/console doctrine:database:drop --if-exists --force --env=dev",
             "bin/console doctrine:database:create --if-not-exists -n --env=dev",
             "bin/console doctrine:migrations:migrate --no-interaction --env=dev",
-            "bin/console app:fixtures:load"
+            "bin/console app:fixtures:load --env=dev",
+            "bin/console messenger:consume async scheduler_interbank_transfers --env=dev"
         ],
         "tests-setup": [
             "bin/console doctrine:database:drop --if-exists --force --env=test",

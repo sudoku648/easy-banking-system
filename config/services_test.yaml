@@ -17,6 +17,11 @@ when@test:
             public: true
             shared: true
 
+        App\Transaction\Domain\Persistence\Repository\PendingInterbankTransferRepositoryInterface:
+            class: App\Tests\Support\Repository\InMemoryPendingInterbankTransferRepository
+            public: true
+            shared: true
+
         App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface:
             class: App\Tests\Support\Repository\InMemoryDebitCardRepository
             public: true

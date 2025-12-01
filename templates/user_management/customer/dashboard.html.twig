@@ -24,6 +24,8 @@
                                 <tr>
                                     <th>{{ 'bank_account.iban'|trans({}, 'bank_account') }}</th>
                                     <th class="text-end">{{ 'bank_account.balance'|trans({}, 'bank_account') }}</th>
+                                    <th class="text-end">{{ 'bank_account.blocked_amount'|trans({}, 'bank_account') }}</th>
+                                    <th class="text-end">{{ 'bank_account.available_balance'|trans({}, 'bank_account') }}</th>
                                     <th>{{ 'bank_account.currency'|trans({}, 'bank_account') }}</th>
                                     <th class="text-center">{{ 'common.status'|trans({}, 'app') }}</th>
                                     <th class="text-center">{{ 'common.actions'|trans({}, 'app') }}</th>
@@ -37,6 +39,18 @@
                                         </td>
                                         <td class="text-end">
                                             <strong>{{ account.balance|number_format(2, '.', ',') }}</strong>
+                                        </td>
+                                        <td class="text-end">
+                                            {% if account.blockedAmount > 0 %}
+                                                <span class="text-warning">
+                                                    <i class="bi bi-lock"></i> {{ account.blockedAmount|number_format(2, '.', ',') }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted">0.00</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end">
+                                            <strong class="text-success">{{ account.availableBalance|number_format(2, '.', ',') }}</strong>
                                         </td>
                                         <td>
                                             <span class="badge bg-secondary">{{ account.currency }}</span>

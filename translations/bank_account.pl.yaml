@@ -1,6 +1,8 @@
 # Bank Account Polish translations
 bank_account.iban: IBAN
 bank_account.balance: Saldo
+bank_account.blocked_amount: Zablokowane
+bank_account.available_balance: Dostępne
 bank_account.currency: Waluta
 bank_account.open_new: Otwórz nowe konto
 bank_account.open_for_new_customer: Otwórz konto dla nowego klienta

@@ -6,6 +6,7 @@ namespace App\Tests\Shared;
 
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\Shared\Domain\Event\EventBus;
+use App\Transaction\Domain\Persistence\Repository\PendingInterbankTransferRepositoryInterface;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Domain\Provider\ExchangeRateProviderInterface;
 use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
@@ -33,6 +34,7 @@ abstract class ApplicationTestCase extends KernelTestCase
             UserRepositoryInterface::class,
             BankAccountRepositoryInterface::class,
             TransactionRepositoryInterface::class,
+            PendingInterbankTransferRepositoryInterface::class,
             ExchangeRateProviderInterface::class,
             EventBus::class,
         ];
