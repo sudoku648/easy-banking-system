@@ -20,6 +20,7 @@
                                     <th>{{ 'transaction.date'|trans({}, 'transaction') }}</th>
                                     <th>{{ 'bank_account.iban'|trans({}, 'bank_account') }}</th>
                                     <th>{{ 'transaction.type'|trans({}, 'transaction') }}</th>
+                                    <th>{{ 'transaction.status'|trans({}, 'transaction') }}</th>
                                     <th class="text-end">{{ 'transaction.amount'|trans({}, 'transaction') }}</th>
                                     <th class="text-end">{{ 'transaction.original_amount'|trans({}, 'transaction') }}</th>
                                     <th class="text-center">{{ 'transaction.exchange_rate'|trans({}, 'transaction') }}</th>
@@ -54,6 +55,21 @@
                                             {% elseif transaction.type == 'CASH_DEPOSIT' %}
                                                 <span class="badge bg-primary">
                                                     <i class="bi bi-cash-coin"></i> {{ 'transaction.cash_deposit'|trans({}, 'transaction') }}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if transaction.status == 'ORDERED' %}
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-clock"></i> {{ 'transaction.status_ordered'|trans({}, 'transaction') }}
+                                                </span>
+                                            {% elseif transaction.status == 'EXECUTED' %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i> {{ 'transaction.status_executed'|trans({}, 'transaction') }}
+                                                </span>
+                                            {% elseif transaction.status == 'CANCELED' %}
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-x-circle"></i> {{ 'transaction.status_canceled'|trans({}, 'transaction') }}
                                                 </span>
                                             {% endif %}
                                         </td>

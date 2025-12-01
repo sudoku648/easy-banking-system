@@ -12,7 +12,6 @@ use Doctrine\Migrations\AbstractMigration;
  * 
  * - Adds blocked_amount column to bank_account table
  * - Creates pending_interbank_transfer table for tracking external transfers
- * - Adds INTERBANK_WITHDRAWAL transaction type
  */
 final class Version20251130120000 extends AbstractMigration
 {
@@ -49,11 +48,20 @@ final class Version20251130120000 extends AbstractMigration
         $this->addSql('CREATE INDEX idx_pending_interbank_transfer_is_processed ON pending_interbank_transfer(is_processed) WHERE is_processed = false');
         $this->addSql('CREATE INDEX idx_pending_interbank_transfer_created_at ON pending_interbank_transfer(created_at DESC)');
 
+        // Add status column to transaction table
+        $this->addSql('
+            ALTER TABLE transaction
+            ADD COLUMN status TEXT NOT NULL DEFAULT \'EXECUTED\' CHECK (status IN (\'ORDERED\', \'EXECUTED\', \'CANCELED\'))
+        ');
+
         // Update transaction type constraint to include INTERBANK_WITHDRAWAL
         $this->addSql('
             ALTER TABLE transaction
             DROP CONSTRAINT IF EXISTS transaction_type_check
         ');
+
+        // Add index for status
+        $this->addSql('CREATE INDEX idx_transaction_status ON transaction(status) WHERE status = \'ORDERED\'');
     }
 
     public function down(Schema $schema): void
@@ -68,5 +76,9 @@ final class Version20251130120000 extends AbstractMigration
 
         // Remove blocked_amount column from bank_account table
         $this->addSql('ALTER TABLE bank_account DROP COLUMN IF EXISTS blocked_amount');
+
+        // Drop transaction status index and column
+        $this->addSql('DROP INDEX IF EXISTS idx_transaction_status');
+        $this->addSql('ALTER TABLE transaction DROP COLUMN IF EXISTS status');
     }
 }

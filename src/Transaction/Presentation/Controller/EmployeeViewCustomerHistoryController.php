@@ -114,6 +114,7 @@ final class EmployeeViewCustomerHistoryController extends AbstractController
                         'exchangeRate' => $transaction->exchangeRate->getRate(),
                         'occurredAt' => $transaction->occurredAt->format('Y-m-d H:i:s'),
                         'accountIban' => $account?->iban->getValue() ?? 'N/A',
+                        'status' => $transaction->status->value,
                     ];
                 },
                 $transactions,

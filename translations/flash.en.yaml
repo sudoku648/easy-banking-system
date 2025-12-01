@@ -19,6 +19,7 @@ flash.debit_card.error: 'Error: {error}'
 flash.transaction.transfer_completed: Transfer completed successfully!
 flash.transaction.interbank_transfer_initiated: Interbank transfer initiated! Funds are blocked and will be transferred at the next scheduled time (6am, 9am, 12pm, 3pm, 6pm, 9pm).
 flash.transaction.deposit_completed: Cash deposited successfully!
+flash.transaction.cancelled: Transaction cancelled successfully! Funds have been unblocked.
 flash.transaction.error: 'Error: {error}'
 
 # User flash messages

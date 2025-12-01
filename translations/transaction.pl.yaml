@@ -35,3 +35,10 @@ transaction.view_customer_history: Zobacz historię transakcji klienta lub konta
 transaction.customer_history_title: Historia transakcji klienta
 transaction.exchange_rate: Kurs wymiany
 transaction.validation.please_select_customer: Proszę wybrać klienta
+transaction.status: Status
+transaction.status_ordered: Zlecona
+transaction.status_executed: Wykonana
+transaction.status_canceled: Anulowana
+transaction.actions: Akcje
+transaction.cancel_transfer: Anuluj
+transaction.confirm_cancel: Czy na pewno chcesz anulować tę transakcję?

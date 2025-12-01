@@ -9,6 +9,7 @@ use App\Shared\Domain\ValueObject\Money;
 use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\ExchangeRate;
 use App\Transaction\Domain\ValueObject\TransactionId;
+use App\Transaction\Domain\ValueObject\TransactionStatus;
 use App\Transaction\Domain\ValueObject\TransactionType;
 
 final class Transaction
@@ -21,6 +22,7 @@ final class Transaction
         public readonly Money $originalAmount,
         public readonly ExchangeRate $exchangeRate,
         public readonly \DateTimeImmutable $occurredAt,
+        public private(set) TransactionStatus $status = TransactionStatus::EXECUTED,
     ) {
     }
 
@@ -35,6 +37,7 @@ final class Transaction
      *   original_currency: string,
      *   exchange_rate: float,
      *   occurred_at: string,
+     *   status: string,
      * } $data
      */
     public static function fromRaw(array $data): self
@@ -51,6 +54,7 @@ final class Transaction
                 (float) $data['exchange_rate'],
             ),
             new \DateTimeImmutable($data['occurred_at']),
+            TransactionStatus::from($data['status']),
         );
     }
 
@@ -157,6 +161,25 @@ final class Transaction
             $amount,
             ExchangeRate::identity($amount->getCurrency()),
             $occurredAt,
+            TransactionStatus::ORDERED,
         );
+    }
+
+    public function execute(): void
+    {
+        if ($this->status !== TransactionStatus::ORDERED) {
+            throw new \DomainException('Can only execute ordered transactions');
+        }
+
+        $this->status = TransactionStatus::EXECUTED;
+    }
+
+    public function cancel(): void
+    {
+        if ($this->status !== TransactionStatus::ORDERED) {
+            throw new \DomainException('Can only cancel ordered transactions');
+        }
+
+        $this->status = TransactionStatus::CANCELED;
     }
 }

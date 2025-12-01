@@ -66,6 +66,7 @@ final class CustomerViewTransactionHistoryController extends AbstractController
                     'exchangeRate' => $transaction->exchangeRate->getRate(),
                     'occurredAt' => $transaction->occurredAt->format('Y-m-d H:i:s'),
                     'accountIban' => $account instanceof BankAccount ? $account->iban->getValue() : 'N/A',
+                    'status' => $transaction->status->value,
                 ];
             },
             $transactions,

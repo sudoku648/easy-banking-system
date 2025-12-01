@@ -19,6 +19,7 @@ flash.debit_card.error: 'Błąd: {error}'
 flash.transaction.transfer_completed: Przelew został zrealizowany pomyślnie!
 flash.transaction.interbank_transfer_initiated: Przelew międzybankowy został zainicjowany! Środki są zablokowane i zostaną przelane o następnej zaplanowanej godzinie (6:00, 9:00, 12:00, 15:00, 18:00, 21:00).
 flash.transaction.deposit_completed: Gotówka została pomyślnie wpłacona!
+flash.transaction.cancelled: Transakcja została anulowana pomyślnie! Środki zostały odblokowane.
 flash.transaction.error: 'Błąd: {error}'
 
 # User flash messages

@@ -29,9 +29,11 @@
                                     <th>{{ 'transaction.date'|trans({}, 'transaction') }}</th>
                                     <th>{{ 'bank_account.iban'|trans({}, 'bank_account') }}</th>
                                     <th>{{ 'transaction.type'|trans({}, 'transaction') }}</th>
+                                    <th>{{ 'transaction.status'|trans({}, 'transaction') }}</th>
                                     <th class="text-end">{{ 'transaction.amount'|trans({}, 'transaction') }}</th>
                                     <th class="text-end">{{ 'transaction.original_amount'|trans({}, 'transaction') }}</th>
                                     <th class="text-center">{{ 'transaction.exchange_rate'|trans({}, 'transaction') }}</th>
+                                    <th class="text-center">{{ 'transaction.actions'|trans({}, 'transaction') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,6 +68,21 @@
                                                 </span>
                                             {% endif %}
                                         </td>
+                                        <td>
+                                            {% if transaction.status == 'ORDERED' %}
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-clock"></i> {{ 'transaction.status_ordered'|trans({}, 'transaction') }}
+                                                </span>
+                                            {% elseif transaction.status == 'EXECUTED' %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i> {{ 'transaction.status_executed'|trans({}, 'transaction') }}
+                                                </span>
+                                            {% elseif transaction.status == 'CANCELED' %}
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-x-circle"></i> {{ 'transaction.status_canceled'|trans({}, 'transaction') }}
+                                                </span>
+                                            {% endif %}
+                                        </td>
                                         <td class="text-end">
                                             {% if transaction.type == 'TRANSFER_DEPOSIT' or transaction.type == 'CASH_DEPOSIT' %}
                                                 <span class="text-success">
@@ -85,6 +102,24 @@
                                         <td class="text-center">
                                             {% if transaction.exchangeRate != 1.0 %}
                                                 <span class="badge bg-info">{{ transaction.exchangeRate|number_format(4) }}</span>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if transaction.status == 'ORDERED' %}
+                                                <form method="post" action="{{ path('employee_transaction_cancel') }}" style="display: inline;" onsubmit="return confirm('{{ 'transaction.confirm_cancel'|trans({}, 'transaction') }}')">
+                                                    <input type="hidden" name="transactionId" value="{{ transaction.id }}">
+                                                    {% if app.request.query.get('customerId') %}
+                                                        <input type="hidden" name="customerId" value="{{ app.request.query.get('customerId') }}">
+                                                    {% endif %}
+                                                    {% if app.request.query.get('bankAccountId') %}
+                                                        <input type="hidden" name="bankAccountId" value="{{ app.request.query.get('bankAccountId') }}">
+                                                    {% endif %}
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="bi bi-x-circle"></i> {{ 'transaction.cancel_transfer'|trans({}, 'transaction') }}
+                                                    </button>
+                                                </form>
                                             {% else %}
                                                 <span class="text-muted">-</span>
                                             {% endif %}

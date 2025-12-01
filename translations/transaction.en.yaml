@@ -35,3 +35,10 @@ transaction.view_customer_history: View customer or account transaction history
 transaction.customer_history_title: Customer Transaction History
 transaction.exchange_rate: Exchange Rate
 transaction.validation.please_select_customer: Please select a customer
+transaction.status: Status
+transaction.status_ordered: Ordered
+transaction.status_executed: Executed
+transaction.status_canceled: Canceled
+transaction.actions: Actions
+transaction.cancel_transfer: Cancel
+transaction.confirm_cancel: Are you sure you want to cancel this transaction?

@@ -25,10 +25,6 @@ final readonly class InterbankTransferScheduleProvider implements ScheduleProvid
                 RecurringMessage::cron('0 9 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
             )
             ->add(
-                // Run at 11:35
-                RecurringMessage::cron('35 11 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
-            )
-            ->add(
                 // Run at 12:00
                 RecurringMessage::cron('0 12 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
             )

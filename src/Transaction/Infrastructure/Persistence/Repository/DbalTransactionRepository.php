@@ -30,9 +30,19 @@ final readonly class DbalTransactionRepository implements TransactionRepositoryI
             'original_currency' => $transaction->originalAmount->getCurrency()->value,
             'exchange_rate' => $transaction->exchangeRate->getRate(),
             'occurred_at' => $transaction->occurredAt->format('Y-m-d H:i:s.uP'),
+            'status' => $transaction->status->value,
         ];
 
-        $this->connection->insert('transaction', $data);
+        $exists = $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM transaction WHERE id = :id',
+            ['id' => $transaction->id->getValue()],
+        );
+
+        if ($exists) {
+            $this->connection->update('transaction', $data, ['id' => $transaction->id->getValue()]);
+        } else {
+            $this->connection->insert('transaction', $data);
+        }
     }
 
     public function findById(TransactionId $id): ?Transaction
@@ -92,6 +102,7 @@ final readonly class DbalTransactionRepository implements TransactionRepositoryI
      *   original_currency: string,
      *   exchange_rate: float,
      *   occurred_at: string,
+     *   status: string,
      * } $data
      */
     private function mapToEntity(array $data): Transaction
