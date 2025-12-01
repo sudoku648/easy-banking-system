@@ -18,27 +18,27 @@ final readonly class InterbankTransferScheduleProvider implements ScheduleProvid
         return new Schedule()
             ->add(
                 // Run at 06:00
-                RecurringMessage::cron('0 6 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
+                RecurringMessage::cron('0 6 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw')),
             )
             ->add(
                 // Run at 09:00
-                RecurringMessage::cron('0 9 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
+                RecurringMessage::cron('0 9 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw')),
             )
             ->add(
                 // Run at 12:00
-                RecurringMessage::cron('0 12 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
+                RecurringMessage::cron('0 12 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw')),
             )
             ->add(
                 // Run at 15:00
-                RecurringMessage::cron('0 15 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
+                RecurringMessage::cron('0 15 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw')),
             )
             ->add(
                 // Run at 18:00
-                RecurringMessage::cron('0 18 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
+                RecurringMessage::cron('0 18 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw')),
             )
             ->add(
                 // Run at 21:00
-                RecurringMessage::cron('0 21 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw'))
+                RecurringMessage::cron('0 21 * * *', new ProcessInterbankTransfersCommand(), new \DateTimeZone('Europe/Warsaw')),
             );
     }
 }

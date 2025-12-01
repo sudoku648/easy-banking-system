@@ -579,7 +579,7 @@ final class EmployeeTransactionControllerTest extends PresentationTestCase
 
         // Make deposits to both accounts
         $this->loginAsEmployeeUser($employee);
-        
+
         $crawler = $this->client->request('GET', '/employee/transaction/deposit');
         $form = $crawler->selectButton('Deposit')->form([
             'deposit_money_form[bankAccountId]' => $accounts[0]->id->getValue(),

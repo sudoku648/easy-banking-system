@@ -106,7 +106,7 @@ final class LoadFixturesConsoleCommand extends Command
     {
         $sql = \sprintf('SELECT COUNT(*) FROM %s', $table);
 
-        if ($column !== null && $value !== null) {
+        if (null !== $column && null !== $value) {
             $sql .= \sprintf(' WHERE %s = :value', $column);
 
             return (int) $this->connection->fetchOne($sql, ['value' => $value]);

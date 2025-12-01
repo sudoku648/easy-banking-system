@@ -19,12 +19,12 @@ final readonly class ChangePasswordCommandHandler
     {
         $user = $this->userRepository->findById($command->userId);
 
-        if ($user === null) {
-            throw new UserNotFoundException(\sprintf('User with ID "%s" not found', $command->userId->getValue()));
+        if (null === $user) {
+            throw UserNotFoundException::withId($command->userId->getValue());
         }
 
         if (!$user->password->verify($command->currentPassword)) {
-            throw new InvalidPasswordException('Current password is incorrect');
+            throw InvalidPasswordException::incorrectCurrentPassword();
         }
 
         $user->changePassword($command->newPassword);

@@ -53,7 +53,7 @@ final class InMemoryUserRepository implements UserRepositoryInterface
 
     public function existsByUsername(Username $username): bool
     {
-        return $this->findByUsername($username) !== null;
+        return null !== $this->findByUsername($username);
     }
 
     public function nextIdentity(): UserId

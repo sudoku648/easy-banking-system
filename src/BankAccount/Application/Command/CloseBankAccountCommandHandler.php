@@ -23,7 +23,7 @@ final readonly class CloseBankAccountCommandHandler
         $bankAccountId = BankAccountId::fromString($command->bankAccountId);
         $bankAccount = $this->bankAccountRepository->findById($bankAccountId);
 
-        if ($bankAccount === null) {
+        if (null === $bankAccount) {
             throw BankAccountNotFoundException::withId($bankAccountId->getValue());
         }
 

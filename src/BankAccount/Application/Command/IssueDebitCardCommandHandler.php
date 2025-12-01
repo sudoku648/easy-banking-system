@@ -27,7 +27,7 @@ final readonly class IssueDebitCardCommandHandler
 
         // Verify bank account exists
         $bankAccount = $this->bankAccountRepository->findById($bankAccountId);
-        if ($bankAccount === null) {
+        if (null === $bankAccount) {
             throw BankAccountNotFoundException::withId($bankAccountId->getValue());
         }
 

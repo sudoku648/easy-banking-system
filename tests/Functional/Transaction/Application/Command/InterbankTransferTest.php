@@ -13,8 +13,10 @@ use App\Shared\Domain\ValueObject\Money;
 use App\Tests\Shared\ApplicationTestCase;
 use App\Transaction\Application\Command\InterbankTransferCommand;
 use App\Transaction\Application\Command\InterbankTransferCommandHandler;
+use App\Transaction\Domain\Exception\InvalidTransferException;
 use App\Transaction\Domain\Persistence\Repository\PendingInterbankTransferRepositoryInterface;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
+use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\TransactionType;
 
 final class InterbankTransferTest extends ApplicationTestCase
@@ -66,7 +68,7 @@ final class InterbankTransferTest extends ApplicationTestCase
 
         // Check that pending transfer was created
         $pendingTransfers = $this->pendingTransferRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($fromAccount->id->getValue())
+            BankAccountId::fromString($fromAccount->id->getValue()),
         );
         self::assertCount(1, $pendingTransfers);
         self::assertEquals($externalIban, $pendingTransfers[0]->toIban->getValue());
@@ -75,7 +77,7 @@ final class InterbankTransferTest extends ApplicationTestCase
 
         // Check that a transaction was created (but not processed yet)
         $transactions = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($fromAccount->id->getValue())
+            BankAccountId::fromString($fromAccount->id->getValue()),
         );
         self::assertCount(1, $transactions);
         self::assertEquals(TransactionType::TRANSFER_WITHDRAWAL, $transactions[0]->type);
@@ -95,8 +97,7 @@ final class InterbankTransferTest extends ApplicationTestCase
         $internalIban = 'PL10102010260000000000000002'; // Internal bank IBAN (same bank code)
 
         // Act & Assert
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Use TransferMoney command for internal transfers');
+        $this->expectException(InvalidTransferException::class);
 
         $command = new InterbankTransferCommand(
             $fromAccount->id->getValue(),
@@ -122,8 +123,7 @@ final class InterbankTransferTest extends ApplicationTestCase
         $externalIban = 'GB33BUKB20201555555555';
 
         // Act & Assert
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Insufficient available balance for transfer');
+        $this->expectException(InvalidTransferException::class);
 
         $command = new InterbankTransferCommand(
             $fromAccount->id->getValue(),

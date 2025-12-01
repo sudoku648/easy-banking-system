@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Transaction\Application\Command;
 
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Application\Command\OpenBankAccountCommandHandler;
+use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Shared\Domain\Event\EventBus;
@@ -17,6 +18,7 @@ use App\Tests\Support\Provider\MockClock;
 use App\Transaction\Application\Command\DepositMoneyCommand;
 use App\Transaction\Application\Command\DepositMoneyCommandHandler;
 use App\Transaction\Domain\Event\MoneyDeposited;
+use App\Transaction\Domain\Exception\CurrencyMismatchException;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\TransactionType;
@@ -140,8 +142,7 @@ final class DepositMoneyTest extends ApplicationTestCase
             currency: 'PLN',
         );
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Bank account not found');
+        $this->expectException(BankAccountNotFoundException::class);
 
         $handler($command);
     }
@@ -163,8 +164,7 @@ final class DepositMoneyTest extends ApplicationTestCase
             currency: 'EUR',
         );
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Deposit currency must match account currency');
+        $this->expectException(CurrencyMismatchException::class);
 
         $handler($command);
     }

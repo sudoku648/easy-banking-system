@@ -7,7 +7,7 @@ parameters:
 			path: public/index.php
 
 		-
-			message: '#^Parameter \#1 \$data of method App\\BankAccount\\Infrastructure\\Persistence\\Repository\\DbalBankAccountRepository\:\:mapToEntity\(\) expects array\{id\: string, iban\: string, customer_id\: string, balance\: int, currency\: string, is_active\: bool\}, array\<string, mixed\> given\.$#'
+			message: '#^Parameter \#1 \$data of method App\\BankAccount\\Infrastructure\\Persistence\\Repository\\DbalBankAccountRepository\:\:mapToEntity\(\) expects array\{id\: string, iban\: string, customer_id\: string, balance\: int, blocked_amount\: int, currency\: string, is_active\: bool\}, array\<string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 4
 			path: src/BankAccount/Infrastructure/Persistence/Repository/DbalBankAccountRepository.php
@@ -133,10 +133,46 @@ parameters:
 			path: src/Transaction/Api/Controller/AtmWithdrawalController.php
 
 		-
+			message: '#^Cannot access property \$value on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: src/Transaction/Infrastructure/Fixtures/TransactionFixture.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Transaction/Infrastructure/Fixtures/TransactionFixture.php
+
+		-
+			message: '#^Parameter \#1 \$data of static method App\\Transaction\\Domain\\Entity\\PendingInterbankTransfer\:\:fromRaw\(\) expects array\{id\: string, from_bank_account_id\: string, to_iban\: string, amount\: int, currency\: string, created_at\: string, is_processed\: bool, processed_at\: string\|null, \.\.\.\}, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Transaction/Infrastructure/Persistence/Repository/DbalPendingInterbankTransferRepository.php
+
+		-
 			message: '#^Parameter \#1 \$data of method App\\Transaction\\Infrastructure\\Persistence\\Repository\\DbalTransactionRepository\:\:mapToEntity\(\) expects array\{id\: string, type\: string, bank_account_id\: string, amount\: int, currency\: string, original_amount\: int, original_currency\: string, exchange_rate\: float, \.\.\.\}, array\<string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Transaction/Infrastructure/Persistence/Repository/DbalTransactionRepository.php
+
+		-
+			message: '#^Offset ''EUR''\|''GBP''\|''PLN''\|''USD'' might not exist on array\{EUR\: 4\.35, USD\: 4\.0, GBP\: 5\.2\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Transaction/Infrastructure/Provider/StaticExchangeRateProvider.php
+
+		-
+			message: '#^Parameter \#1 \$accountId of static method App\\BankAccount\\Domain\\Exception\\BankAccountNotFoundException\:\:withId\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Presentation/Controller/CustomerTransferMoneyController.php
+
+		-
+			message: '#^Parameter \#1 \$fromBankAccountId of class App\\Transaction\\Application\\Command\\InterbankTransferCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Presentation/Controller/CustomerTransferMoneyController.php
 
 		-
 			message: '#^Parameter \#1 \$fromBankAccountId of class App\\Transaction\\Application\\Command\\TransferMoneyCommand constructor expects string, string\|null given\.$#'
@@ -155,6 +191,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Transaction/Presentation/Controller/CustomerTransferMoneyController.php
+
+		-
+			message: '#^Parameter \#1 \$accountId of static method App\\BankAccount\\Domain\\Exception\\BankAccountNotFoundException\:\:withId\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Transaction/Presentation/Controller/EmployeeDepositMoneyController.php
 
 		-
 			message: '#^Parameter \#1 \$bankAccountId of class App\\Transaction\\Application\\Command\\DepositMoneyCommand constructor expects string, string\|null given\.$#'

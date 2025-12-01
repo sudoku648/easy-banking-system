@@ -12,6 +12,8 @@ use App\Shared\Domain\ValueObject\Iban;
 
 final class InMemoryBankAccountRepository implements BankAccountRepositoryInterface
 {
+    private const string BANK_CODE = '10201026';
+
     /**
      * @var array<string, BankAccount>
      */
@@ -68,7 +70,7 @@ final class InMemoryBankAccountRepository implements BankAccountRepositoryInterf
 
     public function existsByIban(Iban $iban): bool
     {
-        return $this->findByIban($iban) !== null;
+        return null !== $this->findByIban($iban);
     }
 
     public function nextIdentity(): BankAccountId
@@ -78,10 +80,12 @@ final class InMemoryBankAccountRepository implements BankAccountRepositoryInterf
 
     public function nextAccountNumber(): string
     {
-        $accountNumber = str_pad((string) $this->accountNumberSequence, 26, '0', STR_PAD_LEFT);
+        // Generate account number with bank code (8 digits) + sequence (18 digits)
+        // This ensures consistency with production repository
+        $randomPart = str_pad((string) $this->accountNumberSequence, 18, '0', STR_PAD_LEFT);
         $this->accountNumberSequence++;
 
-        return $accountNumber;
+        return self::BANK_CODE . $randomPart;
     }
 
     public function clear(): void

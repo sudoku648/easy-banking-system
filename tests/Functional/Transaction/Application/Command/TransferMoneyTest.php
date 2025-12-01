@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Transaction\Application\Command;
 
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Application\Command\OpenBankAccountCommandHandler;
+use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
 use App\BankAccount\Domain\Exception\InsufficientFundsException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\CustomerId;
@@ -269,8 +270,7 @@ final class TransferMoneyTest extends ApplicationTestCase
             currency: 'PLN',
         );
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Source bank account not found');
+        $this->expectException(BankAccountNotFoundException::class);
 
         $handler($command);
     }
@@ -297,8 +297,7 @@ final class TransferMoneyTest extends ApplicationTestCase
             currency: 'PLN',
         );
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Target bank account not found');
+        $this->expectException(BankAccountNotFoundException::class);
 
         $handler($command);
     }

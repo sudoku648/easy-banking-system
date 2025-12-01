@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Transaction\Application\Command;
 
+use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
+use App\BankAccount\Domain\Exception\DebitCardNotFoundException;
+use App\BankAccount\Domain\Exception\DebitCardStateException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\DebitCardNumber;
@@ -36,20 +39,20 @@ final readonly class WithdrawCashFromAtmCommandHandler
         // Find debit card
         $debitCard = $this->debitCardRepository->findByCardNumber($cardNumber);
 
-        if ($debitCard === null) {
-            throw new \DomainException('Debit card not found');
+        if (null === $debitCard) {
+            throw DebitCardNotFoundException::withCardNumber($command->cardNumber);
         }
 
         // Check if card can be used for withdrawal
         if (!$debitCard->canBeUsedForWithdrawal()) {
-            throw new \DomainException('Debit card is blocked or inactive');
+            throw DebitCardStateException::blockedOrInactive();
         }
 
         // Get associated bank account
         $bankAccount = $this->bankAccountRepository->findById($debitCard->bankAccountId);
 
-        if ($bankAccount === null) {
-            throw new \DomainException('Bank account associated with card not found');
+        if (null === $bankAccount) {
+            throw BankAccountNotFoundException::withId($debitCard->bankAccountId->getValue());
         }
 
         // Create ATM amount in the ATM's currency

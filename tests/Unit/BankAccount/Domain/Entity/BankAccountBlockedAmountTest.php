@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\BankAccount\Domain\Entity;
 
 use App\BankAccount\Domain\Entity\BankAccount;
+use App\BankAccount\Domain\Exception\BankAccountStateException;
 use App\BankAccount\Domain\Exception\InsufficientFundsException;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\BankAccount\Domain\ValueObject\CustomerId;
@@ -71,8 +72,7 @@ final class BankAccountBlockedAmountTest extends TestCase
     {
         $this->account->blockAmount(new Money(3000, Currency::PLN));
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Cannot unblock more than blocked amount');
+        $this->expectException(BankAccountStateException::class);
 
         $this->account->unblockAmount(new Money(4000, Currency::PLN));
     }

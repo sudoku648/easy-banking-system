@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\UserManagement\Domain\Exception;
 
-final class UsernameAlreadyExistsException extends \DomainException
+use App\Shared\Domain\Exception\ConflictException;
+
+final class UsernameAlreadyExistsException extends ConflictException
 {
     public static function forUsername(string $username): self
     {

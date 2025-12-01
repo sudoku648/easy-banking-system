@@ -8,6 +8,8 @@ use App\BankAccount\Application\Command\BlockDebitCardCommand;
 use App\BankAccount\Application\Command\BlockDebitCardCommandHandler;
 use App\BankAccount\Domain\Entity\DebitCard;
 use App\BankAccount\Domain\Event\DebitCardBlocked;
+use App\BankAccount\Domain\Exception\DebitCardNotFoundException;
+use App\BankAccount\Domain\Exception\DebitCardStateException;
 use App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\BankAccount\Domain\ValueObject\DebitCardId;
@@ -53,9 +55,7 @@ final class BlockDebitCardCommandHandlerTest extends TestCase
         $this->debitCardRepository
             ->expects(self::once())
             ->method('save')
-            ->with(self::callback(function (DebitCard $card): bool {
-                return !$card->isActive && $card->blockedAt !== null;
-            }));
+            ->with(self::callback(fn (DebitCard $card): bool => !$card->isActive && null !== $card->blockedAt));
 
         $this->eventBus
             ->expects(self::once())
@@ -75,8 +75,7 @@ final class BlockDebitCardCommandHandlerTest extends TestCase
             ->method('findById')
             ->willReturn(null);
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Debit card not found');
+        $this->expectException(DebitCardNotFoundException::class);
 
         ($this->handler)($command);
     }
@@ -100,8 +99,7 @@ final class BlockDebitCardCommandHandlerTest extends TestCase
             ->method('findById')
             ->willReturn($debitCard);
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Card is already blocked');
+        $this->expectException(DebitCardStateException::class);
 
         ($this->handler)($command);
     }

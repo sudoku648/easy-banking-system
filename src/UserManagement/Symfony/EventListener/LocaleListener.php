@@ -25,7 +25,7 @@ final readonly class LocaleListener
         // Get locale from authenticated user first (highest priority)
         $token = $this->tokenStorage->getToken();
 
-        if ($token !== null) {
+        if (null !== $token) {
             $user = $token->getUser();
 
             if ($user instanceof SecurityUser) {

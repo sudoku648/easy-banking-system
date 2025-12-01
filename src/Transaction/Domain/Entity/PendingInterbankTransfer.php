@@ -7,6 +7,7 @@ namespace App\Transaction\Domain\Entity;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Iban;
 use App\Shared\Domain\ValueObject\Money;
+use App\Transaction\Domain\Exception\InvalidTransactionStateException;
 use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\PendingTransferId;
 use App\Transaction\Domain\ValueObject\TransferId;
@@ -71,7 +72,7 @@ final class PendingInterbankTransfer
     public function markAsProcessed(TransferId $transactionId, \DateTimeImmutable $processedAt): void
     {
         if ($this->isProcessed) {
-            throw new \DomainException('Transfer already processed');
+            throw InvalidTransactionStateException::alreadyProcessed();
         }
 
         $this->isProcessed = true;

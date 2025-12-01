@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\UserManagement\Domain\Exception;
 
-final class UserNotFoundException extends \DomainException
+use App\Shared\Domain\Exception\NotFoundException;
+
+final class UserNotFoundException extends NotFoundException
 {
     public static function withId(string $userId): self
     {

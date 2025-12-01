@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\BankAccount\Application\Command;
 
 use App\BankAccount\Domain\Event\DebitCardBlocked;
+use App\BankAccount\Domain\Exception\DebitCardNotFoundException;
 use App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\DebitCardId;
 use App\Shared\Domain\Event\EventBus;
@@ -22,8 +23,8 @@ final readonly class BlockDebitCardCommandHandler
         $debitCardId = DebitCardId::fromString($command->debitCardId);
 
         $debitCard = $this->debitCardRepository->findById($debitCardId);
-        if ($debitCard === null) {
-            throw new \DomainException('Debit card not found');
+        if (null === $debitCard) {
+            throw DebitCardNotFoundException::generic();
         }
 
         $debitCard->block();

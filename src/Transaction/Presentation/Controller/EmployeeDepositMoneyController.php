@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Transaction\Presentation\Controller;
 
 use App\BankAccount\Application\Query\GetAllActiveBankAccountsQuery;
+use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\Transaction\Application\Command\DepositMoneyCommand;
@@ -54,8 +55,8 @@ final class EmployeeDepositMoneyController extends AbstractController
                     BankAccountId::fromString($dto->bankAccountId),
                 );
 
-                if ($account === null) {
-                    throw new \DomainException('Bank account not found');
+                if (null === $account) {
+                    throw BankAccountNotFoundException::withId($dto->bankAccountId);
                 }
 
                 $this->handle(

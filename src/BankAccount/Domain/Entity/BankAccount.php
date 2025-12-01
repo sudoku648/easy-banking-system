@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\BankAccount\Domain\Entity;
 
+use App\BankAccount\Domain\Exception\BankAccountStateException;
 use App\BankAccount\Domain\Exception\InsufficientFundsException;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\BankAccount\Domain\ValueObject\CustomerId;
@@ -79,7 +80,7 @@ final class BankAccount
     public function blockAmount(Money $amount): void
     {
         $availableBalance = $this->balance->subtract($this->blockedAmount);
-        
+
         if (!$availableBalance->isGreaterThanOrEqual($amount)) {
             throw InsufficientFundsException::forAccount($this->id->getValue(), $amount);
         }
@@ -90,7 +91,7 @@ final class BankAccount
     public function unblockAmount(Money $amount): void
     {
         if (!$this->blockedAmount->isGreaterThanOrEqual($amount)) {
-            throw new \DomainException('Cannot unblock more than blocked amount');
+            throw BankAccountStateException::cannotUnblockMoreThanBlocked();
         }
 
         $this->blockedAmount = $this->blockedAmount->subtract($amount);
@@ -104,7 +105,7 @@ final class BankAccount
     public function close(): void
     {
         if (!$this->balance->isZero()) {
-            throw new \DomainException('Cannot close account with non-zero balance');
+            throw BankAccountStateException::cannotCloseWithNonZeroBalance();
         }
 
         $this->isActive = false;

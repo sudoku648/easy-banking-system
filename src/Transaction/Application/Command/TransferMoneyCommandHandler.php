@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Transaction\Application\Command;
 
+use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId as BankAccountIdVO;
 use App\Shared\Domain\Event\EventBus;
@@ -35,12 +36,12 @@ final readonly class TransferMoneyCommandHandler
         $fromAccount = $this->bankAccountRepository->findById($fromBankAccountId);
         $toAccount = $this->bankAccountRepository->findById($toBankAccountId);
 
-        if ($fromAccount === null) {
-            throw new \DomainException('Source bank account not found');
+        if (null === $fromAccount) {
+            throw BankAccountNotFoundException::withId($command->fromBankAccountId);
         }
 
-        if ($toAccount === null) {
-            throw new \DomainException('Target bank account not found');
+        if (null === $toAccount) {
+            throw BankAccountNotFoundException::withId($command->toBankAccountId);
         }
 
         $transferCurrency = Currency::fromString($command->currency);

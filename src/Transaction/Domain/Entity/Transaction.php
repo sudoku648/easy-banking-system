@@ -6,6 +6,7 @@ namespace App\Transaction\Domain\Entity;
 
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Money;
+use App\Transaction\Domain\Exception\InvalidTransactionStateException;
 use App\Transaction\Domain\ValueObject\BankAccountId;
 use App\Transaction\Domain\ValueObject\ExchangeRate;
 use App\Transaction\Domain\ValueObject\TransactionId;
@@ -168,7 +169,7 @@ final class Transaction
     public function execute(): void
     {
         if ($this->status !== TransactionStatus::ORDERED) {
-            throw new \DomainException('Can only execute ordered transactions');
+            throw InvalidTransactionStateException::cannotExecute();
         }
 
         $this->status = TransactionStatus::EXECUTED;
@@ -177,7 +178,7 @@ final class Transaction
     public function cancel(): void
     {
         if ($this->status !== TransactionStatus::ORDERED) {
-            throw new \DomainException('Can only cancel ordered transactions');
+            throw InvalidTransactionStateException::cannotCancel();
         }
 
         $this->status = TransactionStatus::CANCELED;

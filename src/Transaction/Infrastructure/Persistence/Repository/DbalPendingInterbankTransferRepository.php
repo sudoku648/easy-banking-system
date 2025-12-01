@@ -25,7 +25,7 @@ final readonly class DbalPendingInterbankTransferRepository implements PendingIn
 
     public function save(PendingInterbankTransfer $transfer): void
     {
-        $exists = $this->findById($transfer->id) !== null;
+        $exists = null !== $this->findById($transfer->id);
 
         if ($exists) {
             $this->update($transfer);

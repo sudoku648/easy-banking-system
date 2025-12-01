@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Transaction\Api\Controller;
 
+use App\Shared\Domain\Exception\DomainException;
 use App\Shared\Infrastructure\Http\ApiSuccessResponse;
 use App\Shared\Infrastructure\Http\BadRequestResponse;
 use App\Shared\Infrastructure\Http\InternalServerErrorResponse;
-use App\Shared\Infrastructure\Http\UnprocessableEntityResponse;
 use App\Shared\Infrastructure\Http\ValidationErrorExtractor;
 use App\Transaction\Application\Command\WithdrawCashFromAtmCommand;
 use App\Transaction\Presentation\Dto\WithdrawCashFromAtmDto;
@@ -83,18 +83,26 @@ final class AtmWithdrawalController extends AbstractController
         } catch (HandlerFailedException $e) {
             // Unwrap the original exception from Symfony Messenger
             $originalException = $e->getPrevious() ?? $e;
-            
-            if ($originalException instanceof \DomainException) {
-                return new UnprocessableEntityResponse(
-                    message: $originalException->getMessage(),
-                )->toJsonResponse();
+
+            if ($originalException instanceof DomainException) {
+                return new JsonResponse(
+                    [
+                        'status' => 'error',
+                        'message' => $originalException->getMessage(),
+                    ],
+                    $originalException->getStatusCode(),
+                );
             }
-            
+
             throw $e; // Re-throw if not a domain exception
-        } catch (\DomainException $e) {
-            return new UnprocessableEntityResponse(
-                message: $e->getMessage(),
-            )->toJsonResponse();
+        } catch (DomainException $e) {
+            return new JsonResponse(
+                [
+                    'status' => 'error',
+                    'message' => $e->getMessage(),
+                ],
+                $e->getStatusCode(),
+            );
         } catch (\Exception $e) {
             return new InternalServerErrorResponse()->toJsonResponse();
         }

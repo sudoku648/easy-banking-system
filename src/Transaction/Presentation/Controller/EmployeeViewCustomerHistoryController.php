@@ -6,8 +6,10 @@ namespace App\Transaction\Presentation\Controller;
 
 use App\BankAccount\Application\Query\GetBankAccountsByCustomerIdQuery;
 use App\BankAccount\Domain\Entity\BankAccount;
+use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
+use App\Transaction\Domain\Exception\NoAccountsFoundException;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Domain\ValueObject\BankAccountId as BankAccountIdVO;
 use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
@@ -40,7 +42,7 @@ final class EmployeeViewCustomerHistoryController extends AbstractController
         $customerId = $request->query->get('customerId');
         $bankAccountId = $request->query->get('bankAccountId');
 
-        if ($customerId === null && $bankAccountId === null) {
+        if (null === $customerId && null === $bankAccountId) {
             $this->addFlash('danger', 'Please select a customer or bank account');
             return $this->redirectToRoute('employee_transaction_history_select');
         }
@@ -49,14 +51,14 @@ final class EmployeeViewCustomerHistoryController extends AbstractController
         $accountIban = null;
 
         try {
-            if ($bankAccountId !== null) {
+            if (null !== $bankAccountId) {
                 // View specific bank account history
                 $account = $this->bankAccountRepository->findById(
                     BankAccountId::fromString((string) $bankAccountId),
                 );
 
-                if ($account === null) {
-                    throw new \DomainException('Bank account not found');
+                if (null === $account) {
+                    throw BankAccountNotFoundException::withId((string) $bankAccountId);
                 }
 
                 $accountIban = $account->iban->getValue();
@@ -68,10 +70,10 @@ final class EmployeeViewCustomerHistoryController extends AbstractController
                 $customer = $this->userRepository->findById(
                     UserId::fromString($account->customerId->getValue()),
                 );
-                $customerName = $customer !== null
+                $customerName = null !== $customer
                     ? $customer->getFullName() . ' (IBAN: ' . $accountIban . ')'
                     : 'Unknown Customer (IBAN: ' . $accountIban . ')';
-            } elseif ($customerId !== null) {
+            } elseif (null !== $customerId) {
                 // View all customer's accounts history
                 /** @var array<BankAccount> $accounts */
                 $accounts = $this->handle(
@@ -79,7 +81,7 @@ final class EmployeeViewCustomerHistoryController extends AbstractController
                 );
 
                 if (empty($accounts)) {
-                    throw new \DomainException('No accounts found for this customer');
+                    throw NoAccountsFoundException::generic();
                 }
 
                 $accountIds = array_map(

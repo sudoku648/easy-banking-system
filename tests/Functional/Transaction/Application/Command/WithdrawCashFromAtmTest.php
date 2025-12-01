@@ -7,6 +7,8 @@ namespace App\Tests\Functional\Transaction\Application\Command;
 use App\BankAccount\Application\Command\OpenBankAccountCommand;
 use App\BankAccount\Application\Command\OpenBankAccountCommandHandler;
 use App\BankAccount\Domain\Entity\DebitCard;
+use App\BankAccount\Domain\Exception\DebitCardNotFoundException;
+use App\BankAccount\Domain\Exception\DebitCardStateException;
 use App\BankAccount\Domain\Exception\InsufficientFundsException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface;
@@ -173,8 +175,7 @@ final class WithdrawCashFromAtmTest extends ApplicationTestCase
             currency: 'PLN',
         );
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Debit card not found');
+        $this->expectException(DebitCardNotFoundException::class);
 
         $handler($command);
     }
@@ -319,8 +320,7 @@ final class WithdrawCashFromAtmTest extends ApplicationTestCase
             currency: 'PLN',
         );
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Debit card is blocked or inactive');
+        $this->expectException(DebitCardStateException::class);
 
         $handler($command);
     }

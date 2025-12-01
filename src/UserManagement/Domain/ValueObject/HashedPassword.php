@@ -29,9 +29,7 @@ final class HashedPassword extends StringValueObject
         try {
             Assert::minLength($password, self::MIN_PASSWORD_LENGTH);
         } catch (\InvalidArgumentException $e) {
-            throw new InvalidPasswordException(
-                \sprintf('Password must be at least %d characters long', self::MIN_PASSWORD_LENGTH),
-            );
+            throw InvalidPasswordException::tooShort(self::MIN_PASSWORD_LENGTH);
         }
     }
 }

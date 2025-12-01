@@ -217,7 +217,7 @@ abstract class PresentationTestCase extends WebTestCase
             "Expected to find flash message of type '{$type}', but none found.",
         );
 
-        if ($messageSubstring !== null) {
+        if (null !== $messageSubstring) {
             $messageText = $flashMessages->text();
             self::assertStringContainsString(
                 $messageSubstring,
@@ -242,7 +242,7 @@ abstract class PresentationTestCase extends WebTestCase
         // If no locale parameter provided, route has _locale placeholder, and request has _locale, use it
         if (
             !isset($parameters['_locale'])
-            && $route !== null
+            && null !== $route
             && str_contains($route->getPath(), '{_locale}')
             && $this->client->getRequest()->attributes->has('_locale')
         ) {
@@ -280,7 +280,7 @@ abstract class PresentationTestCase extends WebTestCase
 
         // If route has _locale placeholder but actual redirect doesn't contain locale in path
         // (e.g., redirecting to /login instead of /en/login), be flexible
-        if ($route !== null && str_contains($route->getPath(), '{_locale}')) {
+        if (null !== $route && str_contains($route->getPath(), '{_locale}')) {
             // Check if redirect path has locale pattern
             if (!preg_match('#^/[a-z]{2}/#', $redirectPath)) {
                 // Redirect doesn't have locale, so we're likely being redirected to login_redirect
@@ -344,7 +344,7 @@ abstract class PresentationTestCase extends WebTestCase
             "Expected form field '{$fieldName}' to exist, but it was not found.",
         );
 
-        if ($expectedValue !== null) {
+        if (null !== $expectedValue) {
             $actualValue = $field->attr('value');
             self::assertSame(
                 $expectedValue,

@@ -56,7 +56,7 @@ final class EmployeeOpenAccountNewCustomerController extends AbstractController
                     Username::fromString($dto->username),
                 );
 
-                if ($customer === null) {
+                if (null === $customer) {
                     throw new \RuntimeException('Customer not found after creation');
                 }
 

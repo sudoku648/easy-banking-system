@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\BankAccount\Domain\Exception;
 
-final class IbanAlreadyExistsException extends \DomainException
+use App\Shared\Domain\Exception\ConflictException;
+
+final class IbanAlreadyExistsException extends ConflictException
 {
     public static function forIban(string $iban): self
     {

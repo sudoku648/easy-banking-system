@@ -18,8 +18,8 @@ final readonly class ChangeUserLocaleCommandHandler
     {
         $user = $this->userRepository->findById($command->userId);
 
-        if ($user === null) {
-            throw new UserNotFoundException(\sprintf('User with ID "%s" not found', $command->userId->getValue()));
+        if (null === $user) {
+            throw UserNotFoundException::withId($command->userId->getValue());
         }
 
         $user->changeLocale($command->locale);

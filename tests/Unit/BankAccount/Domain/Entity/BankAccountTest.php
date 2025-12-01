@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\BankAccount\Domain\Entity;
 
 use App\BankAccount\Domain\Entity\BankAccount;
+use App\BankAccount\Domain\Exception\BankAccountStateException;
 use App\BankAccount\Domain\Exception\InsufficientFundsException;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\BankAccount\Domain\ValueObject\CustomerId;
@@ -96,8 +97,7 @@ final class BankAccountTest extends TestCase
         $balance = new Money(1000, Currency::PLN);
         $account = BankAccount::open($this->accountId, $this->iban, $this->customerId, $balance);
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Cannot close account with non-zero balance');
+        $this->expectException(BankAccountStateException::class);
 
         $account->close();
     }

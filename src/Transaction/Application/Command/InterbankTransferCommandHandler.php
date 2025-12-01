@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Transaction\Application\Command;
 
+use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId as BankAccountIdVO;
 use App\Shared\Domain\Event\EventBus;
@@ -15,6 +16,7 @@ use App\Shared\Domain\ValueObject\Money;
 use App\Transaction\Domain\Entity\PendingInterbankTransfer;
 use App\Transaction\Domain\Entity\Transaction;
 use App\Transaction\Domain\Event\InterbankTransferInitiated;
+use App\Transaction\Domain\Exception\InvalidTransferException;
 use App\Transaction\Domain\Persistence\Repository\PendingInterbankTransferRepositoryInterface;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Domain\ValueObject\BankAccountId;
@@ -38,8 +40,8 @@ final readonly class InterbankTransferCommandHandler
 
         $fromAccount = $this->bankAccountRepository->findById($fromBankAccountId);
 
-        if ($fromAccount === null) {
-            throw new \DomainException('Source bank account not found');
+        if (null === $fromAccount) {
+            throw BankAccountNotFoundException::withId($command->fromBankAccountId);
         }
 
         $transferCurrency = Currency::fromString($command->currency);
@@ -48,13 +50,13 @@ final readonly class InterbankTransferCommandHandler
         // Check if this is an internal or external transfer
         if ($this->ibanProvider->isInternalIban($toIban)) {
             // Internal transfer - use existing TransferMoneyCommand
-            throw new \DomainException('Use TransferMoney command for internal transfers');
+            throw InvalidTransferException::useInternalTransferCommand();
         }
 
         // External/interbank transfer - block money and create pending transfer
         // Check if we have enough available balance
         if (!$fromAccount->getAvailableBalance()->isGreaterThanOrEqual($transferAmount)) {
-            throw new \DomainException('Insufficient available balance for transfer');
+            throw InvalidTransferException::insufficientBalance();
         }
 
         // Block the amount

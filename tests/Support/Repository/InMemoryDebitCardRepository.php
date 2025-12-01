@@ -55,7 +55,7 @@ final class InMemoryDebitCardRepository implements DebitCardRepositoryInterface
 
     public function existsByCardNumber(DebitCardNumber $cardNumber): bool
     {
-        return $this->findByCardNumber($cardNumber) !== null;
+        return null !== $this->findByCardNumber($cardNumber);
     }
 
     public function nextIdentity(): DebitCardId

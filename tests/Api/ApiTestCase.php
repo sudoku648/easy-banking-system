@@ -37,7 +37,7 @@ abstract class ApiTestCase extends WebTestCase
         $this->client = static::createClient();
         // Disable kernel reboot to keep in-memory repositories state across requests
         $this->client->disableReboot();
-        
+
         // Get API key from environment
         $this->apiKey = $_ENV['API_KEY'] ?? 'test_api_key_12345';
     }
@@ -55,7 +55,7 @@ abstract class ApiTestCase extends WebTestCase
         array $server = [],
     ): void {
         $server['HTTP_X_API_KEY'] = $this->apiKey;
-        
+
         $this->client->jsonRequest($method, $uri, $parameters, $server);
     }
 
@@ -133,7 +133,7 @@ abstract class ApiTestCase extends WebTestCase
         self::assertArrayHasKey('status', $data);
         self::assertSame('error', $data['status']);
 
-        if ($expectedMessage !== null) {
+        if (null !== $expectedMessage) {
             self::assertArrayHasKey('message', $data);
             self::assertStringContainsString($expectedMessage, $data['message']);
         }
@@ -149,7 +149,7 @@ abstract class ApiTestCase extends WebTestCase
         self::assertArrayHasKey('status', $data);
         self::assertSame('success', $data['status']);
 
-        if ($expectedMessage !== null) {
+        if (null !== $expectedMessage) {
             self::assertArrayHasKey('message', $data);
             self::assertStringContainsString($expectedMessage, $data['message']);
         }

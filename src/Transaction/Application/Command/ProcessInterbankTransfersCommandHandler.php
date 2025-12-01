@@ -36,11 +36,11 @@ final readonly class ProcessInterbankTransfersCommandHandler
     {
         $fromAccount = $this->bankAccountRepository->findById(
             BankAccountId::fromString(
-                $transfer->fromBankAccountId->getValue()
-            )
+                $transfer->fromBankAccountId->getValue(),
+            ),
         );
 
-        if ($fromAccount === null) {
+        if (null === $fromAccount) {
             // Account was deleted - skip this transfer
             return;
         }
@@ -48,7 +48,7 @@ final readonly class ProcessInterbankTransfersCommandHandler
         // Withdraw the blocked money from the account
         $fromAccount->withdraw($transfer->amount);
         $fromAccount->unblockAmount($transfer->amount);
-        
+
         $this->bankAccountRepository->save($fromAccount);
 
         // Mark transfer as processed

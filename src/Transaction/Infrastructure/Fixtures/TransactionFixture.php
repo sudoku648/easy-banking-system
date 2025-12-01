@@ -71,7 +71,7 @@ final class TransactionFixture extends AbstractFixture
                         fn ($c): bool => $c->value !== $currency->value,
                     );
                     $originalCurrency = $this->faker->randomElement($availableCurrencies);
-                    
+
                     // Generate realistic exchange rates
                     // Base rates to PLN: EUR=4.35, USD=4.00, GBP=5.20
                     $ratesToPln = [
@@ -80,15 +80,15 @@ final class TransactionFixture extends AbstractFixture
                         'GBP' => 5.20,
                         'PLN' => 1.0,
                     ];
-                    
+
                     // Calculate exchange rate between two currencies through PLN
                     $fromRate = $ratesToPln[$originalCurrency->value];
                     $toRate = $ratesToPln[$currency->value];
                     $exchangeRate = $fromRate / $toRate;
-                    
+
                     // Add some variation (±5%)
                     $exchangeRate *= $this->faker->randomFloat(4, 0.95, 1.05);
-                    
+
                     $originalAmount = (int) \round($amount / $exchangeRate);
                 } else {
                     // Same currency, no exchange

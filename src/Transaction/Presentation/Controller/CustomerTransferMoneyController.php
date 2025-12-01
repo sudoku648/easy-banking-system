@@ -6,6 +6,7 @@ namespace App\Transaction\Presentation\Controller;
 
 use App\BankAccount\Application\Query\GetBankAccountsByCustomerIdQuery;
 use App\BankAccount\Domain\Entity\BankAccount;
+use App\BankAccount\Domain\Exception\BankAccountNotFoundException;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\ValueObject\BankAccountId;
 use App\Shared\Domain\Provider\IbanProviderInterface;
@@ -63,7 +64,7 @@ final class CustomerTransferMoneyController extends AbstractController
         // Pre-populate DTO with fromAccountId if provided in URL
         $dto = new TransferMoneyDto();
         $fromAccountId = $request->query->get('fromAccountId');
-        if ($fromAccountId !== null) {
+        if (null !== $fromAccountId) {
             $dto->fromBankAccountId = (string) $fromAccountId;
         }
 
@@ -78,7 +79,7 @@ final class CustomerTransferMoneyController extends AbstractController
 
             try {
                 $toIban = Iban::fromString($dto->toIban);
-                
+
                 // Convert amount to cents
                 $amountInCents = (int) round($dto->amount * 100);
 
@@ -87,8 +88,8 @@ final class CustomerTransferMoneyController extends AbstractController
                     BankAccountId::fromString($dto->fromBankAccountId),
                 );
 
-                if ($fromAccount === null) {
-                    throw new \DomainException('Source account not found');
+                if (null === $fromAccount) {
+                    throw BankAccountNotFoundException::withId($dto->fromBankAccountId);
                 }
 
                 // Check if this is an internal or external transfer
@@ -96,8 +97,8 @@ final class CustomerTransferMoneyController extends AbstractController
                     // Internal transfer
                     $toAccount = $this->bankAccountRepository->findByIban($toIban);
 
-                    if ($toAccount === null) {
-                        throw new \DomainException('Destination account not found in our bank');
+                    if (null === $toAccount) {
+                        throw BankAccountNotFoundException::withIban($toIban->getValue());
                     }
 
                     $this->handle(

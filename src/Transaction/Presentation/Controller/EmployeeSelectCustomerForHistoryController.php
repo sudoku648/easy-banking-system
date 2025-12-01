@@ -47,13 +47,13 @@ final class EmployeeSelectCustomerForHistoryController extends AbstractControlle
             $dto = $form->getData();
 
             // Priority: if bank account is selected, use it; otherwise use customer
-            if ($dto->bankAccountId !== null) {
+            if (null !== $dto->bankAccountId) {
                 return $this->redirectToRoute('employee_transaction_history_view', [
                     'bankAccountId' => $dto->bankAccountId,
                 ]);
             }
 
-            if ($dto->customerId !== null) {
+            if (null !== $dto->customerId) {
                 return $this->redirectToRoute('employee_transaction_history_view', [
                     'customerId' => $dto->customerId,
                 ]);

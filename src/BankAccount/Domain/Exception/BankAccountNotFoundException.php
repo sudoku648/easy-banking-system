@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\BankAccount\Domain\Exception;
 
-final class BankAccountNotFoundException extends \DomainException
+use App\Shared\Domain\Exception\NotFoundException;
+
+final class BankAccountNotFoundException extends NotFoundException
 {
     public static function withId(string $accountId): self
     {

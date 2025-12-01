@@ -14,6 +14,8 @@ use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Money;
 use App\Tests\Api\ApiTestCase;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
+use App\Transaction\Domain\ValueObject\BankAccountId as BankAccountIdVO;
+use App\Transaction\Domain\ValueObject\TransactionType;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final class AtmWithdrawalControllerTest extends ApiTestCase
@@ -262,12 +264,12 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
             ],
         );
 
-        $this->assertResponseStatusCodeSame(422);
+        $this->assertResponseStatusCodeSame(404);
 
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
         self::assertSame('error', $response['status']);
-        self::assertSame('Debit card not found', $response['message']);
+        self::assertSame('Debit card with number "1234567890123456" not found', $response['message']);
     }
 
     public function testAtmWithdrawalWithInsufficientFunds(): void
@@ -386,11 +388,11 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
 
         // Verify transaction was created
         $transactions = $this->transactionRepository->findByBankAccountId(
-            \App\Transaction\Domain\ValueObject\BankAccountId::fromString($account->id->getValue()),
+            BankAccountIdVO::fromString($account->id->getValue()),
         );
 
         self::assertCount(1, $transactions);
-        self::assertSame(\App\Transaction\Domain\ValueObject\TransactionType::ATM_WITHDRAWAL, $transactions[0]->type);
+        self::assertSame(TransactionType::ATM_WITHDRAWAL, $transactions[0]->type);
         self::assertSame(15000, $transactions[0]->amount->getAmount());
     }
 

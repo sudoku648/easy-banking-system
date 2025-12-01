@@ -26,7 +26,7 @@ final readonly class DatabaseUserProvider implements UserProviderInterface
         $username = Username::fromString($user->getUserIdentifier());
         $refreshedUser = $this->userRepository->findByUsername($username);
 
-        if ($refreshedUser === null) {
+        if (null === $refreshedUser) {
             throw new UserNotFoundException(\sprintf('User with username "%s" not found.', $user->getUserIdentifier()));
         }
 
@@ -43,7 +43,7 @@ final readonly class DatabaseUserProvider implements UserProviderInterface
         $username = Username::fromString($identifier);
         $user = $this->userRepository->findByUsername($username);
 
-        if ($user === null || !$user->isActive) {
+        if (null === $user || !$user->isActive) {
             throw new UserNotFoundException(\sprintf('User with username "%s" not found.', $identifier));
         }
 
