@@ -33,6 +33,11 @@ final class ChangePasswordTest extends ApplicationTestCase
             password: 'OldPassword123!',
             firstName: 'John',
             lastName: 'Doe',
+            permanentResidenceStreet: 'Main Street 123',
+            permanentResidenceCity: 'Warsaw',
+            permanentResidencePostalCode: '00-001',
+            permanentResidenceCountry: 'Poland',
+            correspondenceAddresses: [['street' => 'Main Street 123', 'city' => 'Warsaw', 'postalCode' => '00-001', 'country' => 'Poland']],
         );
         $createHandler($createCommand);
 
@@ -62,6 +67,11 @@ final class ChangePasswordTest extends ApplicationTestCase
             password: 'CorrectPassword123!',
             firstName: 'Jane',
             lastName: 'Smith',
+            permanentResidenceStreet: 'Main Street 123',
+            permanentResidenceCity: 'Warsaw',
+            permanentResidencePostalCode: '00-001',
+            permanentResidenceCountry: 'Poland',
+            correspondenceAddresses: [['street' => 'Main Street 123', 'city' => 'Warsaw', 'postalCode' => '00-001', 'country' => 'Poland']],
         );
         $createHandler($createCommand);
 
@@ -103,6 +113,11 @@ final class ChangePasswordTest extends ApplicationTestCase
             password: 'InitialPassword!',
             firstName: 'Test',
             lastName: 'User',
+            permanentResidenceStreet: 'Main Street 123',
+            permanentResidenceCity: 'Warsaw',
+            permanentResidencePostalCode: '00-001',
+            permanentResidenceCountry: 'Poland',
+            correspondenceAddresses: [['street' => 'Main Street 123', 'city' => 'Warsaw', 'postalCode' => '00-001', 'country' => 'Poland']],
         );
         $createHandler($createCommand);
 

@@ -91,6 +91,30 @@ parameters:
 			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
 
 		-
+			message: '#^Parameter \#5 \$permanentResidenceStreet of class App\\UserManagement\\Application\\Command\\CreateCustomerCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
+			message: '#^Parameter \#6 \$permanentResidenceCity of class App\\UserManagement\\Application\\Command\\CreateCustomerCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
+			message: '#^Parameter \#8 \$permanentResidenceCountry of class App\\UserManagement\\Application\\Command\\CreateCustomerCommand constructor expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
+			message: '#^Parameter \#9 \$correspondenceAddresses of class App\\UserManagement\\Application\\Command\\CreateCustomerCommand constructor expects list\<array\{street\: string, city\: string, postalCode\: string, country\: string\}\>, list\<array\{street\: string\|null, city\: string\|null, postalCode\: non\-falsy\-string, country\: string\|null\}\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/BankAccount/Presentation/Controller/EmployeeOpenAccountNewCustomerController.php
+
+		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 2
@@ -256,6 +280,12 @@ parameters:
 			message: '#^Parameter \#1 \$data of method App\\UserManagement\\Infrastructure\\Persistence\\Repository\\DbalUserRepository\:\:mapToEntity\(\) expects array\{id\: string, username\: string, password\: string, first_name\: string, last_name\: string, is_active\: bool, role\: string, locale\: string\}, array\<string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 3
+			path: src/UserManagement/Infrastructure/Persistence/Repository/DbalUserRepository.php
+
+		-
+			message: '#^Parameter \#1 \$data of static method App\\UserManagement\\Domain\\Entity\\CustomerAddress\:\:fromRaw\(\) expects array\{id\: string, customer_id\: string, type\: string, street\: string, city\: string, postal_code\: string, country\: string\}, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
 			path: src/UserManagement/Infrastructure/Persistence/Repository/DbalUserRepository.php
 
 		-

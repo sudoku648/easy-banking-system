@@ -24,7 +24,7 @@ final class Version20251130000000 extends AbstractMigration
             ALTER TABLE bank_account DROP CONSTRAINT IF EXISTS bank_account_currency_check
         ');
         $this->addSql('
-            ALTER TABLE bank_account ADD CONSTRAINT bank_account_currency_check 
+            ALTER TABLE bank_account ADD CONSTRAINT bank_account_currency_check
             CHECK (currency IN (\'PLN\', \'EUR\', \'USD\', \'GBP\'))
         ');
 
@@ -33,7 +33,7 @@ final class Version20251130000000 extends AbstractMigration
             ALTER TABLE transaction DROP CONSTRAINT IF EXISTS transaction_currency_check
         ');
         $this->addSql('
-            ALTER TABLE transaction ADD CONSTRAINT transaction_currency_check 
+            ALTER TABLE transaction ADD CONSTRAINT transaction_currency_check
             CHECK (currency IN (\'PLN\', \'EUR\', \'USD\', \'GBP\'))
         ');
 
@@ -41,7 +41,7 @@ final class Version20251130000000 extends AbstractMigration
             ALTER TABLE transaction DROP CONSTRAINT IF EXISTS transaction_original_currency_check
         ');
         $this->addSql('
-            ALTER TABLE transaction ADD CONSTRAINT transaction_original_currency_check 
+            ALTER TABLE transaction ADD CONSTRAINT transaction_original_currency_check
             CHECK (original_currency IN (\'PLN\', \'EUR\', \'USD\', \'GBP\'))
         ');
     }
@@ -53,7 +53,7 @@ final class Version20251130000000 extends AbstractMigration
             ALTER TABLE bank_account DROP CONSTRAINT IF EXISTS bank_account_currency_check
         ');
         $this->addSql('
-            ALTER TABLE bank_account ADD CONSTRAINT bank_account_currency_check 
+            ALTER TABLE bank_account ADD CONSTRAINT bank_account_currency_check
             CHECK (currency IN (\'PLN\', \'EUR\'))
         ');
 
@@ -61,7 +61,7 @@ final class Version20251130000000 extends AbstractMigration
             ALTER TABLE transaction DROP CONSTRAINT IF EXISTS transaction_currency_check
         ');
         $this->addSql('
-            ALTER TABLE transaction ADD CONSTRAINT transaction_currency_check 
+            ALTER TABLE transaction ADD CONSTRAINT transaction_currency_check
             CHECK (currency IN (\'PLN\', \'EUR\'))
         ');
 
@@ -69,7 +69,7 @@ final class Version20251130000000 extends AbstractMigration
             ALTER TABLE transaction DROP CONSTRAINT IF EXISTS transaction_original_currency_check
         ');
         $this->addSql('
-            ALTER TABLE transaction ADD CONSTRAINT transaction_original_currency_check 
+            ALTER TABLE transaction ADD CONSTRAINT transaction_original_currency_check
             CHECK (original_currency IN (\'PLN\', \'EUR\'))
         ');
     }

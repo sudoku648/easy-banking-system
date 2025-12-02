@@ -81,11 +81,11 @@ The **Easy Banking System** is designed to streamline banking operations by prov
    ```bash
    make dev
    ```
-   
+
    This command will:
    - Build and start Docker containers (nginx, app, postgres_dev)
    - Set up the development environment
-   
+
    The development environment includes:
    - **Application**: http://localhost:8080
    - **Database**: localhost:54322 (postgres/postgres)

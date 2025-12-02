@@ -64,7 +64,7 @@
                                         </td>
                                         <td class="text-center">
                                             {% if account.isActive %}
-                                                <a href="{{ path('transaction_transfer', {fromAccountId: account.id}) }}" 
+                                                <a href="{{ path('transaction_transfer', {fromAccountId: account.id}) }}"
                                                    class="btn btn-sm btn-primary">
                                                     <i class="bi bi-arrow-left-right"></i> {{ 'transaction.transfer'|trans({}, 'transaction') }}
                                                 </a>

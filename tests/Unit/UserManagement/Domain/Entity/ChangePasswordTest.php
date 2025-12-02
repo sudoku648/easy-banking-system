@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\UserManagement\Domain\Entity;
 
+use App\Tests\Support\AddressTestHelper;
 use App\UserManagement\Domain\Entity\Customer;
 use App\UserManagement\Domain\Exception\InvalidPasswordException;
 use App\UserManagement\Domain\ValueObject\FirstName;
@@ -15,6 +16,8 @@ use PHPUnit\Framework\TestCase;
 
 final class ChangePasswordTest extends TestCase
 {
+    use AddressTestHelper;
+
     public function testChangePasswordUpdatesPassword(): void
     {
         $customer = Customer::create(
@@ -23,6 +26,8 @@ final class ChangePasswordTest extends TestCase
             HashedPassword::fromPlainPassword('OldPassword123'),
             FirstName::fromString('John'),
             LastName::fromString('Doe'),
+            $this->createTestAddress(),
+            $this->createTestCorrespondenceAddress(),
         );
 
         self::assertTrue($customer->password->verify('OldPassword123'));
@@ -42,6 +47,8 @@ final class ChangePasswordTest extends TestCase
             HashedPassword::fromPlainPassword('CorrectPassword123'),
             FirstName::fromString('John'),
             LastName::fromString('Doe'),
+            $this->createTestAddress(),
+            $this->createTestCorrespondenceAddress(),
         );
 
         self::assertFalse($customer->password->verify('WrongPassword123'));
@@ -56,6 +63,8 @@ final class ChangePasswordTest extends TestCase
             HashedPassword::fromPlainPassword('ValidPassword123'),
             FirstName::fromString('John'),
             LastName::fromString('Doe'),
+            $this->createTestAddress(),
+            $this->createTestCorrespondenceAddress(),
         );
 
         $this->expectException(InvalidPasswordException::class);
@@ -72,6 +81,8 @@ final class ChangePasswordTest extends TestCase
             HashedPassword::fromPlainPassword('InitialPassword'),
             FirstName::fromString('John'),
             LastName::fromString('Doe'),
+            $this->createTestAddress(),
+            $this->createTestCorrespondenceAddress(),
         );
 
         $customer->changePassword('12345678'); // Exactly 8 characters

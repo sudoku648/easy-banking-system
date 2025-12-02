@@ -27,13 +27,13 @@ final class Version20251127120000 extends AbstractMigration
                 is_active BOOLEAN NOT NULL DEFAULT TRUE,
                 issued_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 blocked_at TIMESTAMP DEFAULT NULL,
-                CONSTRAINT fk_debit_card_bank_account 
-                    FOREIGN KEY (bank_account_id) 
-                    REFERENCES bank_account(id) 
+                CONSTRAINT fk_debit_card_bank_account
+                    FOREIGN KEY (bank_account_id)
+                    REFERENCES bank_account(id)
                     ON DELETE RESTRICT,
-                CONSTRAINT chk_card_number_length 
+                CONSTRAINT chk_card_number_length
                     CHECK (LENGTH(card_number) = 16),
-                CONSTRAINT chk_card_number_digits 
+                CONSTRAINT chk_card_number_digits
                     CHECK (card_number ~ \'^\d{16}$\')
             )
         ');

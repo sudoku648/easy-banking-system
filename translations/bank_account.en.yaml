@@ -23,10 +23,34 @@ bank_account.placeholder_username: Enter username
 bank_account.placeholder_password: Enter password
 bank_account.placeholder_first_name: Enter first name
 bank_account.placeholder_last_name: Enter last name
+bank_account.personal_info: Personal Information
+bank_account.account_settings: Account Settings
 bank_account.first_name: First Name
 bank_account.last_name: Last Name
 bank_account.username: Username
 bank_account.password: Password
+
+# Permanent Residence Address
+bank_account.permanent_residence: Permanent Residence Address
+bank_account.permanent_residence_street: Street
+bank_account.permanent_residence_city: City
+bank_account.permanent_residence_postal_code: Postal Code
+bank_account.permanent_residence_country: Country
+
+# Correspondence Address
+bank_account.correspondence: Correspondence Address
+bank_account.correspondence_street: Street
+bank_account.correspondence_city: City
+bank_account.correspondence_postal_code: Postal Code
+bank_account.correspondence_country: Country
+bank_account.same_as_permanent: Correspondence address is same as permanent residence
+bank_account.add_correspondence_address: Add Correspondence Address
+bank_account.remove_address: Remove
+
+# Placeholders
+bank_account.placeholder_street: Enter street address
+bank_account.placeholder_city: Enter city
+bank_account.placeholder_select_country: -- Select country --
 
 # Debit Card
 bank_account.debit_card: Debit Card

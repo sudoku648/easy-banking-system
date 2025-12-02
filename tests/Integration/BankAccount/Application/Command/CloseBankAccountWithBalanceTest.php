@@ -13,6 +13,7 @@ use App\BankAccount\Domain\ValueObject\CustomerId;
 use App\Shared\Domain\Event\EventBus;
 use App\Shared\Domain\Provider\ClockInterface;
 use App\Tests\Integration\IntegrationTestCase;
+use App\Tests\Support\AddressTestHelper;
 use App\Tests\Support\Provider\MockClock;
 use App\Transaction\Application\Command\DepositMoneyCommand;
 use App\Transaction\Application\Command\DepositMoneyCommandHandler;
@@ -29,6 +30,8 @@ use App\UserManagement\Domain\ValueObject\Username;
 
 final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
 {
+    use AddressTestHelper;
+
     private BankAccountRepositoryInterface $bankAccountRepository;
     private TransactionRepositoryInterface $transactionRepository;
     private UserRepositoryInterface $userRepository;
@@ -53,6 +56,8 @@ final class CloseBankAccountWithBalanceTest extends IntegrationTestCase
             password: HashedPassword::fromString('$2y$10$hashedPassword'),
             firstName: FirstName::fromString('Test'),
             lastName: LastName::fromString('Customer'),
+            permanentResidenceAddress: $this->createTestAddress(),
+            correspondenceAddress: $this->createTestCorrespondenceAddress(),
         );
 
         $this->userRepository->save($customer);

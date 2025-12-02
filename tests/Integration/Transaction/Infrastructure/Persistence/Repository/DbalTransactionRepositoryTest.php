@@ -12,6 +12,7 @@ use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Iban;
 use App\Shared\Domain\ValueObject\Money;
 use App\Tests\Integration\IntegrationTestCase;
+use App\Tests\Support\AddressTestHelper;
 use App\Transaction\Domain\Entity\Transaction;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Domain\ValueObject\BankAccountId;
@@ -28,6 +29,8 @@ use App\UserManagement\Domain\ValueObject\Username;
 
 final class DbalTransactionRepositoryTest extends IntegrationTestCase
 {
+    use AddressTestHelper;
+
     private TransactionRepositoryInterface $repository;
     private BankAccountRepositoryInterface $bankAccountRepository;
     private UserRepositoryInterface $userRepository;
@@ -236,6 +239,8 @@ final class DbalTransactionRepositoryTest extends IntegrationTestCase
             password: HashedPassword::fromString('$2y$10$hashedPassword'),
             firstName: FirstName::fromString('Test'),
             lastName: LastName::fromString('Customer'),
+            permanentResidenceAddress: $this->createTestAddress(),
+            correspondenceAddress: $this->createTestCorrespondenceAddress(),
         );
 
         $this->userRepository->save($customer);

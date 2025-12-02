@@ -33,7 +33,8 @@ final class EmployeeOpenAccountNewCustomerController extends AbstractController
 
     public function __invoke(Request $request): Response
     {
-        $form = $this->createForm(OpenAccountNewCustomerFormType::class);
+        $dto = new OpenAccountNewCustomerDto();
+        $form = $this->createForm(OpenAccountNewCustomerFormType::class, $dto);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -41,6 +42,32 @@ final class EmployeeOpenAccountNewCustomerController extends AbstractController
             $dto = $form->getData();
 
             try {
+                // Prepare address data
+                $permanentPostalCode = $dto->permanentResidencePostalCode1 . '-' . $dto->permanentResidencePostalCode2;
+
+                // Prepare correspondence addresses
+                $correspondenceAddresses = [];
+
+                if ($dto->sameAsPermament) {
+                    // If checkbox is checked, use permanent address as single correspondence address
+                    $correspondenceAddresses[] = [
+                        'street' => $dto->permanentResidenceStreet,
+                        'city' => $dto->permanentResidenceCity,
+                        'postalCode' => $permanentPostalCode,
+                        'country' => $dto->permanentResidenceCountry,
+                    ];
+                } else {
+                    // Otherwise, process all correspondence addresses from the collection
+                    foreach ($dto->correspondenceAddresses as $addressDto) {
+                        $correspondenceAddresses[] = [
+                            'street' => $addressDto->street,
+                            'city' => $addressDto->city,
+                            'postalCode' => $addressDto->postalCode1 . '-' . $addressDto->postalCode2,
+                            'country' => $addressDto->country,
+                        ];
+                    }
+                }
+
                 // Create customer first
                 $this->handle(
                     new CreateCustomerCommand(
@@ -48,6 +75,11 @@ final class EmployeeOpenAccountNewCustomerController extends AbstractController
                         $dto->password,
                         $dto->firstName,
                         $dto->lastName,
+                        $dto->permanentResidenceStreet,
+                        $dto->permanentResidenceCity,
+                        $permanentPostalCode,
+                        $dto->permanentResidenceCountry,
+                        $correspondenceAddresses,
                     ),
                 );
 

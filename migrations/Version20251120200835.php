@@ -22,8 +22,8 @@ final class Version20251120200835 extends AbstractMigration
         // Add locale column with default value 'pl' (Polish)
         // Note: When adding new locales, create a new migration to update the CHECK constraint
         $this->addSql('
-            ALTER TABLE "user" 
-            ADD COLUMN locale TEXT NOT NULL DEFAULT \'pl\' 
+            ALTER TABLE "user"
+            ADD COLUMN locale TEXT NOT NULL DEFAULT \'pl\'
             CHECK (locale IN (\'pl\', \'en\'))
         ');
     }

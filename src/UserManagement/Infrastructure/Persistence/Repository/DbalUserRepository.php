@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UserManagement\Infrastructure\Persistence\Repository;
 
 use App\UserManagement\Domain\Entity\Customer;
+use App\UserManagement\Domain\Entity\CustomerAddress;
 use App\UserManagement\Domain\Entity\Employee;
 use App\UserManagement\Domain\Entity\User;
 use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
@@ -43,6 +44,30 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
         } else {
             $this->connection->insert('"user"', $data);
         }
+
+        // Save addresses for customers
+        if ($user instanceof Customer) {
+            $this->saveCustomerAddresses($user);
+        }
+    }
+
+    private function saveCustomerAddresses(Customer $customer): void
+    {
+        // Delete existing addresses
+        $this->connection->delete('customer_address', ['customer_id' => $customer->id->getValue()]);
+
+        // Insert new addresses
+        foreach ($customer->getAllAddresses() as $customerAddress) {
+            $this->connection->insert('customer_address', [
+                'id' => $customerAddress->id->getValue(),
+                'customer_id' => $customerAddress->customerId->getValue(),
+                'type' => $customerAddress->type->value,
+                'street' => $customerAddress->address->street->getValue(),
+                'city' => $customerAddress->address->city->getValue(),
+                'postal_code' => $customerAddress->address->postalCode->getValue(),
+                'country' => $customerAddress->address->country->getValue(),
+            ]);
+        }
     }
 
     public function findById(UserId $id): ?User
@@ -56,7 +81,14 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
             return null;
         }
 
-        return $this->mapToEntity($data);
+        $user = $this->mapToEntity($data);
+
+        // Load addresses for customers
+        if ($user instanceof Customer) {
+            $this->loadCustomerAddresses($user);
+        }
+
+        return $user;
     }
 
     public function findByUsername(Username $username): ?User
@@ -70,7 +102,14 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
             return null;
         }
 
-        return $this->mapToEntity($data);
+        $user = $this->mapToEntity($data);
+
+        // Load addresses for customers
+        if ($user instanceof Customer) {
+            $this->loadCustomerAddresses($user);
+        }
+
+        return $user;
     }
 
     public function findAllCustomers(): array
@@ -80,7 +119,16 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
             ['role' => UserRole::CUSTOMER->value],
         );
 
-        return array_map(fn (array $data): User => $this->mapToEntity($data), $rows);
+        $customers = array_map(fn (array $data): User => $this->mapToEntity($data), $rows);
+
+        // Load addresses for all customers
+        foreach ($customers as $customer) {
+            if ($customer instanceof Customer) {
+                $this->loadCustomerAddresses($customer);
+            }
+        }
+
+        return $customers;
     }
 
     public function existsByUsername(Username $username): bool
@@ -118,5 +166,20 @@ final readonly class DbalUserRepository implements UserRepositoryInterface
             UserRole::EMPLOYEE => Employee::fromRaw($data),
             UserRole::CUSTOMER => Customer::fromRaw($data),
         };
+    }
+
+    private function loadCustomerAddresses(Customer $customer): void
+    {
+        $addressRows = $this->connection->fetchAllAssociative(
+            'SELECT * FROM customer_address WHERE customer_id = :customer_id ORDER BY type',
+            ['customer_id' => $customer->id->getValue()],
+        );
+
+        $addresses = array_map(
+            fn (array $data): CustomerAddress => CustomerAddress::fromRaw($data),
+            $addressRows,
+        );
+
+        $customer->setAddresses($addresses);
     }
 }

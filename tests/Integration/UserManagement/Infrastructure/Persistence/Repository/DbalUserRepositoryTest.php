@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\UserManagement\Infrastructure\Persistence\Repository;
 
 use App\Tests\Integration\IntegrationTestCase;
+use App\Tests\Support\AddressTestHelper;
 use App\UserManagement\Domain\Entity\Customer;
 use App\UserManagement\Domain\Entity\Employee;
 use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
@@ -17,6 +18,8 @@ use App\UserManagement\Domain\ValueObject\Username;
 
 final class DbalUserRepositoryTest extends IntegrationTestCase
 {
+    use AddressTestHelper;
+
     private UserRepositoryInterface $repository;
 
     protected function setUp(): void
@@ -33,6 +36,8 @@ final class DbalUserRepositoryTest extends IntegrationTestCase
             password: HashedPassword::fromString('$2y$10$hashedPassword'),
             firstName: FirstName::fromString('John'),
             lastName: LastName::fromString('Doe'),
+            permanentResidenceAddress: $this->createTestAddress(),
+            correspondenceAddress: $this->createTestCorrespondenceAddress(),
         );
 
         $this->repository->save($customer);
@@ -85,6 +90,8 @@ final class DbalUserRepositoryTest extends IntegrationTestCase
             password: HashedPassword::fromString('$2y$10$hashedPassword'),
             firstName: FirstName::fromString('Test'),
             lastName: LastName::fromString('User'),
+            permanentResidenceAddress: $this->createTestAddress(),
+            correspondenceAddress: $this->createTestCorrespondenceAddress(),
         );
 
         $this->repository->save($customer);
@@ -114,6 +121,8 @@ final class DbalUserRepositoryTest extends IntegrationTestCase
             password: HashedPassword::fromString('$2y$10$hashedPassword'),
             firstName: FirstName::fromString('Existing'),
             lastName: LastName::fromString('User'),
+            permanentResidenceAddress: $this->createTestAddress(),
+            correspondenceAddress: $this->createTestCorrespondenceAddress(),
         );
 
         $this->repository->save($customer);
@@ -130,6 +139,8 @@ final class DbalUserRepositoryTest extends IntegrationTestCase
             password: HashedPassword::fromString('$2y$10$hashedPassword'),
             firstName: FirstName::fromString('Customer'),
             lastName: LastName::fromString('One'),
+            permanentResidenceAddress: $this->createTestAddress(),
+            correspondenceAddress: $this->createTestCorrespondenceAddress(),
         );
 
         $customer2 = Customer::create(
@@ -138,6 +149,8 @@ final class DbalUserRepositoryTest extends IntegrationTestCase
             password: HashedPassword::fromString('$2y$10$hashedPassword'),
             firstName: FirstName::fromString('Customer'),
             lastName: LastName::fromString('Two'),
+            permanentResidenceAddress: $this->createTestAddress(),
+            correspondenceAddress: $this->createTestCorrespondenceAddress(),
         );
 
         $employee = Employee::create(
@@ -168,6 +181,8 @@ final class DbalUserRepositoryTest extends IntegrationTestCase
             password: HashedPassword::fromString('$2y$10$originalPassword'),
             firstName: FirstName::fromString('Original'),
             lastName: LastName::fromString('Name'),
+            permanentResidenceAddress: $this->createTestAddress(),
+            correspondenceAddress: $this->createTestCorrespondenceAddress(),
         );
 
         $this->repository->save($customer);

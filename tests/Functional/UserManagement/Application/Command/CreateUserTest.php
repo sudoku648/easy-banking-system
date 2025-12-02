@@ -34,6 +34,11 @@ final class CreateUserTest extends ApplicationTestCase
             password: 'SecurePassword123!',
             firstName: 'John',
             lastName: 'Doe',
+            permanentResidenceStreet: 'Main Street 123',
+            permanentResidenceCity: 'Warsaw',
+            permanentResidencePostalCode: '00-001',
+            permanentResidenceCountry: 'Poland',
+            correspondenceAddresses: [['street' => 'Main Street 123', 'city' => 'Warsaw', 'postalCode' => '00-001', 'country' => 'Poland']],
         );
 
         $handler($command);
@@ -57,6 +62,11 @@ final class CreateUserTest extends ApplicationTestCase
             password: 'SecurePassword123!',
             firstName: 'John',
             lastName: 'Doe',
+            permanentResidenceStreet: 'Main Street 123',
+            permanentResidenceCity: 'Warsaw',
+            permanentResidencePostalCode: '00-001',
+            permanentResidenceCountry: 'Poland',
+            correspondenceAddresses: [['street' => 'Main Street 123', 'city' => 'Warsaw', 'postalCode' => '00-001', 'country' => 'Poland']],
         );
 
         $handler($command);
@@ -118,6 +128,11 @@ final class CreateUserTest extends ApplicationTestCase
             password: 'Password123!',
             firstName: 'First',
             lastName: 'User',
+            permanentResidenceStreet: 'Main Street 123',
+            permanentResidenceCity: 'Warsaw',
+            permanentResidencePostalCode: '00-001',
+            permanentResidenceCountry: 'Poland',
+            correspondenceAddresses: [['street' => 'Main Street 123', 'city' => 'Warsaw', 'postalCode' => '00-001', 'country' => 'Poland']],
         );
 
         $employeeCommand = new CreateEmployeeCommand(

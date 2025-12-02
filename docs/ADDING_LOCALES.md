@@ -64,11 +64,11 @@ Update the generated migration file:
 public function up(Schema $schema): void
 {
     $this->addSql('
-        ALTER TABLE "user" 
+        ALTER TABLE "user"
         DROP CONSTRAINT IF EXISTS user_locale_check;
 
-        ALTER TABLE "user" 
-        ADD CONSTRAINT user_locale_check 
+        ALTER TABLE "user"
+        ADD CONSTRAINT user_locale_check
         CHECK (locale IN (\'pl\', \'en\', \'de\'))
     ');
 }
@@ -76,11 +76,11 @@ public function up(Schema $schema): void
 public function down(Schema $schema): void
 {
     $this->addSql('
-        ALTER TABLE "user" 
+        ALTER TABLE "user"
         DROP CONSTRAINT user_locale_check;
 
-        ALTER TABLE "user" 
-        ADD CONSTRAINT user_locale_check 
+        ALTER TABLE "user"
+        ADD CONSTRAINT user_locale_check
         CHECK (locale IN (\'pl\', \'en\'))
     ');
 }

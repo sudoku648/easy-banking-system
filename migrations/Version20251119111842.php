@@ -9,7 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Initial database schema for Easy Banking System
- * 
+ *
  * Creates tables for users (employees and customers), bank accounts, and transactions.
  */
 final class Version20251119111842 extends AbstractMigration

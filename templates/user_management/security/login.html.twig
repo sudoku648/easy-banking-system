@@ -11,7 +11,7 @@
                 <div class="text-end mb-3">
                     <div class="btn-group btn-group-sm" role="group">
                         {% for locale in available_locales() %}
-                            <a href="{{ path('change_locale', {locale: locale.value}) }}" 
+                            <a href="{{ path('change_locale', {locale: locale.value}) }}"
                                class="btn btn-outline-secondary {% if app.request.locale == locale.value %}active{% endif %}">
                                 {{ locale_flag(locale.value) }} {{ locale_name(locale.value) }}
                             </a>
@@ -36,22 +36,22 @@
                 <form method="post">
                     <div class="mb-3">
                         <label for="username" class="form-label">{{ 'login.username'|trans({}, 'login') }}</label>
-                        <input type="text" 
-                               class="form-control" 
-                               id="username" 
-                               name="_username" 
-                               value="{{ last_username }}" 
-                               required 
+                        <input type="text"
+                               class="form-control"
+                               id="username"
+                               name="_username"
+                               value="{{ last_username }}"
+                               required
                                autofocus
                                placeholder="{{ 'login.username_placeholder'|trans({}, 'login') }}">
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label">{{ 'login.password'|trans({}, 'login') }}</label>
-                        <input type="password" 
-                               class="form-control" 
-                               id="password" 
-                               name="_password" 
+                        <input type="password"
+                               class="form-control"
+                               id="password"
+                               name="_password"
                                required
                                placeholder="{{ 'login.password_placeholder'|trans({}, 'login') }}">
                     </div>
@@ -67,7 +67,7 @@
 
                 <div class="text-center mt-4">
                     <small class="text-muted">
-                        <i class="bi bi-info-circle"></i> 
+                        <i class="bi bi-info-circle"></i>
                         {{ 'login.info'|trans({}, 'login') }}
                     </small>
                 </div>

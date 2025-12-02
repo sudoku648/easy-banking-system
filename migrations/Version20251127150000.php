@@ -24,8 +24,8 @@ final class Version20251127150000 extends AbstractMigration
 
         // Add the new constraint with ATM_WITHDRAWAL included
         $this->addSql('
-            ALTER TABLE transaction 
-            ADD CONSTRAINT transaction_type_check 
+            ALTER TABLE transaction
+            ADD CONSTRAINT transaction_type_check
             CHECK (type IN (\'TRANSFER_WITHDRAWAL\', \'TRANSFER_DEPOSIT\', \'CASH_WITHDRAWAL\', \'CASH_DEPOSIT\', \'ATM_WITHDRAWAL\'))
         ');
     }
@@ -37,8 +37,8 @@ final class Version20251127150000 extends AbstractMigration
 
         // Restore the original constraint without ATM_WITHDRAWAL
         $this->addSql('
-            ALTER TABLE transaction 
-            ADD CONSTRAINT transaction_type_check 
+            ALTER TABLE transaction
+            ADD CONSTRAINT transaction_type_check
             CHECK (type IN (\'TRANSFER_WITHDRAWAL\', \'TRANSFER_DEPOSIT\', \'CASH_WITHDRAWAL\', \'CASH_DEPOSIT\'))
         ');
     }

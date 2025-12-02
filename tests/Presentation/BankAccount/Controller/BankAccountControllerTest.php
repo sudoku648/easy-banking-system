@@ -78,13 +78,26 @@ final class BankAccountControllerTest extends PresentationTestCase
         $this->loginAsEmployeeUser($employee);
 
         $crawler = $this->client->request('GET', '/employee/bank-account/open/new-customer');
-        $form = $crawler->selectButton('Open New Account')->form([
-            'open_account_new_customer_form[username]' => 'newcustomer',
-            'open_account_new_customer_form[password]' => 'password123',
-            'open_account_new_customer_form[firstName]' => 'John',
-            'open_account_new_customer_form[lastName]' => 'Doe',
-            'open_account_new_customer_form[currency]' => 'PLN',
-        ]);
+
+        // Get the form and fill it
+        $form = $crawler->selectButton('Open New Account')->form();
+        $form['open_account_new_customer_form[username]'] = 'newcustomer';
+        $form['open_account_new_customer_form[password]'] = 'password123';
+        $form['open_account_new_customer_form[firstName]'] = 'John';
+        $form['open_account_new_customer_form[lastName]'] = 'Doe';
+        $form['open_account_new_customer_form[permanentResidenceStreet]'] = 'Main Street 123';
+        $form['open_account_new_customer_form[permanentResidenceCity]'] = 'Warsaw';
+        $form['open_account_new_customer_form[permanentResidencePostalCode1]'] = '00';
+        $form['open_account_new_customer_form[permanentResidencePostalCode2]'] = '001';
+        $form['open_account_new_customer_form[permanentResidenceCountry]'] = 'Poland';
+        // Leave checkbox unchecked by not setting it
+        // Fill correspondence addresses (from the collection field)
+        $form['open_account_new_customer_form[correspondenceAddresses][0][street]'] = 'Correspondence St 456';
+        $form['open_account_new_customer_form[correspondenceAddresses][0][city]'] = 'Krakow';
+        $form['open_account_new_customer_form[correspondenceAddresses][0][postalCode1]'] = '30';
+        $form['open_account_new_customer_form[correspondenceAddresses][0][postalCode2]'] = '001';
+        $form['open_account_new_customer_form[correspondenceAddresses][0][country]'] = 'Poland';
+        $form['open_account_new_customer_form[currency]'] = 'PLN';
 
         $this->client->submit($form);
         $this->client->followRedirect();

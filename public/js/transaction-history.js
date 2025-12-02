@@ -104,9 +104,9 @@ class TransactionHistory extends React.Component {
     }
 
     handleLimitChange(newLimit) {
-        this.setState({ 
-            limit: parseInt(newLimit), 
-            page: 1 
+        this.setState({
+            limit: parseInt(newLimit),
+            page: 1
         });
         this.setCookie('transaction_rows_per_page', newLimit);
     }
@@ -230,7 +230,7 @@ class TransactionHistory extends React.Component {
                     }, '1')
                 )
             );
-            
+
             if (startPage > 2) {
                 paginationItems.push(
                     React.createElement('li', {
@@ -270,7 +270,7 @@ class TransactionHistory extends React.Component {
                     )
                 );
             }
-            
+
             paginationItems.push(
                 React.createElement('li', {
                     key: totalPages,

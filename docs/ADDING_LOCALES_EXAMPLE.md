@@ -134,8 +134,8 @@ final class Version20251120220000 extends AbstractMigration
 
         // Add new constraint with German
         $this->addSql('
-            ALTER TABLE "user" 
-            ADD CONSTRAINT user_locale_check 
+            ALTER TABLE "user"
+            ADD CONSTRAINT user_locale_check
             CHECK (locale IN (\'pl\', \'en\', \'de\'))
         ');
     }
@@ -146,8 +146,8 @@ final class Version20251120220000 extends AbstractMigration
         $this->addSql('ALTER TABLE "user" DROP CONSTRAINT user_locale_check');
 
         $this->addSql('
-            ALTER TABLE "user" 
-            ADD CONSTRAINT user_locale_check 
+            ALTER TABLE "user"
+            ADD CONSTRAINT user_locale_check
             CHECK (locale IN (\'pl\', \'en\'))
         ');
     }

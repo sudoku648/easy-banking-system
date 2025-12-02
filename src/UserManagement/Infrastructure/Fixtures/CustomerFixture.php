@@ -30,8 +30,10 @@ final class CustomerFixture extends AbstractFixture
             // Ensure username uniqueness
             $username = $this->ensureUniqueUsername($username);
 
+            $customerId = $this->faker->uuid();
+
             $this->connection->insert('"user"', [
-                'id' => $this->faker->uuid(),
+                'id' => $customerId,
                 'username' => $username,
                 'password' => $password->getValue(),
                 'first_name' => $firstName,
@@ -41,6 +43,47 @@ final class CustomerFixture extends AbstractFixture
             ], [
                 'is_active' => \Doctrine\DBAL\Types\Types::BOOLEAN,
             ]);
+
+            $permanentStreet = $this->faker->streetAddress();
+            $permanentCity = $this->faker->city();
+            $permanentPostalCode = \sprintf('%02d-%03d', $this->faker->numberBetween(10, 99), $this->faker->numberBetween(100, 999));
+            $permanentCountry = 'Poland';
+
+            // Create permanent residence address
+            $this->connection->insert('customer_address', [
+                'id' => $this->faker->uuid(),
+                'customer_id' => $customerId,
+                'type' => 'PERMANENT_RESIDENCE',
+                'street' => $permanentStreet,
+                'city' => $permanentCity,
+                'postal_code' => $permanentPostalCode,
+                'country' => $permanentCountry,
+            ]);
+
+            // Create correspondence address - 60% same as permanent, 40% different
+            if ($this->faker->boolean(60)) {
+                // Same as permanent
+                $this->connection->insert('customer_address', [
+                    'id' => $this->faker->uuid(),
+                    'customer_id' => $customerId,
+                    'type' => 'CORRESPONDENCE',
+                    'street' => $permanentStreet,
+                    'city' => $permanentCity,
+                    'postal_code' => $permanentPostalCode,
+                    'country' => $permanentCountry,
+                ]);
+            } else {
+                // Different address
+                $this->connection->insert('customer_address', [
+                    'id' => $this->faker->uuid(),
+                    'customer_id' => $customerId,
+                    'type' => 'CORRESPONDENCE',
+                    'street' => $this->faker->streetAddress(),
+                    'city' => $this->faker->city(),
+                    'postal_code' => \sprintf('%02d-%03d', $this->faker->numberBetween(10, 99), $this->faker->numberBetween(100, 999)),
+                    'country' => 'Poland',
+                ]);
+            }
         }
 
         echo \sprintf("✓ Created %d customers\n", self::COUNT);

@@ -1,12 +1,12 @@
 /**
  * Dynamic customer and account selector for transaction history
- * 
+ *
  * Features:
  * - When a customer is selected, the account dropdown is filtered to show only that customer's accounts
  * - When an account is selected, the customer dropdown is auto-filled with the account owner
  * - If a customer has only one account, it's automatically selected when the customer is chosen
  * - If no customer is selected, all accounts are shown
- * 
+ *
  * Requirements:
  * - Account options must have a data-customer-id attribute linking them to their owner
  */

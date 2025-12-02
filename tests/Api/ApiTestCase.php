@@ -7,6 +7,7 @@ namespace App\Tests\Api;
 use App\BankAccount\Domain\Persistence\Repository\BankAccountRepositoryInterface;
 use App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface;
 use App\Shared\Domain\Event\EventBus;
+use App\Tests\Support\AddressTestHelper;
 use App\Transaction\Domain\Persistence\Repository\TransactionRepositoryInterface;
 use App\Transaction\Domain\Provider\ExchangeRateProviderInterface;
 use App\UserManagement\Domain\Entity\Customer;
@@ -29,6 +30,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 abstract class ApiTestCase extends WebTestCase
 {
+    use AddressTestHelper;
+
     protected KernelBrowser $client;
     protected string $apiKey;
 
@@ -168,12 +171,16 @@ abstract class ApiTestCase extends WebTestCase
         $hasher = $container->get(UserPasswordHasherInterface::class);
         $repository = $container->get(UserRepositoryInterface::class);
 
+        $address = $this->createTestAddress();
+        $correspondenceAddress = $this->createTestCorrespondenceAddress();
         $customer = Customer::create(
             id: UserId::generate(),
             username: Username::fromString($username),
             password: HashedPassword::fromString('temp'),
             firstName: FirstName::fromString($firstName),
             lastName: LastName::fromString($lastName),
+            permanentResidenceAddress: $address,
+            correspondenceAddress: $correspondenceAddress,
         );
 
         // Hash the password properly using Symfony's hasher
@@ -188,6 +195,8 @@ abstract class ApiTestCase extends WebTestCase
             password: HashedPassword::fromString($hashedPassword),
             firstName: $customer->firstName,
             lastName: $customer->lastName,
+            permanentResidenceAddress: $address,
+            correspondenceAddress: $correspondenceAddress,
         );
         $customer->changeLocale(Locale::ENGLISH);
 

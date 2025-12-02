@@ -23,10 +23,34 @@ bank_account.placeholder_username: Wprowadź nazwę użytkownika
 bank_account.placeholder_password: Wprowadź hasło
 bank_account.placeholder_first_name: Wprowadź imię
 bank_account.placeholder_last_name: Wprowadź nazwisko
+bank_account.personal_info: Dane osobowe
+bank_account.account_settings: Ustawienia konta
 bank_account.first_name: Imię
 bank_account.last_name: Nazwisko
 bank_account.username: Nazwa użytkownika
 bank_account.password: Hasło
+
+# Adres stałego zamieszkania
+bank_account.permanent_residence: Adres stałego zamieszkania
+bank_account.permanent_residence_street: Ulica
+bank_account.permanent_residence_city: Miasto
+bank_account.permanent_residence_postal_code: Kod pocztowy
+bank_account.permanent_residence_country: Kraj
+
+# Adres korespondencyjny
+bank_account.correspondence: Adres korespondencyjny
+bank_account.correspondence_street: Ulica
+bank_account.correspondence_city: Miasto
+bank_account.correspondence_postal_code: Kod pocztowy
+bank_account.correspondence_country: Kraj
+bank_account.same_as_permanent: Adres korespondencyjny taki sam jak adres stałego zamieszkania
+bank_account.add_correspondence_address: Dodaj adres korespondencyjny
+bank_account.remove_address: Usuń
+
+# Placeholdery
+bank_account.placeholder_street: Wprowadź ulicę
+bank_account.placeholder_city: Wprowadź miasto
+bank_account.placeholder_select_country: -- Wybierz kraj --
 
 # Debit Card
 bank_account.debit_card: Karta debetowa

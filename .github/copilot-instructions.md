@@ -74,12 +74,12 @@ Application follows hexagonal architecture with clear separation between bounded
 - **PHPDoc**: Required for complex logic, keep synchronized with code
 
 ## Common patterns
-- **Repository pattern**: 
+- **Repository pattern**:
   - Interfaces in `Domain/Persistence/Repository/`
   - Implementations in `Infrastructure/Persistence/Repository/` (prefixed with `Dbal`)
   - Example: `BankAccountRepositoryInterface` → `DbalBankAccountRepository`
 - **Factory pattern**: For complex object creation (e.g., `MoneyFactory`, `ValueObjectFactory`)
-- **Value Objects**: 
+- **Value Objects**:
   - Immutable, implement `ValueObject` interface
   - Encapsulate validation (use `webmozart/assert`)
   - Common base classes: `StringValueObject`, `IntValueObject`, `BoolValueObject`, `DateTimeValueObject`, `UuidValueObject`

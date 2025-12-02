@@ -9,7 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Add support for interbank transfers with blocked amounts
- * 
+ *
  * - Adds blocked_amount column to bank_account table
  * - Creates pending_interbank_transfer table for tracking external transfers
  */
