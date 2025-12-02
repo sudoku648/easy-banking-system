@@ -151,9 +151,15 @@ parameters:
 			path: src/Transaction/Infrastructure/Persistence/Repository/DbalPendingInterbankTransferRepository.php
 
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 2
+			path: src/Transaction/Infrastructure/Persistence/Repository/DbalTransactionRepository.php
+
+		-
 			message: '#^Parameter \#1 \$data of method App\\Transaction\\Infrastructure\\Persistence\\Repository\\DbalTransactionRepository\:\:mapToEntity\(\) expects array\{id\: string, type\: string, bank_account_id\: string, amount\: int, currency\: string, original_amount\: int, original_currency\: string, exchange_rate\: float, \.\.\.\}, array\<string, mixed\> given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 5
 			path: src/Transaction/Infrastructure/Persistence/Repository/DbalTransactionRepository.php
 
 		-

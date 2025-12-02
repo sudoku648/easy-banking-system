@@ -25,5 +25,23 @@ interface TransactionRepositoryInterface
      */
     public function findByBankAccountIds(array $bankAccountIds): array;
 
+    /**
+     * @param BankAccountId[] $bankAccountIds
+     * @return Transaction[]
+     */
+    public function findByBankAccountIdsPaginated(array $bankAccountIds, int $limit, int $offset): array;
+
+    /**
+     * @param BankAccountId[] $bankAccountIds
+     */
+    public function countByBankAccountIds(array $bankAccountIds): int;
+
+    /**
+     * @return Transaction[]
+     */
+    public function findByBankAccountIdPaginated(BankAccountId $bankAccountId, int $limit, int $offset): array;
+
+    public function countByBankAccountId(BankAccountId $bankAccountId): int;
+
     public function nextIdentity(): TransactionId;
 }

@@ -86,6 +86,56 @@ final readonly class DbalTransactionRepository implements TransactionRepositoryI
         return array_map(fn (array $data): Transaction => $this->mapToEntity($data), $rows);
     }
 
+    public function findByBankAccountIdsPaginated(array $bankAccountIds, int $limit, int $offset): array
+    {
+        if (empty($bankAccountIds)) {
+            return [];
+        }
+
+        $ids = array_map(fn (BankAccountId $id): string => $id->getValue(), $bankAccountIds);
+
+        $rows = $this->connection->fetchAllAssociative(
+            'SELECT * FROM transaction WHERE bank_account_id IN (:bank_account_ids) ORDER BY occurred_at DESC LIMIT :limit OFFSET :offset',
+            ['bank_account_ids' => $ids, 'limit' => $limit, 'offset' => $offset],
+            ['bank_account_ids' => ArrayParameterType::STRING],
+        );
+
+        return array_map(fn (array $data): Transaction => $this->mapToEntity($data), $rows);
+    }
+
+    public function countByBankAccountIds(array $bankAccountIds): int
+    {
+        if (empty($bankAccountIds)) {
+            return 0;
+        }
+
+        $ids = array_map(fn (BankAccountId $id): string => $id->getValue(), $bankAccountIds);
+
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM transaction WHERE bank_account_id IN (:bank_account_ids)',
+            ['bank_account_ids' => $ids],
+            ['bank_account_ids' => ArrayParameterType::STRING],
+        );
+    }
+
+    public function findByBankAccountIdPaginated(BankAccountId $bankAccountId, int $limit, int $offset): array
+    {
+        $rows = $this->connection->fetchAllAssociative(
+            'SELECT * FROM transaction WHERE bank_account_id = :bank_account_id ORDER BY occurred_at DESC LIMIT :limit OFFSET :offset',
+            ['bank_account_id' => $bankAccountId->getValue(), 'limit' => $limit, 'offset' => $offset],
+        );
+
+        return array_map(fn (array $data): Transaction => $this->mapToEntity($data), $rows);
+    }
+
+    public function countByBankAccountId(BankAccountId $bankAccountId): int
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM transaction WHERE bank_account_id = :bank_account_id',
+            ['bank_account_id' => $bankAccountId->getValue()],
+        );
+    }
+
     public function nextIdentity(): TransactionId
     {
         return TransactionId::generate();

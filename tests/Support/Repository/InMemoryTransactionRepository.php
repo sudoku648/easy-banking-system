@@ -54,6 +54,43 @@ final class InMemoryTransactionRepository implements TransactionRepositoryInterf
         return $result;
     }
 
+    /**
+     * @param BankAccountId[] $bankAccountIds
+     * @return Transaction[]
+     */
+    public function findByBankAccountIdsPaginated(array $bankAccountIds, int $limit, int $offset): array
+    {
+        $all = $this->findByBankAccountIds($bankAccountIds);
+
+        // Sort by occurred_at DESC (newest first)
+        usort($all, fn (Transaction $a, Transaction $b): int => $b->occurredAt <=> $a->occurredAt);
+
+        return \array_slice($all, $offset, $limit);
+    }
+
+    /**
+     * @param BankAccountId[] $bankAccountIds
+     */
+    public function countByBankAccountIds(array $bankAccountIds): int
+    {
+        return \count($this->findByBankAccountIds($bankAccountIds));
+    }
+
+    public function findByBankAccountIdPaginated(BankAccountId $bankAccountId, int $limit, int $offset): array
+    {
+        $all = $this->findByBankAccountId($bankAccountId);
+
+        // Sort by occurred_at DESC (newest first)
+        usort($all, fn (Transaction $a, Transaction $b): int => $b->occurredAt <=> $a->occurredAt);
+
+        return \array_slice($all, $offset, $limit);
+    }
+
+    public function countByBankAccountId(BankAccountId $bankAccountId): int
+    {
+        return \count($this->findByBankAccountId($bankAccountId));
+    }
+
     public function nextIdentity(): TransactionId
     {
         return TransactionId::generate();

@@ -42,3 +42,10 @@ transaction.status_canceled: Canceled
 transaction.actions: Actions
 transaction.cancel_transfer: Cancel
 transaction.confirm_cancel: Are you sure you want to cancel this transaction?
+transaction.rows_per_page: Rows per page
+transaction.showing_records: Showing {from} to {to} of {total} transactions
+transaction.page: Page
+transaction.previous: Previous
+transaction.next: Next
+transaction.loading: Loading transactions...
+transaction.no_data: No transactions found

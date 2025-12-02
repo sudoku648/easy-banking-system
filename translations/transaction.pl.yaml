@@ -42,3 +42,10 @@ transaction.status_canceled: Anulowana
 transaction.actions: Akcje
 transaction.cancel_transfer: Anuluj
 transaction.confirm_cancel: Czy na pewno chcesz anulować tę transakcję?
+transaction.rows_per_page: Wierszy na stronę
+transaction.showing_records: Wyświetlanie {from} do {to} z {total} transakcji
+transaction.page: Strona
+transaction.previous: Poprzednia
+transaction.next: Następna
+transaction.loading: Ładowanie transakcji...
+transaction.no_data: Nie znaleziono transakcji
