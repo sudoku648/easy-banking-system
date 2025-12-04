@@ -90,3 +90,28 @@ frontend-build:
 frontend-preview:
 	$(call highlight,Preview production build)
 	npm run preview
+
+# E2E testing commands
+e2e-install:
+	$(call highlight,Installing Playwright browsers)
+	npx playwright install --with-deps
+
+e2e:
+	$(call highlight,Running e2e tests)
+	npm run test:e2e
+
+e2e-ui:
+	$(call highlight,Running e2e tests in UI mode)
+	npm run test:e2e:ui
+
+e2e-headed:
+	$(call highlight,Running e2e tests in headed mode)
+	npm run test:e2e:headed
+
+e2e-debug:
+	$(call highlight,Running e2e tests in debug mode)
+	npm run test:e2e:debug
+
+e2e-report:
+	$(call highlight,Showing e2e test report)
+	npm run test:e2e:report

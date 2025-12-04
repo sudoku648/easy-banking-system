@@ -26,3 +26,10 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 ###< frontend ###
+
+###> playwright ###
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/e2e/screenshots/
+###< playwright ###
