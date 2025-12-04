@@ -78,7 +78,6 @@ make test           # Run tests
 ## ⚠️ What Needs Work
 
 - [ ] Implement API endpoint logic (marked with @TODO)
-- [ ] Update presentation tests
 - [ ] Remove old Twig templates (optional)
 
 ---

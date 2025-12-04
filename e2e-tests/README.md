@@ -4,10 +4,6 @@
 
 This guide explains how to run and write end-to-end (e2e) tests for the Easy Banking System React frontend using Playwright.
 
-## Overview
-
-The e2e tests are based on the existing Presentation tests (PHPUnit) that tested the Twig-based frontend. They have been migrated to test the new React SPA frontend while maintaining the same test coverage and scenarios.
-
 ## Prerequisites
 
 - Node.js and npm installed
@@ -347,18 +343,3 @@ npx playwright install --with-deps chromium
 - [Playwright Documentation](https://playwright.dev/)
 - [Playwright Best Practices](https://playwright.dev/docs/best-practices)
 - [Playwright API Reference](https://playwright.dev/docs/api/class-playwright)
-
-## Migration from PHPUnit Tests
-
-The e2e tests maintain the same structure and coverage as the original PHPUnit Presentation tests:
-
-| PHPUnit Test | E2E Test | Status |
-|--------------|----------|--------|
-| SecurityControllerTest | auth.spec.js | ✅ Migrated |
-| CustomerDashboardControllerTest | customer-dashboard.spec.js | ✅ Migrated |
-| TransactionControllerTest | customer-transactions.spec.js | ✅ Migrated |
-| EmployeeDashboardControllerTest | employee-operations.spec.js | ✅ Migrated |
-| EmployeeTransactionControllerTest | employee-operations.spec.js | ✅ Migrated |
-| BankAccountControllerTest | bank-account-management.spec.js | ✅ Migrated |
-
-Each test maintains the same test cases and scenarios, adapted for the React frontend's URL structure and component behavior.

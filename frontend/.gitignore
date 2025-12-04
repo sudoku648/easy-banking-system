@@ -4,3 +4,7 @@ dist/
 build/
 *.log
 .DS_Store
+
+# Environment Variables
+.env.local
+.env.*.local

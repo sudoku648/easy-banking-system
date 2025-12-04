@@ -18,7 +18,7 @@ All commands should be run from the **root directory** using the Makefile, unles
 - **Messaging**: Symfony Messenger
 - **ORM**: No ORM - direct SQL via Doctrine DBAL
 - **Dependency Injection**: Symfony DI Container
-- **Testing**: PHPUnit (unit, integration, functional, presentation)
+- **Testing**: PHPUnit (unit, integration, functional)
 - **Migrations**: SQL scripts in `backend/migrations/` directory
 
 ## Architecture - Hexagonal + DDD (Backend)

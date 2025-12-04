@@ -42,9 +42,6 @@ jobs:
       - name: PHPUNIT-INTEGRATION
         run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=integration
 
-      - name: PHPUNIT-PRESENTATION
-        run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} exec -T ebs vendor/bin/phpunit --testsuite=presentation
-
       - name: Stop Containers
         if: always()
         run: docker compose -p ${{ env.COMPOSE_PROJECT_NAME }} down --volumes --remove-orphans

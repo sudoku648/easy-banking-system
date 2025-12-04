@@ -14,6 +14,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+      # Backend API URL - adjust based on your backend service location
       - VITE_API_URL=http://localhost:8080
     networks:
       - easy-banking-network

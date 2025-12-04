@@ -184,18 +184,6 @@ Example TODO items:
 - Account management operations
 - Debit card operations
 
-## Testing
-
-The existing PHPUnit tests for presentation layer will need to be updated:
-- Test API endpoints instead of HTML responses
-- Verify JSON responses
-- Test authentication and authorization
-
-Run tests:
-```bash
-make test suite=presentation
-```
-
 ## Production Deployment
 
 1. Build frontend: `npm run build`

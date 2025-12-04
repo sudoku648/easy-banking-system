@@ -8,10 +8,6 @@ This document summarizes the implementation of end-to-end (e2e) tests for the Ea
 
 December 4, 2025
 
-## Migration Source
-
-The e2e tests are based on the existing PHPUnit Presentation tests from the Twig-based frontend, ensuring consistent test coverage and behavior validation for the new React SPA.
-
 ## Technology Stack
 
 - **Testing Framework**: Playwright v1.48.2
@@ -118,7 +114,7 @@ e2e/
 
 ## Total Test Coverage
 
-**64 test cases** covering all major user flows and scenarios from the original Presentation tests.
+**64 test cases** covering all major user flows and scenarios.
 
 ## Test Mapping
 
@@ -301,7 +297,6 @@ When updating the React frontend:
 ✅ **64 test cases** implemented covering all major user flows
 ✅ **5 test suites** organized by feature area
 ✅ **3 browsers** supported (Chromium, Firefox, WebKit)
-✅ **100% parity** with original PHPUnit Presentation tests
 ✅ **Complete documentation** with guides and setup instructions
 ✅ **CI/CD ready** with proper configuration and reporting
 ✅ **Developer-friendly** with UI mode, debug tools, and helpers

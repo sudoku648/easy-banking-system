@@ -28,9 +28,6 @@
         <testsuite name="integration">
             <directory>tests/Integration</directory>
         </testsuite>
-        <testsuite name="presentation">
-            <directory>tests/Presentation</directory>
-        </testsuite>
         <testsuite name="api">
             <directory>tests/Api</directory>
         </testsuite>

@@ -25,7 +25,24 @@ frontend/
 ## Requirements
 
 - Node.js 18+ and npm
-- Backend API running on http://localhost:8080
+- Backend API running (see [Environment Configuration](#environment-configuration))
+
+## Environment Configuration
+
+The frontend uses environment variables to configure the backend API URL. See [ENVIRONMENT.md](./ENVIRONMENT.md) for detailed configuration guide.
+
+**Quick Setup:**
+
+```bash
+# Optional: Create local environment override
+cp .env.local.example .env.local
+# Edit .env.local if needed (already gitignored)
+```
+
+**Environment Files:**
+- `.env.development` - Development mode (used by `npm run dev`)
+- `.env.production` - Production mode (used by `npm run build`)
+- `.env.local` - Local overrides (gitignored, optional)
 
 ## Quick Start
 
@@ -66,9 +83,12 @@ npm run lint      # Run ESLint
 
 ### API Proxy
 
-The Vite dev server is configured to proxy API requests to the backend:
+The Vite dev server proxies API requests to the backend configured in `VITE_API_URL`:
 - Frontend: http://localhost:3000
-- Backend: http://localhost:8080 (proxied from `/api`)
+- Backend: Configured via environment variable (default: http://localhost:8080)
+- API requests to `/api/*` are proxied to the backend
+
+See [ENVIRONMENT.md](./ENVIRONMENT.md) for more details on API configuration.
 
 ### Building for Production
 

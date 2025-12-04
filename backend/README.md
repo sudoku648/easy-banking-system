@@ -16,7 +16,6 @@ backend/
 │   ├── Transaction/      # Transaction bounded context
 │   ├── UserManagement/   # User management bounded context
 │   └── Shared/           # Shared kernel
-├── templates/        # Twig templates
 ├── tests/            # PHPUnit tests
 ├── translations/     # Translation files
 ├── var/              # Cache, logs, etc.

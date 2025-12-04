@@ -101,7 +101,6 @@ All test files creating `Customer` instances have been updated:
 - `DbalBankAccountRepositoryTest.php`
 - `CloseBankAccountWithBalanceTest.php`
 - `ApiTestCase.php`
-- `PresentationTestCase.php`
 
 ### New Test Files
 - `AddressTest.php` - Tests for Address value object

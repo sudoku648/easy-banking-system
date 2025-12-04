@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "*",
         "doctrine/orm": "*",
         "dragonmantank/cron-expression": "^3.6",
+        "nelmio/cors-bundle": "^2.6",
         "symfony/asset": "7.3.*",
         "symfony/console": "7.3.*",
         "symfony/doctrine-messenger": "7.3.*",
