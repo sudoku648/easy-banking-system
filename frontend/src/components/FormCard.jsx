@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useLocale } from '../contexts/LocaleContext';
 import { getLocalizedUrl } from '../config/routes';
 
-const FormCard = ({ 
-  title, 
-  icon, 
-  color = 'primary', 
+const FormCard = ({
+  title,
+  icon,
+  color = 'primary',
   description,
   alert,
   children,
@@ -20,12 +20,12 @@ const FormCard = ({
   const { locale: urlLocale } = useParams();
   const { locale } = useLocale();
   const currentLocale = urlLocale || locale;
-  
+
   // Support both route keys (e.g., 'employee.dashboard') and full paths
-  const cancelUrl = cancelRoute?.includes('/') 
-    ? cancelRoute 
+  const cancelUrl = cancelRoute?.includes('/')
+    ? cancelRoute
     : getLocalizedUrl(cancelRoute, currentLocale);
-  
+
   return (
     <div className="row">
       <div className="col-md-8 offset-md-2">

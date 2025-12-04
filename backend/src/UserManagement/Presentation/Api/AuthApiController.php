@@ -27,7 +27,7 @@ final class AuthApiController extends AbstractController
 
         $userData = $user->getUser();
         $role = $userData->getRole()->value;
-        
+
         return new ApiSuccessResponse(
             message: 'Login successful',
             data: [
@@ -61,7 +61,7 @@ final class AuthApiController extends AbstractController
 
         $userData = $user->getUser();
         $role = $userData->getRole()->value;
-        
+
         return new ApiSuccessResponse(
             message: 'User retrieved successfully',
             data: [

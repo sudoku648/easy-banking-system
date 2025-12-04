@@ -8,7 +8,7 @@ import Card from '../../components/Card';
 const SelectCustomer = () => {
   const { t } = useTranslation();
   const navigate = useLocaleNavigate();
-  
+
   const [customers, setCustomers] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [allAccounts, setAllAccounts] = useState([]);
@@ -28,7 +28,7 @@ const SelectCustomer = () => {
         acc => acc.customerId === customerId
       );
       setAccounts(customerAccounts);
-      
+
       // Auto-select account if customer has only one
       if (customerAccounts.length === 1) {
         setBankAccountId(customerAccounts[0].id);
@@ -58,7 +58,7 @@ const SelectCustomer = () => {
         api.get('/employee/customers'),
         api.get('/employee/active-accounts'),
       ]);
-      
+
       setCustomers(customersRes.data.data.customers || []);
       setAllAccounts(accountsRes.data.data || []);
       setAccounts(accountsRes.data.data || []);

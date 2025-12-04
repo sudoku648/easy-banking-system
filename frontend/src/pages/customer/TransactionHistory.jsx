@@ -206,19 +206,19 @@ const TransactionHistory = () => {
                             {t('transaction.previous')}
                           </button>
                         </li>
-                        
+
                         {/* Page numbers with ellipsis */}
                         {(() => {
                           const maxPagesToShow = 5;
                           let startPage = Math.max(1, page - Math.floor(maxPagesToShow / 2));
                           let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-                          
+
                           if (endPage - startPage < maxPagesToShow - 1) {
                             startPage = Math.max(1, endPage - maxPagesToShow + 1);
                           }
-                          
+
                           const pageButtons = [];
-                          
+
                           // First page
                           if (startPage > 1) {
                             pageButtons.push(
@@ -228,7 +228,7 @@ const TransactionHistory = () => {
                                 </button>
                               </li>
                             );
-                            
+
                             if (startPage > 2) {
                               pageButtons.push(
                                 <li key="ellipsis-start" className="page-item disabled">
@@ -237,7 +237,7 @@ const TransactionHistory = () => {
                               );
                             }
                           }
-                          
+
                           // Page numbers
                           for (let i = startPage; i <= endPage; i++) {
                             pageButtons.push(
@@ -248,7 +248,7 @@ const TransactionHistory = () => {
                               </li>
                             );
                           }
-                          
+
                           // Last page
                           if (endPage < totalPages) {
                             if (endPage < totalPages - 1) {
@@ -258,7 +258,7 @@ const TransactionHistory = () => {
                                 </li>
                               );
                             }
-                            
+
                             pageButtons.push(
                               <li key={totalPages} className="page-item">
                                 <button className="page-link" onClick={() => setPage(totalPages)}>
@@ -267,10 +267,10 @@ const TransactionHistory = () => {
                               </li>
                             );
                           }
-                          
+
                           return pageButtons;
                         })()}
-                        
+
                         <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
                           <button
                             className="page-link"

@@ -87,7 +87,7 @@ export const routes = {
 export const getLocalizedPath = (routeKey, locale = 'pl', params = {}) => {
   const keys = routeKey.split('.');
   let path = routes;
-  
+
   for (const key of keys) {
     path = path[key];
     if (!path) {
@@ -95,14 +95,14 @@ export const getLocalizedPath = (routeKey, locale = 'pl', params = {}) => {
       return '';
     }
   }
-  
+
   let localizedPath = path[locale] || path.pl;
-  
+
   // Replace params in path
   Object.entries(params).forEach(([key, value]) => {
     localizedPath = localizedPath.replace(`:${key}`, value);
   });
-  
+
   return localizedPath;
 };
 
@@ -126,7 +126,7 @@ export const getLocalizedUrl = (routeKey, locale = 'pl', params = {}) => {
  */
 export const buildRoutePatterns = (locale) => {
   const patterns = {};
-  
+
   const traverse = (obj, prefix = '') => {
     Object.entries(obj).forEach(([key, value]) => {
       if (typeof value === 'object' && (value.en || value.pl)) {
@@ -140,7 +140,7 @@ export const buildRoutePatterns = (locale) => {
       }
     });
   };
-  
+
   traverse(routes);
   return patterns;
 };
@@ -153,12 +153,12 @@ export const buildRoutePatterns = (locale) => {
  */
 export const findRouteKey = (path, locale) => {
   const patterns = buildRoutePatterns(locale);
-  
+
   // First try exact match
   if (patterns[path]) {
     return patterns[path];
   }
-  
+
   // Try pattern matching for routes with parameters
   for (const [pattern, routeKey] of Object.entries(patterns)) {
     if (pattern.includes(':')) {
@@ -170,6 +170,6 @@ export const findRouteKey = (path, locale) => {
       }
     }
   }
-  
+
   return null;
 };

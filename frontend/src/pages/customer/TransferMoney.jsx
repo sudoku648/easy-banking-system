@@ -88,7 +88,7 @@ const TransferMoney = () => {
 
               {error && <div className="alert alert-danger">{error}</div>}
               {success && <div className="alert alert-success">{success}</div>}
-              
+
               <form onSubmit={handleSubmit} noValidate>
                 <div className="mb-3">
                   <div className="form-group">

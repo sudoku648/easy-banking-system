@@ -29,11 +29,11 @@ function App() {
           <Routes>
             {/* Root redirect to Polish login */}
             <Route path="/" element={<Navigate to="/pl/logowanie" replace />} />
-            
+
             {/* English routes */}
             <Route path="/en" element={<LocaleRoute />}>
               <Route path={routes.login.en} element={<Login />} />
-              
+
               {/* Customer Routes */}
               <Route
                 path={routes.customer.dashboard.en}
@@ -170,7 +170,7 @@ function App() {
             {/* Polish routes */}
             <Route path="/pl" element={<LocaleRoute />}>
               <Route path={routes.login.pl} element={<Login />} />
-            
+
               {/* Customer Routes */}
               <Route
                 path={routes.customer.dashboard.pl}

@@ -28,7 +28,7 @@ frontend/
 docker-compose.dev.yaml          # Backend + Frontend for development
 docker-compose.e2e.yaml          # Backend + Frontend for E2E tests
 
-# Backend - Independent test environment  
+# Backend - Independent test environment
 backend/
   ├── docker-compose.yaml        # Backend unit/integration tests
   └── docker-compose.dev.yaml    # (Legacy, kept for compatibility)
@@ -57,7 +57,7 @@ make e2e-start        # Port 8081 (backend) + 3000 (frontend)
 Each environment has its own Docker network:
 - `dev-network` - Development
 - `backend-test-network` - Backend tests
-- `frontend-test-network` - Frontend tests  
+- `frontend-test-network` - Frontend tests
 - `e2e-network` - E2E tests
 
 **Benefit:** No port conflicts, no network collisions, complete isolation.

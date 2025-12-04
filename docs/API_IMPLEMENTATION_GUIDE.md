@@ -39,13 +39,13 @@ public function __invoke(Request $request): Response
 
     if ($form->isSubmitted() && $form->isValid()) {
         $dto = $form->getData();
-        
+
         $query = new GetTransactionsByAccountIdQuery(
             $dto->accountId
         );
-        
+
         $transactions = $this->handle($query);
-        
+
         return $this->render('transaction/history.html.twig', [
             'transactions' => $transactions,
             'form' => $form,
@@ -70,20 +70,20 @@ public function getTransactions(string $accountId): JsonResponse
         /** @var SecurityUser $securityUser */
         $securityUser = $this->getUser();
         $user = $securityUser->getUser();
-        
+
         // Verify account belongs to user
         $account = $this->handle(new GetBankAccountByIdQuery($accountId));
-        
+
         if ($account->customerId->getValue() !== $user->id->getValue()) {
             return $this->jsonError('Access denied', 403);
         }
-        
+
         // Get transactions
         /** @var array<Transaction> $transactions */
         $transactions = $this->handle(
             new GetTransactionsByAccountIdQuery($accountId)
         );
-        
+
         // Map to JSON-friendly format
         $transactionsData = array_map(
             fn (Transaction $tx): array => [
@@ -97,9 +97,8 @@ public function getTransactions(string $accountId): JsonResponse
             ],
             $transactions
         );
-        
+
         return $this->jsonSuccess(['transactions' => $transactionsData]);
-        
     } catch (BankAccountNotFoundException $e) {
         return $this->jsonError('Account not found', 404);
     } catch (\Exception $e) {
@@ -132,11 +131,11 @@ public function transfer(Request $request): JsonResponse
     try {
         // Parse JSON request
         $data = json_decode($request->getContent(), true);
-        
+
         if (!$data) {
             return $this->jsonError('Invalid JSON', 400);
         }
-        
+
         // Validate required fields
         $required = ['sourceAccountId', 'recipientIban', 'amount', 'title'];
         foreach ($required as $field) {
@@ -144,11 +143,11 @@ public function transfer(Request $request): JsonResponse
                 return $this->jsonError("Missing required field: $field", 400);
             }
         }
-        
+
         /** @var SecurityUser $securityUser */
         $securityUser = $this->getUser();
         $user = $securityUser->getUser();
-        
+
         // Create command
         $command = new TransferMoneyCommand(
             sourceAccountId: $data['sourceAccountId'],
@@ -157,14 +156,13 @@ public function transfer(Request $request): JsonResponse
             title: $data['title'],
             customerId: $user->id->getValue(),
         );
-        
+
         // Execute
         $this->handle($command);
-        
+
         return $this->jsonSuccess([
             'message' => 'Transfer initiated successfully'
         ]);
-        
     } catch (InsufficientFundsException $e) {
         return $this->jsonError('Insufficient funds', 400);
     } catch (BankAccountNotFoundException $e) {

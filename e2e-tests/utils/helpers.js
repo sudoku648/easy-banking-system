@@ -79,8 +79,8 @@ export async function waitForNavigation(page) {
  */
 export async function takeScreenshot(page, name) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  await page.screenshot({ 
+  await page.screenshot({
     path: `e2e/screenshots/${name}-${timestamp}.png`,
-    fullPage: true 
+    fullPage: true
   });
 }

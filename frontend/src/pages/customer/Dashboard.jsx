@@ -48,7 +48,7 @@ const CustomerDashboard = () => {
         <i className="bi bi-exclamation-triangle"></i> {error}
         <button type="button" className="btn-close" onClick={() => setError('')}></button>
       </div>}
-      
+
       {/* Dashboard Header */}
       <div className="row">
         <div className="col-12">

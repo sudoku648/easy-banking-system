@@ -36,13 +36,13 @@ class ApiClient {
     // Employees are created via CLI in this system
     // We'll need to execute the CLI command
     const { execSync } = require('child_process');
-    
+
     try {
       execSync(
         `docker exec easy-banking-service-ebs php bin/console app:user:create-employee ${data.username} ${data.password} "${data.firstName}" "${data.lastName}"`,
         { encoding: 'utf-8' }
       );
-      
+
       return {
         username: data.username,
         firstName: data.firstName,

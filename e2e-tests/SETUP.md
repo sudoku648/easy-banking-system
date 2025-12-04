@@ -233,26 +233,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-      
+
       - name: Start services
         run: |
           make dev
           make frontend-dev &
-      
+
       - name: Run e2e tests
         run: npm run test:e2e
-      
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3

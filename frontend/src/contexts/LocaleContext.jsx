@@ -27,11 +27,11 @@ export const LocaleProvider = ({ children }) => {
   }
 
   return (
-    <LocaleContext.Provider value={{ 
-      locale, 
-      setLocale, 
+    <LocaleContext.Provider value={{
+      locale,
+      setLocale,
       supportedLocales: SUPPORTED_LOCALES,
-      defaultLocale: DEFAULT_LOCALE 
+      defaultLocale: DEFAULT_LOCALE
     }}>
       {children}
     </LocaleContext.Provider>

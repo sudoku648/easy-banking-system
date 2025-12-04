@@ -13,7 +13,7 @@ export const useLocaleNavigate = () => {
 
   const localeNavigate = (pathOrKey, options = {}) => {
     const currentLocale = urlLocale || locale;
-    
+
     // If it looks like a route key (no slashes), use localized routing
     if (!pathOrKey.includes('/')) {
       const localePath = getLocalizedUrl(pathOrKey, currentLocale, options.params || {});

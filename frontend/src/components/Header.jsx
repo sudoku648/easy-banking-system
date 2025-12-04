@@ -21,11 +21,11 @@ const Header = () => {
 
   const handleLocaleChange = (newLocale) => {
     setLocale(newLocale);
-    
+
     // Find current route key from current path
     const pathWithoutLocale = location.pathname.replace(/^\/[^/]+\//, ''); // Remove /locale/ prefix
     const matchedRouteKey = findRouteKey(pathWithoutLocale, currentLocale);
-    
+
     if (matchedRouteKey) {
       // Navigate to the same route in new locale
       const newUrl = getLocalizedUrl(matchedRouteKey, newLocale);
@@ -48,8 +48,8 @@ const Header = () => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container-fluid">
         <Link className="navbar-brand" to={
-          isCustomer ? getLocalizedUrl('customer.dashboard', currentLocale) : 
-          isEmployee ? getLocalizedUrl('employee.dashboard', currentLocale) : 
+          isCustomer ? getLocalizedUrl('customer.dashboard', currentLocale) :
+          isEmployee ? getLocalizedUrl('employee.dashboard', currentLocale) :
           getLocalizedUrl('login', currentLocale)
         }>
           <i className="bi bi-bank2"></i> {t('app.name')}

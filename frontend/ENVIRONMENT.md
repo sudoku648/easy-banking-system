@@ -44,7 +44,7 @@ cp .env.local.example .env.local
     - `VITE_API_URL` is used by the **browser**, not the Node.js server
     - The browser runs on the user's machine, outside Docker
     - `localhost:8080` is the exposed port that maps to the nginx container
-  
+
 - **Production**: `` (empty string)
   - Frontend is built and served by backend
   - API calls are relative (e.g., `/api/auth/login`)
@@ -193,12 +193,12 @@ If you see CORS errors:
 
 **Cause**: The `VITE_API_URL` environment variable in Docker is set to `http://nginx:80`
 
-**Solution**: 
+**Solution**:
 1. Verify `docker-compose.dev.yaml` sets: `VITE_API_URL=http://localhost:8080`
 2. Recreate the frontend container: `docker compose -f docker-compose.dev.yaml up -d --force-recreate frontend`
 3. Verify: `docker compose -f docker-compose.dev.yaml exec frontend printenv | grep VITE_API_URL`
 
-**Explanation**: 
+**Explanation**:
 - `VITE_API_URL` is used by the browser (client-side), not by Node.js
 - The browser runs on your machine, not inside Docker
 - Docker internal hostnames like `nginx` are not accessible from the browser

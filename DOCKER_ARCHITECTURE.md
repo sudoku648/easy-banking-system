@@ -4,79 +4,79 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                     Easy Banking System - Docker Setup                   │
+│                     Easy Banking System - Docker Setup                  │
 └─────────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────────┐
-│  1. INTEGRATED DEVELOPMENT (make dev)                                     │
-│  File: docker-compose.dev.yaml                                            │
-│  Network: dev-network                                                     │
+│  1. INTEGRATED DEVELOPMENT (make dev)                                    │
+│  File: docker-compose.dev.yaml                                           │
+│  Network: dev-network                                                    │
 ├──────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  ┌─────────────┐   ┌──────────┐   ┌───────────┐   ┌────────────────┐  │
-│  │ PostgreSQL  │◄──│ PHP-FPM  │◄──│  Nginx    │   │   Frontend     │  │
-│  │ :54322      │   │ (EBS)    │   │  :8080    │   │   (Vite)       │  │
-│  │ (external)  │   │          │   │ (external)│   │   :3000        │  │
-│  └─────────────┘   └──────────┘   └───────────┘   └────────────────┘  │
-│       ▲                  ▲               ▲               ▲              │
-│       └──────────────────┴───────────────┴───────────────┘              │
+│                                                                          │
+│  ┌─────────────┐   ┌──────────┐   ┌───────────┐   ┌────────────────┐     │
+│  │ PostgreSQL  │◄──│ PHP-FPM  │◄──│  Nginx    │   │   Frontend     │     │
+│  │ :54322      │   │ (EBS)    │   │  :8080    │   │   (Vite)       │     │
+│  │ (external)  │   │          │   │ (external)│   │   :3000        │     │
+│  └─────────────┘   └──────────┘   └───────────┘   └────────────────┘     │
+│       ▲                  ▲               ▲               ▲               │
+│       └──────────────────┴───────────────┴───────────────┘               │
 │                    All on dev-network                                    │
-│                                                                           │
+│                                                                          │
 │  Use: Full-stack development with hot-reload                             │
 └──────────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────────┐
-│  2. BACKEND TEST (make backend-start)                                     │
-│  File: backend/docker-compose.yaml                                        │
-│  Network: backend-test-network                                            │
+│  2. BACKEND TEST (make backend-start)                                    │
+│  File: backend/docker-compose.yaml                                       │
+│  Network: backend-test-network                                           │
 ├──────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  ┌─────────────┐   ┌──────────┐                                         │
-│  │ PostgreSQL  │◄──│ PHP-FPM  │                                         │
-│  │ (test DB)   │   │ (EBS)    │                                         │
-│  │ (internal)  │   │          │                                         │
-│  └─────────────┘   └──────────┘                                         │
-│       ▲                  ▲                                                │
-│       └──────────────────┘                                                │
-│      backend-test-network                                                 │
-│                                                                           │
+│                                                                          │
+│  ┌─────────────┐   ┌──────────┐                                          │
+│  │ PostgreSQL  │◄──│ PHP-FPM  │                                          │
+│  │ (test DB)   │   │ (EBS)    │                                          │
+│  │ (internal)  │   │          │                                          │
+│  └─────────────┘   └──────────┘                                          │
+│       ▲                  ▲                                               │
+│       └──────────────────┘                                               │
+│      backend-test-network                                                │
+│                                                                          │
 │  Use: PHPUnit tests, isolated backend testing                            │
 └──────────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────────┐
-│  3. FRONTEND TEST (make frontend-start)                                   │
-│  File: frontend/docker-compose.test.yaml                                  │
-│  Network: frontend-test-network                                           │
+│  3. FRONTEND TEST (make frontend-start)                                  │
+│  File: frontend/docker-compose.test.yaml                                 │
+│  Network: frontend-test-network                                          │
 ├──────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
+│                                                                          │
 │  ┌────────────────┐                                                      │
 │  │   Frontend     │                                                      │
 │  │   (Vite)       │                                                      │
 │  │   :3001        │                                                      │
 │  │   (external)   │                                                      │
 │  └────────────────┘                                                      │
-│         ▲                                                                 │
-│         └─ frontend-test-network                                          │
-│                                                                           │
-│  Use: Frontend development/testing without backend                        │
+│         ▲                                                                │
+│         └─ frontend-test-network                                         │
+│                                                                          │
+│  Use: Frontend development/testing without backend                       │
 └──────────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────────┐
-│  4. E2E TEST (make e2e-start)                                             │
-│  File: docker-compose.e2e.yaml                                            │
-│  Network: e2e-network                                                     │
+│  4. E2E TEST (make e2e-start)                                            │
+│  File: docker-compose.e2e.yaml                                           │
+│  Network: e2e-network                                                    │
 ├──────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  ┌─────────────┐   ┌──────────┐   ┌───────────┐   ┌────────────────┐  │
-│  │ PostgreSQL  │◄──│ PHP-FPM  │◄──│  Nginx    │   │   Frontend     │  │
-│  │ (e2e DB)    │   │ (EBS)    │   │  :8081    │   │   (Vite)       │  │
-│  │ (internal)  │   │          │   │ (external)│   │   :3000        │  │
-│  └─────────────┘   └──────────┘   └───────────┘   └────────────────┘  │
-│       ▲                  ▲               ▲               ▲              │
-│       └──────────────────┴───────────────┴───────────────┘              │
+│                                                                          │
+│  ┌─────────────┐   ┌──────────┐   ┌───────────┐   ┌────────────────┐     │
+│  │ PostgreSQL  │◄──│ PHP-FPM  │◄──│  Nginx    │   │   Frontend     │     │
+│  │ (e2e DB)    │   │ (EBS)    │   │  :8081    │   │   (Vite)       │     │
+│  │ (internal)  │   │          │   │ (external)│   │   :3000        │     │
+│  └─────────────┘   └──────────┘   └───────────┘   └────────────────┘     │
+│       ▲                  ▲               ▲               ▲               │
+│       └──────────────────┴───────────────┴───────────────┘               │
 │                    All on e2e-network                                    │
-│                                                                           │
-│  Use: Playwright E2E tests                                                │
+│                                                                          │
+│  Use: Playwright E2E tests                                               │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -84,18 +84,18 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         Docker Networks                              │
+│                         Docker Networks                             │
 ├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
-│  │  dev-network    │  │ backend-test-    │  │ frontend-test-   │  │
-│  │                 │  │     network      │  │     network      │  │
-│  │  • ebs-dev      │  │                  │  │                  │  │
-│  │  • nginx-dev    │  │  • ebs-test      │  │  • frontend-test │  │
-│  │  • postgres-dev │  │  • postgres-test │  │                  │  │
-│  │  • frontend-dev │  │                  │  │                  │  │
-│  └─────────────────┘  └──────────────────┘  └──────────────────┘  │
-│                                                                      │
+│                                                                     │
+│  ┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐    │
+│  │  dev-network    │  │ backend-test-    │  │ frontend-test-   │    │
+│  │                 │  │     network      │  │     network      │    │
+│  │  • ebs-dev      │  │                  │  │                  │    │
+│  │  • nginx-dev    │  │  • ebs-test      │  │  • frontend-test │    │
+│  │  • postgres-dev │  │  • postgres-test │  │                  │    │
+│  │  • frontend-dev │  │                  │  │                  │    │
+│  └─────────────────┘  └──────────────────┘  └──────────────────┘    │
+│                                                                     │
 │  ┌─────────────────┐                                                │
 │  │  e2e-network    │                                                │
 │  │                 │                                                │
@@ -104,7 +104,7 @@
 │  │  • postgres-e2e │                                                │
 │  │  • frontend-e2e │                                                │
 │  └─────────────────┘                                                │
-│                                                                      │
+│                                                                     │
 │  ✓ All networks are isolated from each other                        │
 │  ✓ No communication between environments                            │
 │  ✓ Can run all environments simultaneously                          │
@@ -169,7 +169,7 @@ Development Environment:
   ebs-dev
     ↓
   nginx-dev ←→ frontend-dev
-  
+
 Backend Test:
   postgres-test (healthy)
     ↓
@@ -208,7 +208,7 @@ E2E Environment:
 └────────────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────────┐
-│ Persistent Data Volumes                                     │
+│ Persistent Data Volumes                                    │
 ├────────────────────────────────────────────────────────────┤
 │ postgres_dev_data    (Development database)                │
 │ postgres_e2e_data    (E2E database)                        │

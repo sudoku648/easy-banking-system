@@ -145,15 +145,14 @@ Tests account management:
 import { test, expect } from '@playwright/test';
 
 test.describe('Feature Name', () => {
-  
   test('should do something', async ({ page }) => {
     // Navigate to page
     await page.goto('/en/login');
-    
+
     // Interact with elements
     await page.fill('input[name="username"]', 'testuser');
     await page.click('button[type="submit"]');
-    
+
     // Assert expectations
     await expect(page).toHaveURL(/\/dashboard/);
     await expect(page.getByText('Welcome')).toBeVisible();
