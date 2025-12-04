@@ -35,6 +35,7 @@ transaction.view_customer_history: View customer or account transaction history
 transaction.customer_history_title: Customer Transaction History
 transaction.exchange_rate: Exchange Rate
 transaction.validation.please_select_customer: Please select a customer
+transaction.select_customer_or_account_error: Please select either a customer or a bank account
 transaction.status: Status
 transaction.status_ordered: Ordered
 transaction.status_executed: Executed

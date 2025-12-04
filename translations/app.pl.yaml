@@ -19,6 +19,9 @@ common.cancel: Anuluj
 common.back: Wróć
 common.yes: Tak
 common.no: Nie
+common.loading: Ładowanie...
+common.error_loading_data: Nie udało się załadować danych
+common.error_occurred: Wystąpił błąd
 common.account_closed: Konto zamknięte
 common.first_name: Imię
 common.last_name: Nazwisko
@@ -38,3 +41,6 @@ user.help_confirm_new_password: Wprowadź ponownie nowe hasło, aby je potwierdz
 user.password_security_note: Po zmianie hasła pozostaniesz zalogowany na tym urządzeniu
 user.current_password_incorrect: Obecne hasło jest nieprawidłowe
 user.passwords_must_match: Hasła muszą być takie same
+user.passwords_do_not_match: Nowe hasła nie pasują do siebie
+user.password_changed_successfully: Hasło zostało pomyślnie zmienione!
+user.failed_to_change_password: Nie udało się zmienić hasła

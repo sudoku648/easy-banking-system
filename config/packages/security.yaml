@@ -13,9 +13,14 @@ security:
             security: false
         api:
             pattern: ^/api/
-            stateless: true
-            custom_authenticators:
-                - App\Shared\Infrastructure\Security\ApiKeyAuthenticator
+            stateless: false
+            provider: database_users
+            json_login:
+                check_path: api_auth_login
+                username_path: username
+                password_path: password
+            logout:
+                path: api_auth_logout
         main:
             lazy: true
             provider: database_users

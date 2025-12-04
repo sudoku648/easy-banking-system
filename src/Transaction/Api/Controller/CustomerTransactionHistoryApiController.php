@@ -17,7 +17,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/customer/transaction/history/api', name: 'api_customer_transaction_history')]
+#[Route('/api/customer/transaction/history', name: 'api_customer_transaction_history')]
 #[IsGranted('ROLE_CUSTOMER')]
 final class CustomerTransactionHistoryApiController extends AbstractController
 {

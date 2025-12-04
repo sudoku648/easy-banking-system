@@ -33,8 +33,10 @@ The **Easy Banking System** is designed to streamline banking operations by prov
 ## Tech Stack
 
 ### Frontend
-- **Twig** - Symfony templating engine
-- **Bootstrap 5** - UI styling framework
+- **React 18** - Modern UI library with hooks
+- **React Router v6** - Client-side routing
+- **Vite** - Fast build tool and dev server
+- **Axios** - HTTP client for API calls
 
 ### Backend
 - **PHP 8.4** - Programming language with strict types
@@ -103,7 +105,17 @@ The development environment runs in separate Docker containers:
 - **PostgreSQL Database**: `easy-banking-service-postgres-dev` (ebsdatabase_dev)
 - **Nginx Server**: `easy-banking-service-nginx`
 
-Access the application at: **http://localhost:8080**
+Access the application:
+- **Frontend (Development)**: http://localhost:3000 (Vite dev server with hot reload)
+- **Backend API**: http://localhost:8080/api
+
+**Development Workflow:**
+1. Start backend: `make dev`
+2. Install frontend deps: `make frontend-install` (first time only)
+3. Start frontend: `make frontend-dev`
+4. Access app at http://localhost:3000
+
+The Vite dev server automatically proxies API requests to the backend.
 
 #### Test Environment (`make start`)
 The test environment uses minimal containers:
@@ -132,16 +144,21 @@ To create an employee account manually:
 docker compose -f docker-compose.dev.yaml exec ebs php bin/console app:create-employee "First Name" "Last Name" "username" "password"
 ```
 
-## Available Scripts
+### Available Scripts
 
 The project uses a Makefile for common tasks:
 
 ### Development
 ```bash
-make dev            # Start development environment (nginx + app + postgres_dev)
-make dev-stop       # Stop development environment
-make fixtures       # Load sample data into development database
+make dev                 # Start development environment (nginx + app + postgres_dev)
+make dev-stop            # Stop development environment
+make fixtures            # Load sample data into development database
+make frontend-install    # Install frontend dependencies (npm install)
+make frontend-dev        # Start frontend dev server (Vite on port 3000)
+make frontend-build      # Build frontend for production
 ```
+
+**Note**: For development, run both `make dev` (backend) and `make frontend-dev` (frontend) in separate terminals.
 
 ### Testing
 ```bash

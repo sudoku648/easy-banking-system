@@ -73,3 +73,20 @@ else
 	$(call highlight,Running all test suites)
 	$(DOCKER_EXEC_WITH_USER_TEST) "$(PHPUNIT_CMD) || test \$$? -eq 1"
 endif
+
+# Frontend commands
+frontend-install:
+	$(call highlight,Installing frontend dependencies)
+	npm install
+
+frontend-dev:
+	$(call highlight,Starting frontend development server)
+	npm run dev
+
+frontend-build:
+	$(call highlight,Building frontend for production)
+	npm run build
+
+frontend-preview:
+	$(call highlight,Preview production build)
+	npm run preview

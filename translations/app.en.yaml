@@ -19,6 +19,9 @@ common.cancel: Cancel
 common.back: Back
 common.yes: Yes
 common.no: No
+common.loading: Loading...
+common.error_loading_data: Failed to load data
+common.error_occurred: An error occurred
 common.account_closed: Account Closed
 common.first_name: First Name
 common.last_name: Last Name
@@ -38,3 +41,6 @@ user.help_confirm_new_password: Re-enter your new password to confirm
 user.password_security_note: After changing your password, you will remain logged in on this device
 user.current_password_incorrect: Current password is incorrect
 user.passwords_must_match: Passwords must match
+user.passwords_do_not_match: New passwords do not match
+user.password_changed_successfully: Password changed successfully!
+user.failed_to_change_password: Failed to change password

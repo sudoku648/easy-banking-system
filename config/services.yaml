@@ -19,6 +19,7 @@ services:
             - '../src/*/Domain/Exception/'
             - '../src/Shared/Infrastructure/Fixtures/'
             - '../src/*/Infrastructure/Fixtures/'
+            - '../src/UserManagement/Infrastructure/Security/SecurityUser.php'
 
     # Fixtures (only in dev environment)
     App\UserManagement\Infrastructure\Fixtures\:
