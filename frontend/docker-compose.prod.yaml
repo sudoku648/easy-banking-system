@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  frontend:
+    container_name: easy-banking-service-frontend-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - easy-banking-network
+    restart: unless-stopped
+
+networks:
+  easy-banking-network:
+    external: true
+    name: easy-banking-network

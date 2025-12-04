@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  frontend:
+    container_name: easy-banking-service-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - .:/app:rw
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8080
+    networks:
+      - easy-banking-network
+
+networks:
+  easy-banking-network:
+    external: true
+    name: easy-banking-network

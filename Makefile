@@ -91,6 +91,29 @@ frontend-preview:
 	$(call highlight,Preview production build)
 	cd frontend && npm run preview
 
+# Frontend Docker commands
+DOCKER_COMPOSE_FRONTEND=docker compose -f frontend/docker-compose.yaml
+
+frontend-docker-dev:
+	$(call highlight,Starting frontend in Docker)
+	$(DOCKER_COMPOSE_FRONTEND) up -d --build
+	@echo ""
+	@echo "Frontend is running in Docker!"
+	@echo "Application: http://localhost:3000"
+	@echo ""
+
+frontend-docker-stop:
+	$(call highlight,Stopping frontend Docker container)
+	$(DOCKER_COMPOSE_FRONTEND) down --volumes --remove-orphans
+
+frontend-docker-logs:
+	$(call highlight,Showing frontend Docker logs)
+	$(DOCKER_COMPOSE_FRONTEND) logs -f
+
+frontend-docker-restart:
+	$(call highlight,Restarting frontend Docker container)
+	$(DOCKER_COMPOSE_FRONTEND) restart
+
 # E2E testing commands
 e2e-install:
 	$(call highlight,Installing Playwright browsers)
