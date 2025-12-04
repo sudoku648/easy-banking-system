@@ -1,0 +1,7 @@
+###> playwright ###
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/screenshots/
+/node_modules/
+###< playwright ###

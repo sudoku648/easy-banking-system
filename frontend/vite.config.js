@@ -3,14 +3,14 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  root: 'frontend',
+  root: '.',
   build: {
-    outDir: '../public/build',
+    outDir: '../backend/public/build',
     emptyOutDir: true,
     manifest: true,
     rollupOptions: {
       input: {
-        main: './frontend/src/main.jsx',
+        main: './src/main.jsx',
       },
     },
   },

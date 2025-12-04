@@ -1,5 +1,7 @@
 # E2E Testing Guide
 
+> **Note**: This directory is part of the restructured Easy Banking System. Run all commands from the **root directory** using `make` commands, or from within this directory using `npm` commands.
+
 This guide explains how to run and write end-to-end (e2e) tests for the Easy Banking System React frontend using Playwright.
 
 ## Overview

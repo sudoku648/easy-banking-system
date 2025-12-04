@@ -4,8 +4,8 @@ define highlight
 endef
 
 DOCKER_CONTAINER=ebs
-DOCKER_COMPOSE_TEST=docker compose -f docker-compose.yaml --env-file=.env.test
-DOCKER_COMPOSE_DEV=docker compose -f docker-compose.dev.yaml --env-file=.env.dev
+DOCKER_COMPOSE_TEST=docker compose -f backend/docker-compose.yaml --env-file=backend/.env.test
+DOCKER_COMPOSE_DEV=docker compose -f backend/docker-compose.dev.yaml --env-file=backend/.env.dev
 PHPUNIT_CMD=php vendor/bin/phpunit
 
 USER_ID=$(shell id -u)
@@ -77,41 +77,41 @@ endif
 # Frontend commands
 frontend-install:
 	$(call highlight,Installing frontend dependencies)
-	npm install
+	cd frontend && npm install
 
 frontend-dev:
 	$(call highlight,Starting frontend development server)
-	npm run dev
+	cd frontend && npm run dev
 
 frontend-build:
 	$(call highlight,Building frontend for production)
-	npm run build
+	cd frontend && npm run build
 
 frontend-preview:
 	$(call highlight,Preview production build)
-	npm run preview
+	cd frontend && npm run preview
 
 # E2E testing commands
 e2e-install:
 	$(call highlight,Installing Playwright browsers)
-	npx playwright install --with-deps
+	cd e2e-tests && npx playwright install --with-deps
 
 e2e:
 	$(call highlight,Running e2e tests)
-	npm run test:e2e
+	cd e2e-tests && npm run test:e2e
 
 e2e-ui:
 	$(call highlight,Running e2e tests in UI mode)
-	npm run test:e2e:ui
+	cd e2e-tests && npm run test:e2e:ui
 
 e2e-headed:
 	$(call highlight,Running e2e tests in headed mode)
-	npm run test:e2e:headed
+	cd e2e-tests && npm run test:e2e:headed
 
 e2e-debug:
 	$(call highlight,Running e2e tests in debug mode)
-	npm run test:e2e:debug
+	cd e2e-tests && npm run test:e2e:debug
 
 e2e-report:
 	$(call highlight,Showing e2e test report)
-	npm run test:e2e:report
+	cd e2e-tests && npm run test:e2e:report

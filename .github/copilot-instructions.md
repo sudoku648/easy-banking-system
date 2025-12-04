@@ -2,25 +2,33 @@
 
 > You are an expert in PHP 8/Symfony/DDD/PHPUnit. You know SOLID, design patterns and architectures. When analyzing a module, check the tests directory. You specialize in banking systems. Your goal is to understand, implement, and test easy-banking-service. If you don't know something, ask - don't hallucinate or guess. Instead, learn from existing code, documentation, and patterns.
 
-## Environment
+## Project Structure
+The project is divided into three main directories:
+- **backend/**: Symfony PHP application (API) - all PHP code, Symfony config, tests
+- **frontend/**: React application (UI) - React components, pages, API client
+- **e2e-tests/**: Playwright end-to-end tests
+
+All commands should be run from the **root directory** using the Makefile, unless specifically working within a subdirectory.
+
+## Backend Environment (backend/)
 - **Framework**: Symfony 7.3 (HttpKernel, Routing, Messenger)
 - **PHP**: 8.4 with strict types (`declare(strict_types=1);`)
-- **Database**: PostgreSQL (Don't use a local database for storing data - the project uses external/test environment database, details in the .env.local file)
+- **Database**: PostgreSQL (Don't use a local database for storing data - the project uses external/test environment database, details in backend/.env.local file)
 - **Validation**: Symfony Validator + webmozart/assert for domain assertions
 - **Messaging**: Symfony Messenger
 - **ORM**: No ORM - direct SQL via Doctrine DBAL
 - **Dependency Injection**: Symfony DI Container
 - **Testing**: PHPUnit (unit, integration, functional, presentation)
-- **Migrations**: SQL scripts in `migrations/` directory
+- **Migrations**: SQL scripts in `backend/migrations/` directory
 
-## Architecture - Hexagonal + DDD
+## Architecture - Hexagonal + DDD (Backend)
 Application follows hexagonal architecture with clear separation between bounded contexts.
 
-### Folder structure (per bounded context):
+### Folder structure (per bounded context in backend/src/):
 - **Application/**: Commands, Queries, Handlers, Events, EventHandlers (use cases)
 - **Domain/**: Entities, Value Objects, Repositories (interfaces), Domain Services, Domain Events
 - **Infrastructure/**: Repository implementations, external service integrations, persistence
-- **Presentation/**: frontend controllers, DTOs, forms, validators (entry points)
+- **Presentation/**: API controllers, DTOs, forms, validators (entry points)
 - **Symfony/**: Symfony-specific configuration (services, routes, event listeners)
 - **Cli/**: Console commands (optional)
 
@@ -67,6 +75,27 @@ Application follows hexagonal architecture with clear separation between bounded
     - Write testable code (use abstractions for dependencies)
     - Use Faker for test data generation
 - **Database**: Tests use test environment database (configured in `.env.test`)
+
+## Frontend Environment (frontend/)
+- **Framework**: React 18 with hooks
+- **Build Tool**: Vite
+- **Routing**: React Router v6
+- **HTTP Client**: Axios
+- **i18n**: i18next with react-i18next
+- **Dev Server**: http://localhost:3000
+- **Build Output**: `backend/public/build/`
+- **Commands**:
+  - `make frontend-dev` - Start dev server
+  - `make frontend-build` - Build for production
+
+## E2E Tests (e2e-tests/)
+- **Framework**: Playwright
+- **Test location**: `e2e-tests/*.spec.js`
+- **Commands**:
+  - `make e2e` - Run all e2e tests
+  - `make e2e-ui` - Run in UI mode
+  - `make e2e-debug` - Run in debug mode
+- **Configuration**: `e2e-tests/playwright.config.js`
 
 ## Documentation
 - **README.md**: Keep installation/config/usage instructions up to date

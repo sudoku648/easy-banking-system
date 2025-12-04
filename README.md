@@ -2,9 +2,22 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.4-blue.svg)](https://www.php.net/)
 [![Symfony](https://img.shields.io/badge/Symfony-7.3-black.svg)](https://symfony.com/)
+[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
 [![License](https://img.shields.io/badge/license-proprietary-red.svg)](LICENSE)
 
 A modern banking system application that enables bank employees to manage customer accounts and allows customers to manage their funds through a web application.
+
+## Project Structure
+
+The project is organized into three main directories:
+
+```
+easy-banking-system/
+├── backend/          # Symfony PHP application (API)
+├── frontend/         # React application (UI)
+├── e2e-tests/        # Playwright end-to-end tests
+└── docs/             # Documentation
+```
 
 ## Table of Contents
 
@@ -79,20 +92,29 @@ The **Easy Banking System** is designed to streamline banking operations by prov
    cd easy-banking-system
    ```
 
-2. **Start the development environment**
+2. **Start the backend (development environment)**
    ```bash
    make dev
    ```
 
    This command will:
-   - Build and start Docker containers (nginx, app, postgres_dev)
-   - Set up the development environment
+   - Build and start Docker containers (nginx, app, postgres_dev) from the `backend/` directory
+   - Set up the development environment with the database and dependencies
 
-   The development environment includes:
-   - **Application**: http://localhost:8080
+   The backend will be available at:
+   - **Backend API**: http://localhost:8080
    - **Database**: localhost:54322 (postgres/postgres)
 
-3. **For testing environment**
+3. **Install and start the frontend**
+   ```bash
+   make frontend-install   # First time only
+   make frontend-dev       # Start Vite dev server
+   ```
+
+   The frontend will be available at:
+   - **Frontend**: http://localhost:3000
+
+4. **For testing environment (backend only)**
    ```bash
    make start
    ```
@@ -141,26 +163,41 @@ This will create:
 
 To create an employee account manually:
 ```bash
-docker compose -f docker-compose.dev.yaml exec ebs php bin/console app:create-employee "First Name" "Last Name" "username" "password"
+docker compose -f backend/docker-compose.dev.yaml exec ebs php bin/console app:create-employee "First Name" "Last Name" "username" "password"
 ```
 
 ### Available Scripts
 
-The project uses a Makefile for common tasks:
+The project uses a Makefile (in the root directory) for common tasks:
 
-### Development
+### Backend Development
 ```bash
-make dev                 # Start development environment (nginx + app + postgres_dev)
+make dev                 # Start backend development environment (nginx + app + postgres_dev)
 make dev-stop            # Stop development environment
 make fixtures            # Load sample data into development database
-make frontend-install    # Install frontend dependencies (npm install)
-make frontend-dev        # Start frontend dev server (Vite on port 3000)
-make frontend-build      # Build frontend for production
 ```
 
-**Note**: For development, run both `make dev` (backend) and `make frontend-dev` (frontend) in separate terminals.
+### Frontend Development
+```bash
+make frontend-install    # Install frontend dependencies (npm install in frontend/)
+make frontend-dev        # Start frontend dev server (Vite on port 3000)
+make frontend-build      # Build frontend for production (outputs to backend/public/build)
+make frontend-preview    # Preview production build
+```
 
-### Testing
+### E2E Testing
+```bash
+make e2e-install        # Install Playwright browsers
+make e2e                # Run all e2e tests
+make e2e-ui             # Run e2e tests in UI mode
+make e2e-headed         # Run e2e tests in headed mode
+make e2e-debug          # Run e2e tests in debug mode
+make e2e-report         # Show e2e test report
+```
+
+**Note**: For full development, run both `make dev` (backend) and `make frontend-dev` (frontend) in separate terminals.
+
+### Backend Testing
 ```bash
 make start                   # Start test environment (app + postgres_test)
 make stop                    # Stop test environment
@@ -180,29 +217,31 @@ make test suite=presentation # Run presentation tests
 make analyse        # Run static code analysis (ECS + PHPStan)
 ```
 
-### Direct Composer Scripts
+### Direct Composer Scripts (from backend/ directory)
 ```bash
+cd backend
 composer ecs:check  # Check code style
 composer phpstan    # Run static analysis
 ```
 
 ### Internationalization
 ```bash
+cd backend
 ./bin/generate-locale-templates.sh <locale>  # Generate translation file templates for a new locale
 ```
 
 See [docs/ADDING_LOCALES.md](docs/ADDING_LOCALES.md) for detailed instructions on adding new locales.
 
-### Asynchronous Commands
+### Asynchronous Commands (backend)
 ```bash
 # In production, run the messenger worker to process async commands
-php bin/console messenger:consume async
+docker compose -f backend/docker-compose.dev.yaml exec ebs php bin/console messenger:consume async
 
 # View failed messages
-php bin/console messenger:failed:show
+docker compose -f backend/docker-compose.dev.yaml exec ebs php bin/console messenger:failed:show
 
 # Retry failed messages
-php bin/console messenger:failed:retry
+docker compose -f backend/docker-compose.dev.yaml exec ebs php bin/console messenger:failed:retry
 ```
 
 See [docs/ASYNC_COMMANDS.md](docs/ASYNC_COMMANDS.md) for detailed instructions on implementing async commands.
@@ -264,23 +303,43 @@ The following features are not included in the current version:
 
 ## Architecture
 
-The project follows **Hexagonal Architecture** (Ports & Adapters) combined with **Domain-Driven Design** principles:
+### Project Structure
 
-### Bounded Context Structure
+The application is divided into three main parts:
+
+#### Backend (`backend/`)
+The backend follows **Hexagonal Architecture** (Ports & Adapters) combined with **Domain-Driven Design** principles:
+
+**Bounded Context Structure:**
 - **Application/**: Commands, Queries, Handlers, Events, EventHandlers (use cases)
 - **Domain/**: Entities, Value Objects, Repositories (interfaces), Domain Services, Domain Events
 - **Infrastructure/**: Repository implementations, external service integrations, persistence
-- **Presentation/**: frontend controllers, DTOs, forms, validators (entry points)
+- **Presentation/**: API controllers, DTOs, forms, validators (entry points)
 - **Symfony/**: Symfony-specific configuration (services, routes, event listeners)
 - **Cli/**: Console commands
 
-### Key Principles
+**Key Principles:**
 - No direct coupling between bounded contexts
 - Communication via domain events using Symfony Messenger
 - Domain layer depends only on interfaces (ports), never on concrete implementations
 - Strict type hints and immutability where appropriate
 - Value Objects for domain concepts
 - Repository pattern for data persistence
+
+#### Frontend (`frontend/`)
+Modern React application with:
+- Component-based architecture
+- React Router for navigation
+- Axios for API communication
+- i18next for internationalization
+- Vite for fast development and optimized builds
+
+#### E2E Tests (`e2e-tests/`)
+Playwright-based end-to-end tests covering:
+- Authentication flows
+- Bank account management
+- Customer transactions
+- Employee operations
 
 ## Project Status
 

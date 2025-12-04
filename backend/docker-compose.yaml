@@ -5,15 +5,15 @@ services:
     container_name: easy-banking-service-ebs-test
     build:
       target: test
-      context: .
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: backend/Dockerfile
       args:
         USER_ID: ${USER_ID:-1000}
         GROUP_ID: ${GROUP_ID:-1000}
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     volumes:
-      - ./:/app:rw
+      - ../backend:/app:rw
     environment:
       PHP_IDE_CONFIG: serverName=ebs-test
     depends_on:
@@ -24,7 +24,7 @@ services:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     container_name: easy-banking-service-postgres-test
     volumes:
-      - ./docker/postgres:/docker-entrypoint-initdb.d
+      - ../backend/docker/postgres:/docker-entrypoint-initdb.d
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:
