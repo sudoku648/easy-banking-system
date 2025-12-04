@@ -1,8 +1,12 @@
 version: '3.7'
 
+# Legacy file - kept for backward compatibility
+# Use root-level docker-compose.dev.yaml for integrated development
+# Or use this file for standalone backend development
+
 services:
   ebs:
-    container_name: easy-banking-service-ebs
+    container_name: easy-banking-service-ebs-standalone
     build:
       target: dev
       context: ../
@@ -15,16 +19,16 @@ services:
     volumes:
       - ../backend:/app:rw
     environment:
-      PHP_IDE_CONFIG: serverName=ebs
+      PHP_IDE_CONFIG: serverName=ebs-standalone
     depends_on:
       postgres_dev:
         condition: service_healthy
     networks:
-      - easy-banking-network
+      - backend-standalone-network
 
   nginx:
     image: nginx:alpine
-    container_name: easy-banking-service-nginx-dev
+    container_name: easy-banking-service-nginx-standalone
     ports:
       - "8080:80"
     volumes:
@@ -33,16 +37,16 @@ services:
     depends_on:
       - ebs
     networks:
-      - easy-banking-network
+      - backend-standalone-network
 
   postgres_dev:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
-    container_name: easy-banking-service-postgres-dev
+    container_name: easy-banking-service-postgres-standalone
     ports:
       - "54322:5432"
     volumes:
       - ../backend/docker/postgres:/docker-entrypoint-initdb.d
-      - postgres_dev_data:/var/lib/postgresql/data
+      - postgres_standalone_data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:
@@ -56,12 +60,12 @@ services:
       timeout: 2s
       retries: 5
     networks:
-      - easy-banking-network
+      - backend-standalone-network
 
 networks:
-  easy-banking-network:
+  backend-standalone-network:
     driver: bridge
-    name: easy-banking-network
+    name: backend-standalone-network
 
 volumes:
-  postgres_dev_data:
+  postgres_standalone_data:

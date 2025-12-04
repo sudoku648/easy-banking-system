@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  frontend:
+    container_name: easy-banking-service-frontend-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - .:/app:rw
+      - /app/node_modules
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=test
+      - VITE_API_URL=http://localhost:8081
+    networks:
+      - frontend-test-network
+
+networks:
+  frontend-test-network:
+    driver: bridge
+    name: frontend-test-network

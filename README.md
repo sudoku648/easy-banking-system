@@ -92,57 +92,75 @@ The **Easy Banking System** is designed to streamline banking operations by prov
    cd easy-banking-system
    ```
 
-2. **Start the backend (development environment)**
+2. **Start the integrated development environment**
    ```bash
    make dev
    ```
 
    This command will:
-   - Build and start Docker containers (nginx, app, postgres_dev) from the `backend/` directory
-   - Set up the development environment with the database and dependencies
+   - Build and start Docker containers (backend + frontend + database)
+   - Set up the development environment with database migrations and fixtures
+   - Start both backend and frontend with hot-reload
 
-   The backend will be available at:
+   The application will be available at:
+   - **Frontend**: http://localhost:3000
    - **Backend API**: http://localhost:8080
    - **Database**: localhost:54322 (postgres/postgres)
 
-3. **Install and start the frontend**
+3. **Alternative: Start environments independently**
    ```bash
-   make frontend-install   # First time only
-   make frontend-dev       # Start Vite dev server
-   ```
+   # Backend only (for testing)
+   make backend-start
 
-   The frontend will be available at:
-   - **Frontend**: http://localhost:3000
+   # Frontend only (for UI development)
+   make frontend-start    # Runs on port 3001
 
-4. **For testing environment (backend only)**
-   ```bash
-   make start
+   # E2E testing environment
+   make e2e-start
    ```
 
 ### Running the Application
 
-#### Development Environment (`make dev`)
-The development environment runs in separate Docker containers:
-- **PHP Application**: `easy-banking-service-ebs` (with xdebug, hot-reload)
+#### Integrated Development Environment (`make dev`)
+The recommended way for full-stack development. Runs everything in Docker:
+- **PHP Application**: `easy-banking-service-ebs-dev` (with Xdebug, hot-reload)
+- **Nginx Server**: `easy-banking-service-nginx-dev`
 - **PostgreSQL Database**: `easy-banking-service-postgres-dev` (ebsdatabase_dev)
-- **Nginx Server**: `easy-banking-service-nginx`
+- **Frontend**: `easy-banking-service-frontend-dev` (Vite with hot-reload)
 
 Access the application:
-- **Frontend (Development)**: http://localhost:3000 (Vite dev server with hot reload)
-- **Backend API**: http://localhost:8080/api
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8080
+- **Database**: localhost:54322 (postgres/postgres)
 
-**Development Workflow:**
-1. Start backend: `make dev`
-2. Install frontend deps: `make frontend-install` (first time only)
-3. Start frontend: `make frontend-dev`
-4. Access app at http://localhost:3000
+**Single-command workflow:**
+```bash
+make dev              # Start everything
+make fixtures         # Load sample data (optional)
+make dev-stop         # Stop everything
+```
 
-The Vite dev server automatically proxies API requests to the backend.
+Both backend and frontend have hot-reload enabled for efficient development.
 
-#### Test Environment (`make start`)
-The test environment uses minimal containers:
+#### Backend Test Environment (`make backend-start`)
+Isolated backend environment for running tests:
 - **PHP Application**: `easy-banking-service-ebs-test`
 - **PostgreSQL Database**: `easy-banking-service-postgres-test` (ebsdatabase_test)
+
+Use for PHPUnit tests without frontend dependency.
+
+#### Frontend Test Environment (`make frontend-start`)
+Standalone frontend environment for UI development:
+- **Frontend**: `easy-banking-service-frontend-test` (port 3001)
+
+Use when working on UI without needing backend.
+
+#### E2E Test Environment (`make e2e-start`)
+Integrated environment for Playwright tests:
+- Backend on port 8081, frontend on port 3000
+- Isolated database and network for E2E testing
+
+See [DOCKER_ENVIRONMENTS.md](./DOCKER_ENVIRONMENTS.md) for detailed information about each environment.
 
 ### Loading Development Fixtures
 
@@ -168,54 +186,54 @@ docker compose -f backend/docker-compose.dev.yaml exec ebs php bin/console app:c
 
 ### Available Scripts
 
-The project uses a Makefile (in the root directory) for common tasks:
+The project uses a Makefile (in the root directory) for common tasks. See [DOCKER_COMMANDS.md](./DOCKER_COMMANDS.md) for quick reference.
 
-### Backend Development
+### Integrated Development (Recommended)
 ```bash
-make dev                 # Start backend development environment (nginx + app + postgres_dev)
-make dev-stop            # Stop development environment
+make dev                 # Start backend + frontend + database (all in Docker)
+make dev-stop            # Stop integrated environment
 make fixtures            # Load sample data into development database
 ```
+Access: Frontend (http://localhost:3000), Backend (http://localhost:8080)
 
-### Frontend Development
+### Independent Environments
 ```bash
-make frontend-install    # Install frontend dependencies (npm install in frontend/)
-make frontend-dev        # Start frontend dev server (Vite on port 3000)
-make frontend-build      # Build frontend for production (outputs to backend/public/build)
-make frontend-preview    # Preview production build
+# Backend only (for testing)
+make backend-start       # Start backend test environment
+make backend-stop        # Stop backend
+make test                # Run PHPUnit tests
+make test suite=unit     # Run specific test suite
+
+# Frontend only (for UI work)
+make frontend-start      # Start frontend on port 3001
+make frontend-stop       # Stop frontend
+
+# E2E Testing
+make e2e-start          # Start E2E environment (backend + frontend)
+make e2e-stop           # Stop E2E environment
+make e2e                # Run Playwright tests
+make e2e-ui             # Run E2E tests in UI mode
 ```
 
-### E2E Testing
+### Frontend Local Development (without Docker)
 ```bash
-make e2e-install        # Install Playwright browsers
-make e2e                # Run all e2e tests
-make e2e-ui             # Run e2e tests in UI mode
-make e2e-headed         # Run e2e tests in headed mode
-make e2e-debug          # Run e2e tests in debug mode
-make e2e-report         # Show e2e test report
+make frontend-install    # Install dependencies (npm install)
+make frontend-dev        # Start Vite dev server (port 3000)
+make frontend-build      # Build for production
 ```
-
-**Note**: For full development, run both `make dev` (backend) and `make frontend-dev` (frontend) in separate terminals.
-
-### Backend Testing
-```bash
-make start                   # Start test environment (app + postgres_test)
-make stop                    # Stop test environment
-make vendor                  # Install Composer dependencies
-make setup                   # Setup test database
-make test                    # Run all test suites
-make test suite=unit         # Run unit tests
-make test suite=integration  # Run integration tests
-make test suite=functional   # Run functional tests
-make test suite=presentation # Run presentation tests
-```
-
-**Debugging Tests**: Xdebug is pre-configured in both dev and test environments. See [docs/XDEBUG.md](docs/XDEBUG.md) for IDE setup instructions.
 
 ### Code Quality
 ```bash
-make analyse        # Run static code analysis (ECS + PHPStan)
+make analyse            # Run static code analysis (ECS + PHPStan)
 ```
+
+### Legacy Commands (backward compatible)
+```bash
+make start              # Alias for make backend-start
+make stop               # Alias for make backend-stop
+```
+
+**Debugging**: Xdebug is pre-configured in all environments. See [docs/XDEBUG.md](docs/XDEBUG.md) for IDE setup instructions.
 
 ### Direct Composer Scripts (from backend/ directory)
 ```bash

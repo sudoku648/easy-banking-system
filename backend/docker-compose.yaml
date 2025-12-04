@@ -19,6 +19,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - backend-test-network
 
   postgres:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
@@ -37,3 +39,10 @@ services:
       interval: 2s
       timeout: 2s
       retries: 5
+    networks:
+      - backend-test-network
+
+networks:
+  backend-test-network:
+    driver: bridge
+    name: backend-test-network

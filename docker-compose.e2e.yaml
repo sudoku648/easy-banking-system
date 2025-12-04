@@ -1,0 +1,87 @@
+version: '3.7'
+
+services:
+  # Backend services
+  ebs:
+    container_name: easy-banking-service-ebs-e2e
+    build:
+      target: dev
+      context: .
+      dockerfile: backend/Dockerfile
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - ./backend:/app:rw
+    environment:
+      PHP_IDE_CONFIG: serverName=ebs-e2e
+      APP_ENV: dev
+    depends_on:
+      postgres_e2e:
+        condition: service_healthy
+    networks:
+      - e2e-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: easy-banking-service-nginx-e2e
+    ports:
+      - "8081:80"
+    volumes:
+      - ./backend/docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./backend:/app:rw
+    depends_on:
+      - ebs
+    networks:
+      - e2e-network
+
+  postgres_e2e:
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    container_name: easy-banking-service-postgres-e2e
+    volumes:
+      - ./backend/docker/postgres:/docker-entrypoint-initdb.d
+      - postgres_e2e_data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: ebsdatabase_e2e
+      POSTGRES_PASSWORD: postgres
+      TZ: "CET"
+      PGTZ: "CET"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
+    networks:
+      - e2e-network
+
+  # Frontend service
+  frontend:
+    container_name: easy-banking-service-frontend-e2e
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - ./frontend:/app:rw
+      - /app/node_modules
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8081
+    depends_on:
+      - nginx
+    networks:
+      - e2e-network
+
+networks:
+  e2e-network:
+    driver: bridge
+    name: e2e-network
+
+volumes:
+  postgres_e2e_data:
