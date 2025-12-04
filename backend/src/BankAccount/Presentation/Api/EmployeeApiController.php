@@ -25,7 +25,6 @@ use App\Transaction\Domain\Entity\Transaction;
 use App\UserManagement\Application\Command\CreateCustomerCommand;
 use App\UserManagement\Application\Query\GetAllCustomersQuery;
 use App\UserManagement\Domain\Entity\Customer;
-use App\UserManagement\Domain\Entity\User;
 use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
 use App\UserManagement\Domain\ValueObject\UserId;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,7 +36,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/api/employee')]
+#[Route('/api/frontend/employee')]
 #[IsGranted('ROLE_EMPLOYEE')]
 final class EmployeeApiController extends AbstractController
 {
@@ -390,50 +389,6 @@ final class EmployeeApiController extends AbstractController
 
             return new ApiSuccessResponse(
                 message: 'Account closed successfully',
-            )->toJsonResponse();
-        } catch (\DomainException $e) {
-            return new UnprocessableEntityResponse(
-                message: $e->getMessage(),
-            )->toJsonResponse();
-        } catch (\Exception $e) {
-            return new InternalServerErrorResponse()->toJsonResponse();
-        }
-    }
-
-    #[Route('/issue-debit-card', name: 'api_employee_issue_card', methods: ['POST'])]
-    public function issueDebitCard(Request $request): JsonResponse
-    {
-        try {
-            $data = json_decode($request->getContent(), true);
-
-            if (!isset($data['accountId'])) {
-                return new BadRequestResponse(
-                    message: 'Missing required field: accountId',
-                )->toJsonResponse();
-            }
-
-            $accountId = (string) $data['accountId'];
-
-            // Verify account exists
-            $account = $this->bankAccountRepository->findById(
-                BankAccountId::fromString($accountId),
-            );
-
-            if (null === $account) {
-                return new UnprocessableEntityResponse(
-                    message: 'Account not found',
-                )->toJsonResponse();
-            }
-
-            /** @var string $cardId */
-            $cardId = $this->handle(
-                new IssueDebitCardCommand($accountId),
-            );
-
-            return new ApiSuccessResponse(
-                message: 'Debit card issued successfully',
-                data: ['cardId' => $cardId],
-                statusCode: Response::HTTP_CREATED,
             )->toJsonResponse();
         } catch (\DomainException $e) {
             return new UnprocessableEntityResponse(

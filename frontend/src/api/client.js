@@ -4,7 +4,7 @@ import axios from 'axios';
 // In development: http://localhost:8080
 // In production: empty string (same origin)
 const apiUrl = import.meta.env.VITE_API_URL || '';
-const baseURL = apiUrl ? `${apiUrl}/api` : '/api';
+const baseURL = apiUrl ? `${apiUrl}/api/frontend` : '/api/frontend';
 
 const api = axios.create({
   baseURL,

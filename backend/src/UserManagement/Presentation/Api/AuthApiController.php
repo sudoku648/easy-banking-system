@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-#[Route('/api/auth')]
+#[Route('/api/frontend/auth')]
 final class AuthApiController extends AbstractController
 {
     #[Route('/login', name: 'api_auth_login', methods: ['POST'])]
