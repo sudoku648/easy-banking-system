@@ -41,7 +41,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
         // Make request without API key
         $this->client->jsonRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => '1234567890123456',
                 'amount' => 100,
@@ -62,7 +62,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
         // Make request with invalid API key
         $this->client->jsonRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => '1234567890123456',
                 'amount' => 100,
@@ -104,7 +104,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
         // Make API request
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => $debitCard->cardNumber->getValue(),
                 'amount' => 500,
@@ -132,7 +132,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
     {
         $this->client->request(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_X_API_KEY' => $this->apiKey],
@@ -150,7 +150,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
     {
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'amount' => 100,
                 'currency' => 'PLN',
@@ -170,7 +170,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
     {
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => '1234567890123456',
             ],
@@ -202,7 +202,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
 
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => $debitCard->cardNumber->getValue(),
                 'amount' => -50,
@@ -236,7 +236,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
 
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => $debitCard->cardNumber->getValue(),
                 'amount' => 0,
@@ -256,7 +256,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
     {
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => '1234567890123456',
                 'amount' => 100,
@@ -295,7 +295,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
         // Try to withdraw more than available
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => $debitCard->cardNumber->getValue(),
                 'amount' => 500,
@@ -338,7 +338,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
         // Try to withdraw with blocked card
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => $debitCard->cardNumber->getValue(),
                 'amount' => 100,
@@ -376,7 +376,7 @@ final class AtmWithdrawalControllerTest extends ApiTestCase
 
         $this->makeApiRequest(
             'POST',
-            '/api/transactions/atm-withdrawal',
+            '/api/external/atm-withdrawal',
             [
                 'cardNumber' => $debitCard->cardNumber->getValue(),
                 'amount' => 150,

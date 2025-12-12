@@ -117,12 +117,10 @@ final readonly class TestUserDto
         #[Assert\NotBlank]
         #[Assert\Length(min: 3, max: 100)]
         public string $name,
-
         #[Assert\NotBlank]
         #[Assert\Range(min: 18, max: 120)]
         #[Assert\Type('integer')]
         public int $age,
-
         #[Assert\NotBlank]
         #[Assert\Email]
         public string $email,
@@ -137,11 +135,9 @@ final readonly class TestComplexDto
         #[Assert\Length(min: 3, max: 50)]
         #[Assert\Regex(pattern: '/^[a-z0-9_]+$/')]
         public string $username,
-
         #[Assert\NotBlank]
         #[Assert\Length(min: 8, max: 100)]
         public string $password,
-
         #[Assert\NotBlank]
         #[Assert\Range(min: 13, max: 100)]
         #[Assert\Type('integer')]

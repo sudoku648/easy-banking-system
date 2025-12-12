@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\UserManagement\Presentation\Api;
+namespace App\UserManagement\Api;
 
 use App\Shared\Infrastructure\Http\ApiSuccessResponse;
 use App\Shared\Infrastructure\Http\UnprocessableEntityResponse;

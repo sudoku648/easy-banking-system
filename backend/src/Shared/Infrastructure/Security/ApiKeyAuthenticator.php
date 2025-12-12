@@ -27,8 +27,9 @@ final class ApiKeyAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): bool
     {
-        // Only support requests to /api/* endpoints
-        return str_starts_with($request->getPathInfo(), '/api/');
+        // Only support requests to /api/external/* endpoints (external API)
+        // Exclude /api/frontend/* endpoints (used by our own frontend)
+        return str_starts_with($request->getPathInfo(), '/api/external/');
     }
 
     public function authenticate(Request $request): Passport

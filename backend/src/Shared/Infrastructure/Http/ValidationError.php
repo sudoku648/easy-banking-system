@@ -11,7 +11,7 @@ final readonly class ValidationError
 {
     public function __construct(
         private string $path,
-        private string $message,
+        private string|\Stringable $message,
         private mixed $invalidValue = null,
     ) {
     }
@@ -23,7 +23,7 @@ final readonly class ValidationError
 
     public function getMessage(): string
     {
-        return $this->message;
+        return (string) $this->message;
     }
 
     public function getInvalidValue(): mixed
@@ -38,7 +38,7 @@ final readonly class ValidationError
     {
         $data = [
             'path' => $this->path,
-            'message' => $this->message,
+            'message' => (string) $this->message,
         ];
 
         if (null !== $this->invalidValue && '' !== $this->invalidValue) {

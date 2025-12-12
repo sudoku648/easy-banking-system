@@ -58,11 +58,15 @@ final readonly class ApiValidator
     /**
      * Converts validation errors to a simple array format.
      *
-     * @param array<ValidationError> $errors
-     * @return array<array{path: string, message: string, invalidValue?: mixed}>
+     * @param array<ValidationError>|null $errors
+     * @return array<array{path: string, message: string, invalidValue?: mixed}>|null
      */
-    public static function errorsToArray(array $errors): array
+    public static function errorsToArray(?array $errors): ?array
     {
+        if (null === $errors) {
+            return null;
+        }
+
         return array_map(
             fn (ValidationError $error): array => $error->toArray(),
             $errors,

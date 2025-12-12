@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Transaction\Api\Controller;
+namespace App\Transaction\Api\Frontend\Controller;
 
 use App\BankAccount\Application\Query\GetBankAccountsByCustomerIdQuery;
 use App\BankAccount\Domain\Entity\BankAccount;

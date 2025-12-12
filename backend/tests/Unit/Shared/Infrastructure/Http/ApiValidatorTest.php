@@ -6,7 +6,6 @@ namespace App\Tests\Unit\Shared\Infrastructure\Http;
 
 use App\Shared\Infrastructure\Http\ApiValidator;
 use App\Shared\Infrastructure\Http\ValidationError;
-use App\Shared\Infrastructure\Http\ValidationException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validation;
@@ -26,7 +25,7 @@ final class ApiValidatorTest extends TestCase
 
     public function testValidateReturnsEmptyArrayForValidObject(): void
     {
-        $dto = new class () {
+        $dto = new class() {
             #[Assert\NotBlank]
             #[Assert\Email]
             public string $email = 'test@example.com';
@@ -39,7 +38,7 @@ final class ApiValidatorTest extends TestCase
 
     public function testValidateReturnsErrorsForInvalidObject(): void
     {
-        $dto = new class () {
+        $dto = new class() {
             #[Assert\NotBlank]
             #[Assert\Email]
             public string $email = '';
@@ -55,7 +54,7 @@ final class ApiValidatorTest extends TestCase
 
     public function testValidateReturnsMultipleErrors(): void
     {
-        $dto = new class () {
+        $dto = new class() {
             #[Assert\NotBlank]
             #[Assert\Length(min: 5)]
             public string $username = '';
@@ -109,7 +108,7 @@ final class ApiValidatorTest extends TestCase
 
     public function testValidateWithInvalidValueCapture(): void
     {
-        $dto = new class () {
+        $dto = new class() {
             #[Assert\Positive]
             public int $amount = -100;
         };

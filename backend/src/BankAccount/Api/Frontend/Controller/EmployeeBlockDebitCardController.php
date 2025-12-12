@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\BankAccount\Api\Frontend\Controller;
 
-use App\BankAccount\Api\Frontend\Dto\BlockDebitCardDto;
-use App\BankAccount\Application\Command\BlockDebitCardCommand;
+use App\BankAccount\Api\Frontend\Dto\IssueDebitCardDto;
+use App\BankAccount\Application\Command\IssueDebitCardCommand;
 use App\Shared\Infrastructure\Http\ApiSuccessResponse;
 use App\Shared\Infrastructure\Http\Attribute\DynamicDto;
 use App\Shared\Infrastructure\Http\InternalServerErrorResponse;
 use App\Shared\Infrastructure\Http\UnprocessableEntityResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/frontend/employee')]
 #[IsGranted('ROLE_EMPLOYEE')]
-final class EmployeeIssueDebitCardController extends AbstractController
+final class EmployeeBlockDebitCardController extends AbstractController
 {
     use HandleTrait;
 
@@ -29,18 +30,21 @@ final class EmployeeIssueDebitCardController extends AbstractController
         $this->messageBus = $messageBus;
     }
 
-    #[Route('/block-debit-card', name: 'api_employee_block_card', methods: ['POST'])]
+    #[Route('/issue-debit-card', name: 'api_frontend_employee_issue_card', methods: ['POST'])]
     public function __invoke(
         #[DynamicDto]
-        BlockDebitCardDto $dto,
+        IssueDebitCardDto $dto,
     ): JsonResponse {
         try {
-            $this->handle(
-                new BlockDebitCardCommand($dto->cardId),
+            /** @var string $cardId */
+            $cardId = $this->handle(
+                new IssueDebitCardCommand($dto->bankAccountId),
             );
 
             return new ApiSuccessResponse(
-                message: 'Debit card blocked successfully',
+                message: 'Debit card issued successfully',
+                data: ['cardId' => $cardId],
+                statusCode: Response::HTTP_CREATED,
             )->toJsonResponse();
         } catch (\DomainException $e) {
             return new UnprocessableEntityResponse(

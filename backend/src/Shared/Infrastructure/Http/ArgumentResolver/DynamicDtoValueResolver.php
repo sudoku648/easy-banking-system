@@ -6,6 +6,7 @@ namespace App\Shared\Infrastructure\Http\ArgumentResolver;
 
 use App\Shared\Infrastructure\Http\Attribute\DynamicDto;
 use App\Shared\Infrastructure\Http\DynamicValidator;
+use App\Shared\Infrastructure\Http\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -21,6 +22,9 @@ final readonly class DynamicDtoValueResolver implements ValueResolverInterface
     ) {
     }
 
+    /**
+     * @return iterable<object>
+     */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         // Check if argument has DynamicDto attribute
@@ -52,9 +56,16 @@ final readonly class DynamicDtoValueResolver implements ValueResolverInterface
      */
     private function getRequestData(Request $request): array
     {
-        if ($request->getContentTypeFormat() === 'json') {
+        if ('json' === $request->getContentTypeFormat()) {
             $content = $request->getContent();
-            $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+            try {
+                $data = json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                return throw new ValidationException(
+                    errors: [],
+                    message: 'Invalid JSON payload',
+                );
+            }
 
             return \is_array($data) ? $data : [];
         }

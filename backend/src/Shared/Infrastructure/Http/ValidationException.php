@@ -49,7 +49,7 @@ final class ValidationException extends \RuntimeException
      * Creates ValidationException from Symfony ConstraintViolationList.
      */
     public static function fromConstraintViolationList(
-        ConstraintViolationListInterface $violations
+        ConstraintViolationListInterface $violations,
     ): self {
         $errors = [];
         foreach ($violations as $violation) {

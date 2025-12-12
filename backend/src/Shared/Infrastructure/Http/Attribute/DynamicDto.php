@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Http\Attribute;
 
-use Attribute;
-
 /**
  * Marks a controller argument as a dynamic DTO that should be:
  * 1. Deserialized from request into a shadow object with mixed properties
@@ -20,7 +18,7 @@ use Attribute;
  * }
  * ```
  */
-#[Attribute(Attribute::TARGET_PARAMETER)]
+#[\Attribute(\Attribute::TARGET_PARAMETER)]
 final readonly class DynamicDto
 {
 }

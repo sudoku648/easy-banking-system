@@ -2,65 +2,38 @@
 
 declare(strict_types=1);
 
-namespace App\Transaction\Api\Controller;
+namespace App\Transaction\Api\External\Controller;
 
 use App\Shared\Domain\Exception\DomainException;
 use App\Shared\Infrastructure\Http\ApiSuccessResponse;
-use App\Shared\Infrastructure\Http\BadRequestResponse;
+use App\Shared\Infrastructure\Http\Attribute\DynamicDto;
 use App\Shared\Infrastructure\Http\InternalServerErrorResponse;
-use App\Shared\Infrastructure\Http\ValidationErrorExtractor;
+use App\Transaction\Api\External\Dto\WithdrawCashFromAtmDto;
 use App\Transaction\Application\Command\WithdrawCashFromAtmCommand;
-use App\Transaction\Presentation\Dto\WithdrawCashFromAtmDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/api/transactions/atm-withdrawal', name: 'api_atm_withdrawal', methods: ['POST'])]
+#[Route('/api/external/atm-withdrawal', name: 'api_atm_withdrawal', methods: ['POST'])]
 final class AtmWithdrawalController extends AbstractController
 {
     use HandleTrait;
 
     public function __construct(
         MessageBusInterface $messageBus,
-        private readonly SerializerInterface $serializer,
-        private readonly ValidatorInterface $validator,
     ) {
         $this->messageBus = $messageBus;
     }
 
-    public function __invoke(Request $request): JsonResponse
-    {
+    public function __invoke(
+        #[DynamicDto]
+        WithdrawCashFromAtmDto $dto,
+    ): JsonResponse {
         try {
-            /** @var WithdrawCashFromAtmDto $dto */
-            $dto = $this->serializer->deserialize(
-                $request->getContent(),
-                WithdrawCashFromAtmDto::class,
-                'json',
-            );
-        } catch (NotEncodableValueException $e) {
-            return new BadRequestResponse(
-                message: 'Invalid JSON format',
-            )->toJsonResponse();
-        }
-
-        try {
-            // Validate DTO
-            $errors = $this->validator->validate($dto);
-            if (\count($errors) > 0) {
-                return new BadRequestResponse(
-                    message: 'Validation failed',
-                    errors: ValidationErrorExtractor::extract($errors),
-                )->toJsonResponse();
-            }
-
             // Convert amount to cents
             $amountInCents = (int) round($dto->amount * 100);
 

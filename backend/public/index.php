@@ -7,7 +7,7 @@ use App\Kernel;
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
 // Serve React app for non-API routes
-$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+$requestUri = is_string($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 if (!str_starts_with($requestUri, '/api') && !str_starts_with($requestUri, '/build')) {
     // Check if it's not a file that exists
     $filePath = __DIR__ . $requestUri;

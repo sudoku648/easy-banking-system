@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class BadRequestResponse extends ApiErrorResponse
 {
     /**
-     * @param array<ValidationError> $validationErrors
+     * @param array<ValidationError> $errors
      */
     public function __construct(
         string $message = 'Validation failed',
@@ -20,7 +20,7 @@ final class BadRequestResponse extends ApiErrorResponse
         parent::__construct(
             message: $message,
             statusCode: Response::HTTP_BAD_REQUEST,
-            errors: $this->formatErrors($errors),
+            errors: null !== $errors ? $this->formatErrors($errors) : null,
         );
     }
 

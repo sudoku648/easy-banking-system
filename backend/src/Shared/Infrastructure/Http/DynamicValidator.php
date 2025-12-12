@@ -25,8 +25,8 @@ final readonly class DynamicValidator
      * @template T of object
      * @param class-string<T> $dtoClass
      * @param array<string, mixed> $data
-     * @return T
      * @throws ValidationException
+     * @return T
      */
     public function validateAndHydrate(string $dtoClass, array $data): object
     {
@@ -65,7 +65,7 @@ final readonly class DynamicValidator
         }
 
         // Build class code
-        $classCode = $this->buildShadowClassCode($reflection, $shadowClassName);
+        $classCode = $this->buildShadowClassCode($reflection);
 
         // Evaluate and create the class
         eval($classCode);
@@ -76,7 +76,7 @@ final readonly class DynamicValidator
     /**
      * Builds PHP code for the shadow class.
      */
-    private function buildShadowClassCode(\ReflectionClass $reflection, string $shadowClassName): string
+    private function buildShadowClassCode(\ReflectionClass $reflection): string
     {
         $originalClass = $reflection->getName();
         $shortName = $reflection->getShortName() . 'Shadow';
@@ -99,7 +99,7 @@ final readonly class DynamicValidator
             $properties[] = \sprintf(
                 "    %s\n    public mixed \$%s = null;",
                 $attributes,
-                $propertyName
+                $propertyName,
             );
         }
 
@@ -189,6 +189,8 @@ PHP,
 
     /**
      * Formats attribute arguments for code generation.
+     *
+     * @param array<int|string, mixed> $args
      */
     private function formatAttributeArguments(array $args): string
     {
@@ -260,7 +262,7 @@ PHP,
 
         if ($constructor === null) {
             throw new \RuntimeException(
-                sprintf('DTO class %s must have a constructor', $dtoClass)
+                \sprintf('DTO class %s must have a constructor', $dtoClass),
             );
         }
 

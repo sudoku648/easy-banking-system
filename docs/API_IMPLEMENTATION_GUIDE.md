@@ -18,11 +18,6 @@ Instead of:
 - Getting data from Symfony Form → Get from Request JSON
 - Returning rendered Twig template → Return JSON response
 
-### 4. Use Base Methods
-The `ApiController` provides helper methods:
-- `jsonSuccess($data)` - Return success response
-- `jsonError($message, $status)` - Return error response
-
 ---
 
 ## Example: Implementing Transaction History
@@ -191,24 +186,6 @@ public function transfer(Request $request): JsonResponse
 /** @var SecurityUser $securityUser */
 $securityUser = $this->getUser();
 $user = $securityUser->getUser();
-```
-
-### Parsing JSON Request
-```php
-$data = json_decode($request->getContent(), true);
-if (!$data) {
-    return $this->jsonError('Invalid JSON', 400);
-}
-```
-
-### Validating Required Fields
-```php
-$required = ['field1', 'field2'];
-foreach ($required as $field) {
-    if (!isset($data[$field])) {
-        return $this->jsonError("Missing field: $field", 400);
-    }
-}
 ```
 
 ### Using MessageBus

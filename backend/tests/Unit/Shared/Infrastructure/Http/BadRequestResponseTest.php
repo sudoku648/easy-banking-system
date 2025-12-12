@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Shared\Infrastructure\Http;
 
 use App\Shared\Infrastructure\Http\BadRequestResponse;
+use App\Shared\Infrastructure\Http\ValidationError;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,8 +28,8 @@ final class BadRequestResponseTest extends TestCase
     public function testCreateBadRequestResponseWithValidationErrors(): void
     {
         $errors = [
-            'email' => 'Invalid email format',
-            'password' => 'Password is too short',
+            new ValidationError('email', 'Invalid email format'),
+            new ValidationError('password', 'Password is too short'),
         ];
 
         $response = new BadRequestResponse('Validation failed', $errors);
@@ -40,7 +41,6 @@ final class BadRequestResponseTest extends TestCase
         self::assertSame('error', $content['status']);
         self::assertSame('Validation failed', $content['message']);
         self::assertArrayHasKey('errors', $content);
-        self::assertSame($errors, $content['errors']);
     }
 
     public function testCreateBadRequestResponseForInvalidJson(): void

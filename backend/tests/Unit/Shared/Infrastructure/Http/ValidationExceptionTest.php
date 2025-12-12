@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Shared\Infrastructure\Http;
 
-use App\Shared\Infrastructure\Http\ApiValidator;
 use App\Shared\Infrastructure\Http\ValidationError;
 use App\Shared\Infrastructure\Http\ValidationException;
 use PHPUnit\Framework\TestCase;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\BankAccount\Api\Frontend\Controller;
 
-use App\BankAccount\Api\Frontend\Dto\BlockDebitCardDto;
-use App\BankAccount\Application\Command\BlockDebitCardCommand;
+use App\BankAccount\Api\Frontend\Dto\CloseAccountDto;
+use App\BankAccount\Application\Command\CloseBankAccountCommand;
 use App\Shared\Infrastructure\Http\ApiSuccessResponse;
 use App\Shared\Infrastructure\Http\Attribute\DynamicDto;
 use App\Shared\Infrastructure\Http\InternalServerErrorResponse;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/frontend/employee')]
 #[IsGranted('ROLE_EMPLOYEE')]
-final class EmployeeIssueDebitCardController extends AbstractController
+final class EmployeeCloseAccountController extends AbstractController
 {
     use HandleTrait;
 
@@ -29,18 +29,18 @@ final class EmployeeIssueDebitCardController extends AbstractController
         $this->messageBus = $messageBus;
     }
 
-    #[Route('/block-debit-card', name: 'api_employee_block_card', methods: ['POST'])]
+    #[Route('/close-account', name: 'api_employee_close_account', methods: ['POST'])]
     public function __invoke(
         #[DynamicDto]
-        BlockDebitCardDto $dto,
+        CloseAccountDto $dto,
     ): JsonResponse {
         try {
             $this->handle(
-                new BlockDebitCardCommand($dto->cardId),
+                new CloseBankAccountCommand($dto->accountId),
             );
 
             return new ApiSuccessResponse(
-                message: 'Debit card blocked successfully',
+                message: 'Account closed successfully',
             )->toJsonResponse();
         } catch (\DomainException $e) {
             return new UnprocessableEntityResponse(

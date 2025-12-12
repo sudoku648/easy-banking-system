@@ -56,7 +56,8 @@ Use it in controller with `#[DynamicDto]` attribute:
 
 ```php
 public function create(
-    #[DynamicDto] CreateUserDto $dto,
+    #[DynamicDto]
+    CreateUserDto $dto,
 ): Response {
     // $dto is guaranteed to be valid and non-null!
     // No need for null checks - type safety guaranteed
