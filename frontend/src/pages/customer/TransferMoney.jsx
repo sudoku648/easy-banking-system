@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../../api/client';
 import Layout from '../../components/Layout';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ const TransferMoney = () => {
   const { t } = useTranslation();
   const { currentLocale } = useLocale();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [accounts, setAccounts] = useState([]);
   const [formData, setFormData] = useState({
     fromBankAccountId: '',
@@ -24,10 +25,20 @@ const TransferMoney = () => {
     fetchAccounts();
   }, []);
 
+  useEffect(() => {
+    const accountId = searchParams.get('accountId');
+    if (accountId) {
+      setFormData(prev => ({
+        ...prev,
+        fromBankAccountId: accountId,
+      }));
+    }
+  }, [searchParams]);
+
   const fetchAccounts = async () => {
     try {
       const response = await api.get('/customer/accounts');
-      setAccounts(response.data.accounts || []);
+      setAccounts(response.data.data.accounts || []);
     } catch (err) {
       setError(t('Failed to load accounts'));
     }

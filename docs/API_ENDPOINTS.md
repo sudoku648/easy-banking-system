@@ -169,6 +169,28 @@ Change password for the authenticated customer.
 - **400 Bad Request:** Missing required fields
 - **422 Unprocessable Entity:** Current password is incorrect, new password validation failed
 
+### GET /api/customer/debit-cards
+Get all active debit cards for the authenticated customer.
+
+**Response (200):**
+```json
+{
+  "message": "Debit cards retrieved successfully",
+  "data": {
+    "debitCards": [
+      {
+        "id": "uuid",
+        "cardNumber": "string",
+        "bankAccountId": "uuid",
+        "iban": "string",
+        "isActive": true,
+        "issuedAt": "2024-01-01 12:00:00"
+      }
+    ]
+  }
+}
+```
+
 ### POST /api/customer/block-debit-card
 Block an active debit card for an account.
 

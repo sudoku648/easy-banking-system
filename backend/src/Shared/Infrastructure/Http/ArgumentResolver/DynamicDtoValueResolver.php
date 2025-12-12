@@ -51,25 +51,31 @@ final readonly class DynamicDtoValueResolver implements ValueResolverInterface
 
     /**
      * Extracts data from request based on content type.
+     * Merges query parameters with body data (query params have lower priority).
      *
      * @return array<string, mixed>
      */
     private function getRequestData(Request $request): array
     {
+        $bodyData = [];
+
         if ('json' === $request->getContentTypeFormat()) {
             $content = $request->getContent();
             try {
                 $data = json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
+                $bodyData = \is_array($data) ? $data : [];
             } catch (\JsonException) {
                 return throw new ValidationException(
                     errors: [],
                     message: 'Invalid JSON payload',
                 );
             }
-
-            return \is_array($data) ? $data : [];
+        } else {
+            $bodyData = $request->request->all();
         }
 
-        return $request->request->all();
+        // Merge query parameters with body data
+        // Body data takes precedence over query parameters
+        return array_merge($request->query->all(), $bodyData);
     }
 }

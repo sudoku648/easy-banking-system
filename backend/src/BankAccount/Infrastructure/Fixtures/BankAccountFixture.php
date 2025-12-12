@@ -7,6 +7,7 @@ namespace App\BankAccount\Infrastructure\Fixtures;
 use App\Shared\Domain\ValueObject\Currency;
 use App\Shared\Domain\ValueObject\Iban;
 use App\Shared\Infrastructure\Fixtures\AbstractFixture;
+use Doctrine\DBAL\Types\Types;
 
 final class BankAccountFixture extends AbstractFixture
 {
@@ -50,7 +51,7 @@ final class BankAccountFixture extends AbstractFixture
                     'currency' => $currency->value,
                     'is_active' => $this->faker->boolean(95), // 95% active
                 ], [
-                    'is_active' => \Doctrine\DBAL\Types\Types::BOOLEAN,
+                    'is_active' => Types::BOOLEAN,
                 ]);
 
                 $totalAccountsCreated++;

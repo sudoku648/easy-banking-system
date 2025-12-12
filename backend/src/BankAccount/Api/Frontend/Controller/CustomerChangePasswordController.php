@@ -14,6 +14,7 @@ use App\UserManagement\Infrastructure\Security\SecurityUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\HandleTrait;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -22,6 +23,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class CustomerChangePasswordController extends AbstractController
 {
     use HandleTrait;
+
+    public function __construct(
+        MessageBusInterface $messageBus,
+    ) {
+        $this->messageBus = $messageBus;
+    }
 
     #[Route('/change-password', name: 'api_customer_change_password', methods: ['POST'])]
     public function __invoke(

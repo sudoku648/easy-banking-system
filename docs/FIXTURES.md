@@ -24,7 +24,8 @@ src/
 │   ├── EmployeeFixture.php            # Creates employee accounts
 │   └── CustomerFixture.php            # Creates customer accounts
 ├── BankAccount/Infrastructure/Fixtures/
-│   └── BankAccountFixture.php         # Creates bank accounts
+│   ├── BankAccountFixture.php         # Creates bank accounts
+│   └── DebitCardFixture.php           # Creates debit cards
 └── Transaction/Infrastructure/Fixtures/
     └── TransactionFixture.php         # Creates transactions
 ```
@@ -82,6 +83,15 @@ Each customer gets 1-3 bank accounts with:
 - 95% are active, 5% inactive
 - Unique IBAN generation
 
+### Debit Cards (70% of active accounts)
+Randomly generated debit cards for active bank accounts:
+- 70% of active accounts receive a debit card
+- Valid 16-digit card numbers (Visa format: 4532 XXXX XXXX XXXX)
+- 90% are active, 10% blocked
+- Issue date within the last 2 years
+- Blocked cards have a blocked_at timestamp after issue date
+- Unique card number generation
+
 ### Transactions (3-15 per account)
 Random transactions for active accounts:
 - Types: CASH_DEPOSIT, CASH_WITHDRAWAL, TRANSFER_DEPOSIT, TRANSFER_WITHDRAWAL
@@ -96,9 +106,10 @@ Fixtures are loaded in a specific order defined by the `getOrder()` method:
 1. **Order 10**: Employee Fixture
 2. **Order 20**: Customer Fixture
 3. **Order 30**: Bank Account Fixture
-4. **Order 40**: Transaction Fixture
+4. **Order 35**: Debit Card Fixture
+5. **Order 40**: Transaction Fixture
 
-This ensures referential integrity (e.g., customers must exist before bank accounts).
+This ensures referential integrity (e.g., customers must exist before bank accounts, bank accounts must exist before debit cards).
 
 ## Technical Details
 

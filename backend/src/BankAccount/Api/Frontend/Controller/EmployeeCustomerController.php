@@ -12,8 +12,6 @@ use App\UserManagement\Domain\Persistence\Repository\UserRepositoryInterface;
 use App\UserManagement\Domain\ValueObject\UserId;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Messenger\HandleTrait;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -21,13 +19,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_EMPLOYEE')]
 final class EmployeeCustomerController extends AbstractController
 {
-    use HandleTrait;
-
     public function __construct(
-        MessageBusInterface $messageBus,
         private readonly UserRepositoryInterface $userRepository,
     ) {
-        $this->messageBus = $messageBus;
     }
 
     #[Route('/customers/{customerId}', name: 'api_employee_customer', methods: ['GET'])]

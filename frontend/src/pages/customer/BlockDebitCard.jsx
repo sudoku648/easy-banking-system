@@ -7,23 +7,22 @@ import FormField from '../../components/FormField';
 
 const BlockDebitCard = () => {
   const { t } = useTranslation();
-  const [accounts, setAccounts] = useState([]);
+  const [debitCards, setDebitCards] = useState([]);
   const [formData, setFormData] = useState({
-    accountId: '',
+    cardId: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    fetchAccounts();
+    fetchDebitCards();
   }, []);
 
-  const fetchAccounts = async () => {
+  const fetchDebitCards = async () => {
     try {
-      const response = await api.get('/customer/accounts');
-      const activeAccounts = (response.data.accounts || []).filter(account => account.isActive);
-      setAccounts(activeAccounts);
+      const response = await api.get('/customer/debit-cards');
+      setDebitCards(response.data.data.debitCards);
     } catch (err) {
       setError(t('common.error_occurred'));
     }
@@ -46,9 +45,9 @@ const BlockDebitCard = () => {
       const response = await api.post('/customer/block-debit-card', formData);
       setSuccess(response.data.message || t('bank_account.card_blocked_successfully'));
       setFormData({
-        accountId: '',
+        cardId: '',
       });
-      fetchAccounts();
+      fetchDebitCards();
     } catch (err) {
       setError(err.response?.data?.message || t('common.error_occurred'));
     } finally {
@@ -78,18 +77,18 @@ const BlockDebitCard = () => {
         <div className="mb-3">
           <div className="form-group">
             <FormField
-              label={t('bank_account.bank_account')}
+              label={t('bank_account.debit_card')}
               type="select"
-              name="accountId"
-              value={formData.accountId}
+              name="cardId"
+              value={formData.cardId}
               onChange={handleChange}
               helpText={t('bank_account.help_select_my_card_to_block')}
               required
               options={[
                 { value: '', label: t('bank_account.placeholder_select_debit_card_to_block') },
-                ...accounts.map((account) => ({
-                  value: account.id,
-                  label: account.iban,
+                ...debitCards.map((debitCard) => ({
+                  value: debitCard.id,
+                  label: `${debitCard.cardNumber} - ${debitCard.iban}`
                 }))
               ]}
             />

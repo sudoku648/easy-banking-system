@@ -71,6 +71,7 @@ final class LoadFixturesConsoleCommand extends Command
                     ['Employees', $this->getCount('"user"', 'role', 'EMPLOYEE')],
                     ['Customers', $this->getCount('"user"', 'role', 'CUSTOMER')],
                     ['Bank Accounts', $this->getCount('bank_account')],
+                    ['Debit Cards', $this->getCount('debit_card')],
                     ['Transactions', $this->getCount('transaction')],
                 ],
             );

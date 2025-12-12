@@ -7,9 +7,9 @@ namespace App\BankAccount\Api\Frontend\Controller;
 use App\BankAccount\Api\Frontend\Dto\CustomerBlockDebitCardDto;
 use App\BankAccount\Application\Command\BlockDebitCardCommand;
 use App\BankAccount\Application\Query\GetBankAccountsByCustomerIdQuery;
-use App\BankAccount\Application\Query\GetDebitCardsByBankAccountIdQuery;
 use App\BankAccount\Domain\Entity\BankAccount;
-use App\BankAccount\Domain\Entity\DebitCard;
+use App\BankAccount\Domain\Persistence\Repository\DebitCardRepositoryInterface;
+use App\BankAccount\Domain\ValueObject\DebitCardId;
 use App\Shared\Infrastructure\Http\ApiSuccessResponse;
 use App\Shared\Infrastructure\Http\Attribute\DynamicDto;
 use App\Shared\Infrastructure\Http\InternalServerErrorResponse;
@@ -18,6 +18,7 @@ use App\UserManagement\Infrastructure\Security\SecurityUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\HandleTrait;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -27,51 +28,53 @@ final class CustomerBlockDebitCardController extends AbstractController
 {
     use HandleTrait;
 
+    public function __construct(
+        MessageBusInterface $messageBus,
+    ) {
+        $this->messageBus = $messageBus;
+    }
+
     #[Route('/block-debit-card', name: 'api_customer_block_card', methods: ['POST'])]
     public function __invoke(
         #[DynamicDto]
         CustomerBlockDebitCardDto $dto,
+        DebitCardRepositoryInterface $debitCardRepository,
     ): JsonResponse {
         try {
             /** @var SecurityUser $securityUser */
             $securityUser = $this->getUser();
             $user = $securityUser->getUser();
 
-            // Verify account belongs to user
+            // Get the debit card
+            $card = $debitCardRepository->findById(DebitCardId::fromString($dto->cardId));
+
+            if (null === $card) {
+                return new UnprocessableEntityResponse(
+                    message: 'Debit card not found',
+                )->toJsonResponse();
+            }
+
+            // Verify card belongs to one of user's accounts
             /** @var array<BankAccount> $bankAccounts */
             $bankAccounts = $this->handle(
                 new GetBankAccountsByCustomerIdQuery($user->id->getValue()),
             );
 
             $accountIds = array_map(fn (BankAccount $account): string => $account->id->getValue(), $bankAccounts);
-            if (!\in_array($dto->accountId, $accountIds, true)) {
+            if (!\in_array($card->bankAccountId->getValue(), $accountIds, true)) {
                 return new UnprocessableEntityResponse(
-                    message: 'Account not found or does not belong to you',
+                    message: 'Debit card does not belong to your accounts',
                 )->toJsonResponse();
             }
 
-            // Get active debit cards for this account
-            /** @var array<DebitCard> $cards */
-            $cards = $this->handle(
-                new GetDebitCardsByBankAccountIdQuery($dto->accountId),
-            );
-
-            $activeCard = null;
-            foreach ($cards as $card) {
-                if ($card->isActive) {
-                    $activeCard = $card;
-                    break;
-                }
-            }
-
-            if (null === $activeCard) {
+            if (!$card->isActive) {
                 return new UnprocessableEntityResponse(
-                    message: 'No active debit card found for this account',
+                    message: 'Debit card is already blocked',
                 )->toJsonResponse();
             }
 
             $this->handle(
-                new BlockDebitCardCommand($activeCard->id->getValue()),
+                new BlockDebitCardCommand($dto->cardId),
             );
 
             return new ApiSuccessResponse(

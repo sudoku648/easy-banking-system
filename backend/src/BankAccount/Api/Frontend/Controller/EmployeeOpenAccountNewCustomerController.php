@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\HandleTrait;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -24,6 +25,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class EmployeeOpenAccountNewCustomerController extends AbstractController
 {
     use HandleTrait;
+
+    public function __construct(
+        MessageBusInterface $messageBus,
+    ) {
+        $this->messageBus = $messageBus;
+    }
 
     #[Route('/open-account-new-customer', name: 'api_employee_open_account_new', methods: ['POST'])]
     public function __invoke(

@@ -2,7 +2,16 @@
 
 ## Overview
 
-This implementation provides a way to have **ONE strict-typed DTO class** without nullable properties, while still being able to deserialize and validate JSON data dynamically. It uses PHP reflection to create "shadow" classes with `mixed` type properties for deserialization and validation.
+This implementation provides a way to have **ONE strict-typed DTO class** without nullable properties, while still being able to deserialize and validate JSON/form data and query parameters dynamically. It uses PHP reflection to create "shadow" classes with `mixed` type properties for deserialization and validation.
+
+**Features:**
+- ✅ Strict type safety (non-nullable properties)
+- ✅ JSON body support
+- ✅ Form data support
+- ✅ **Query parameters support**
+- ✅ Mixed sources (query + body)
+- ✅ Single DTO definition
+- ✅ Automatic validation
 
 ## The Problem
 
@@ -71,9 +80,23 @@ public function create(
 
 ## How It Works
 
+### 0. Request Data Extraction
+
+When a request arrives, the system extracts data from multiple sources:
+
+1. **Query parameters** - from URL (e.g., `?page=1&limit=10`)
+2. **Request body** - from JSON or form data
+3. **Merge strategy** - Body data takes precedence over query parameters
+
+```php
+// Example: GET /api/users?page=1&limit=10
+// With body: {"limit": 20, "sort": "name"}
+// Result: ["page" => 1, "limit" => 20, "sort" => "name"]
+```
+
 ### 1. Shadow Class Generation
 
-When JSON arrives, the system:
+When request data arrives, the system:
 
 1. **Analyzes your DTO** using reflection
 2. **Creates a shadow class** at runtime with `mixed` properties
@@ -234,6 +257,129 @@ Response:
     {
       "path": "customerId",
       "message": "This is not a valid UUID."
+    },
+    {
+      "path": "accountType",
+      "message": "The value you selected is not a valid choice."
+    },
+    {
+      "path": "currency",
+      "message": "This value is not a valid currency."
+    },
+    {
+      "path": "initialBalance",
+      "message": "This value should be greater than or equal to 0."
+    }
+  ]
+}
+```
+
+## Query Parameters Support
+
+DynamicDto supports extracting data from both query parameters and request body.
+
+**Important:** Query parameters are automatically coerced to the correct types based on DTO constructor parameter types.
+
+### Type Coercion
+
+Query parameters arrive as strings, but are automatically converted:
+
+| DTO Type | Query Value | Coerced Value | Example |
+|----------|-------------|---------------|---------|
+| `int` | `'10'` | `10` | `?page=10` → `$dto->page = 10` |
+| `float` | `'19.99'` | `19.99` | `?price=19.99` → `$dto->price = 19.99` |
+| `bool` | `'true'`, `'1'`, `'yes'`, `'on'` | `true` | `?active=true` → `$dto->active = true` |
+| `bool` | `'false'`, `'0'`, `'no'`, `'off'`, `''` | `false` | `?active=false` → `$dto->active = false` |
+| `array` | `'a,b,c'` | `['a', 'b', 'c']` | `?tags=php,symfony` → `$dto->tags = ['php', 'symfony']` |
+| `string` | `'text'` | `'text'` | `?name=John` → `$dto->name = 'John'` |
+
+### Example: Pagination DTO
+
+```php
+final readonly class GetTransactionsDto
+{
+    public function __construct(
+        #[Assert\NotBlank]
+        #[Assert\Uuid]
+        public string $accountId,
+
+        #[Assert\Type('integer')]
+        #[Assert\GreaterThan(0)]
+        public int $page = 1,
+
+        #[Assert\Type('integer')]
+        #[Assert\Choice(choices: [10, 20, 50])]
+        public int $limit = 10,
+    ) {}
+}
+```
+
+### Usage with Query Parameters
+
+```php
+#[Route('/api/transactions', methods: ['GET'])]
+public function list(
+    #[DynamicDto] GetTransactionsDto $dto,
+): JsonResponse {
+    $transactions = $this->transactionRepository->findPaginated(
+        accountId: $dto->accountId,
+        page: $dto->page,
+        limit: $dto->limit,
+    );
+
+    return new JsonResponse($transactions);
+}
+```
+
+### Request Examples
+
+**1. All via query parameters:**
+```bash
+GET /api/transactions?accountId=550e8400-e29b-41d4-a716-446655440000&page=2&limit=20
+```
+
+**2. Mixed (query + body):**
+```bash
+POST /api/transactions?page=2&limit=20
+Content-Type: application/json
+
+{
+  "accountId": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+**3. Body takes precedence:**
+```bash
+POST /api/transactions?limit=10
+Content-Type: application/json
+
+{
+  "accountId": "550e8400-e29b-41d4-a716-446655440000",
+  "limit": 20
+}
+```
+Result: `limit` will be `20` (from body, not query)
+
+### Merge Strategy
+
+When data comes from multiple sources:
+
+1. **Query parameters** are extracted first
+2. **Request body** is extracted second
+3. **Body values override** query parameters with the same key
+4. **Validation** runs on the merged data
+
+```php
+// Query: ?page=1&limit=10
+// Body: {"limit": 20, "sort": "name"}
+// Merged: ["page" => 1, "limit" => 20, "sort" => "name"]
+//         ↑ from query  ↑ from body   ↑ from body
+```
+
+This allows flexible API design:
+- GET endpoints can use query parameters
+- POST endpoints can use request body
+- Both can be mixed for convenience
     },
     {
       "path": "accountType",

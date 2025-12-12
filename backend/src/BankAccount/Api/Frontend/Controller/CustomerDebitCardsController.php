@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\BankAccount\Api\Frontend\Controller;
 
 use App\BankAccount\Application\Query\GetBankAccountsByCustomerIdQuery;
+use App\BankAccount\Application\Query\GetDebitCardsByBankAccountIdQuery;
 use App\BankAccount\Domain\Entity\BankAccount;
+use App\BankAccount\Domain\Entity\DebitCard;
 use App\Shared\Infrastructure\Http\ApiSuccessResponse;
 use App\Shared\Infrastructure\Http\InternalServerErrorResponse;
 use App\UserManagement\Infrastructure\Security\SecurityUser;
@@ -18,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/frontend/customer')]
 #[IsGranted('ROLE_CUSTOMER')]
-final class CustomerAccountsController extends AbstractController
+final class CustomerDebitCardsController extends AbstractController
 {
     use HandleTrait;
 
@@ -28,7 +30,7 @@ final class CustomerAccountsController extends AbstractController
         $this->messageBus = $messageBus;
     }
 
-    #[Route('/accounts', name: 'api_customer_accounts', methods: ['GET'])]
+    #[Route('/debit-cards', name: 'api_customer_debit_cards', methods: ['GET'])]
     public function __invoke(): JsonResponse
     {
         try {
@@ -41,22 +43,32 @@ final class CustomerAccountsController extends AbstractController
                 new GetBankAccountsByCustomerIdQuery($user->id->getValue()),
             );
 
-            $accountsData = array_map(
-                fn (BankAccount $account): array => [
-                    'id' => $account->id->getValue(),
-                    'iban' => $account->iban->getValue(),
-                    'balance' => $account->balance->getAmount(),
-                    'blockedAmount' => $account->blockedAmount->getAmount(),
-                    'availableBalance' => $account->getAvailableBalance()->getAmount(),
-                    'currency' => $account->balance->getCurrency()->value,
-                    'isActive' => $account->isActive,
-                ],
-                $accounts,
-            );
+            $allCards = [];
+            foreach ($accounts as $account) {
+                /** @var array<DebitCard> $cards */
+                $cards = $this->handle(
+                    new GetDebitCardsByBankAccountIdQuery($account->id->getValue()),
+                );
+
+                foreach ($cards as $card) {
+                    if (!$card->isActive) {
+                        continue;
+                    }
+
+                    $allCards[] = [
+                        'id' => $card->id->getValue(),
+                        'cardNumber' => $card->cardNumber->getValue(),
+                        'bankAccountId' => $account->id->getValue(),
+                        'iban' => $account->iban->getValue(),
+                        'isActive' => $card->isActive,
+                        'issuedAt' => $card->issuedAt->format('Y-m-d H:i:s'),
+                    ];
+                }
+            }
 
             return new ApiSuccessResponse(
-                message: 'Accounts retrieved successfully',
-                data: ['accounts' => $accountsData],
+                message: 'Debit cards retrieved successfully',
+                data: ['debitCards' => $allCards],
             )->toJsonResponse();
         } catch (\Exception $e) {
             return new InternalServerErrorResponse()->toJsonResponse();

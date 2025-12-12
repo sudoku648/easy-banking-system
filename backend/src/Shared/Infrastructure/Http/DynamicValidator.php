@@ -30,6 +30,9 @@ final readonly class DynamicValidator
      */
     public function validateAndHydrate(string $dtoClass, array $data): object
     {
+        // Coerce types based on DTO constructor parameter types
+        $data = $this->coerceTypes($dtoClass, $data);
+
         // Create shadow class with mixed properties
         $shadowClass = $this->createShadowClass($dtoClass);
 
@@ -279,5 +282,143 @@ PHP,
         }
 
         return $reflection->newInstanceArgs($args);
+    }
+
+    /**
+     * Coerces data types based on DTO constructor parameter types.
+     * Handles conversion from query parameter strings to appropriate types.
+     *
+     * @param class-string $dtoClass
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function coerceTypes(string $dtoClass, array $data): array
+    {
+        $reflection = new \ReflectionClass($dtoClass);
+        $constructor = $reflection->getConstructor();
+
+        if ($constructor === null) {
+            return $data;
+        }
+
+        $coercedData = [];
+
+        foreach ($data as $key => $value) {
+            // Find matching parameter
+            $param = null;
+            foreach ($constructor->getParameters() as $p) {
+                if ($p->getName() === $key) {
+                    $param = $p;
+                    break;
+                }
+            }
+
+            // If no matching parameter, keep original value
+            if (null === $param) {
+                $coercedData[$key] = $value;
+                continue;
+            }
+
+            // Coerce based on parameter type
+            $coercedData[$key] = $this->coerceValue($value, $param);
+        }
+
+        return $coercedData;
+    }
+
+    /**
+     * Coerces a single value to match the parameter type.
+     */
+    private function coerceValue(mixed $value, \ReflectionParameter $param): mixed
+    {
+        // If value is null or not a string, return as-is
+        if (null === $value || !\is_string($value)) {
+            return $value;
+        }
+
+        $type = $param->getType();
+
+        // If no type hint or union type, return as-is
+        if (null === $type || $type instanceof \ReflectionUnionType) {
+            return $value;
+        }
+
+        // Handle named types
+        if ($type instanceof \ReflectionNamedType) {
+            $typeName = $type->getName();
+
+            return match ($typeName) {
+                'int' => $this->coerceToInt($value),
+                'float' => $this->coerceToFloat($value),
+                'bool' => $this->coerceToBool($value),
+                'array' => $this->coerceToArray($value),
+                default => $value, // Keep as string for other types
+            };
+        }
+
+        return $value;
+    }
+
+    /**
+     * Coerces string to integer.
+     * Only coerces if the value is a valid integer string (no decimals).
+     */
+    private function coerceToInt(string $value): int|string
+    {
+        // Return original if not numeric (let validator handle it)
+        if (!is_numeric($value)) {
+            return $value;
+        }
+
+        // Check if value has decimal point - if so, don't coerce
+        // This prevents '3.41' from becoming 3
+        if (str_contains($value, '.') || str_contains($value, ',')) {
+            return $value; // Return as string, let validator handle it
+        }
+
+        return (int) $value;
+    }
+
+    /**
+     * Coerces string to float.
+     */
+    private function coerceToFloat(string $value): float|string
+    {
+        // Return original if not numeric (let validator handle it)
+        if (!is_numeric($value)) {
+            return $value;
+        }
+
+        return (float) $value;
+    }
+
+    /**
+     * Coerces string to boolean.
+     * Handles common string representations: 'true', 'false'.
+     */
+    private function coerceToBool(string $value): bool|string
+    {
+        $lowercaseValue = strtolower($value);
+
+        return match ($lowercaseValue) {
+            'true' => true,
+            'false' => false,
+            default => $value, // Return original (let validator handle it)
+        };
+    }
+
+    /**
+     * Coerces string to array.
+     * Handles comma-separated values.
+     */
+    private function coerceToArray(string $value): array
+    {
+        // If empty string, return empty array
+        if ('' === $value) {
+            return [];
+        }
+
+        // Split by comma and trim
+        return array_map('trim', explode(',', $value));
     }
 }

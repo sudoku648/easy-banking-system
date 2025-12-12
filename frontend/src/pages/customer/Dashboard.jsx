@@ -114,7 +114,7 @@ const CustomerDashboard = () => {
                         </td>
                         <td className="text-center">
                           {account.isActive ? (
-                            <Link to={`${getLocalizedUrl('customer.transfer', currentLocale)}?account=${account.id}`} className="btn btn-sm btn-primary">
+                            <Link to={`${getLocalizedUrl('customer.transfer', currentLocale)}?accountId=${account.id}`} className="btn btn-sm btn-primary">
                               <i className="bi bi-arrow-left-right"></i> {t('transaction.transfer')}
                             </Link>
                           ) : (

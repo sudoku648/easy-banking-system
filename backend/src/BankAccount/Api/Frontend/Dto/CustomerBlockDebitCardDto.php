@@ -12,7 +12,7 @@ final class CustomerBlockDebitCardDto
         #[Assert\Type(type: 'string')]
         #[Assert\NotBlank]
         #[Assert\Uuid]
-        public string $accountId,
+        public string $cardId,
     ) {
     }
 }
